@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
-author: "Eric Hare, Heike Hofmann, Ganesh Krishnan"
-date: "July 09, 2018"
+author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--09-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -21,86 +21,23 @@ Analyze bullet striations using nonparametric methods
 
 1. Load Libraries
     
-
-```r
+```{r}
     library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
     library(bulletr)
     library(randomForest)
-```
-
-```
-## randomForest 4.6-14
-```
-
-```
-## Type rfNews() to see new features/changes/bug fixes.
-```
-
-```
-## 
-## Attaching package: 'randomForest'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
 ```
   
 2. Read in the bullet file data, and convert to the appropriate x3p format (if necessary):
 
-
-```r
-    h44_g1 <- read_dat("~/Downloads/H44-G-1.dat", profiley=FALSE)
-```
-
-```
-## Parsed with column specification:
-## cols(
-##   x = col_double(),
-##   y = col_double(),
-##   value = col_character()
-## )
-```
-
-```r
-    h44_gx1 <- read_dat("~/Downloads/H44-G-2.dat", profiley = FALSE)
-```
-
-```
-## Parsed with column specification:
-## cols(
-##   x = col_double(),
-##   y = col_double(),
-##   value = col_character()
-## )
+```{r}
+    b1 <- read_bullet("/Volumes/Ocean/bullet-scans/LAPD/FAU 609/Bullet A", "x3p")
+    b2 <- read_bullet("/Volumes/Ocean/bullet-scans/LAPD/FAU 609/Bullet B", "x3p")
 ```
     
 3. Get the ideal cross sections
 
 
-
-```r
+```{r}
     cc_g1 <- bulletCheckCrossCut(path = "~/Downloads/H44-G-1.dat", bullet = h44_g1)
     cc_gx1 <- bulletCheckCrossCut(path = "~/Downloads/H44-GX-1.dat", bullet = h44_gx1)
 
@@ -110,16 +47,14 @@ Analyze bullet striations using nonparametric methods
     
 4. Get the groove locations
 
-
-```r
+```{r}
     grooves_g1 <- get_grooves(bullet = ccdata_g1)
     grooves_gx1 <- get_grooves(bullet = ccdata_gx1)
 ```
     
 6. Process the bullets to extract LOESS residuals
 
-
-```r
+```{r}
     g1_processed <- processBullets(bullet = ccdata_g1,
                                name = "g1",
                                x = ccdata_g1$x[1],
@@ -135,8 +70,7 @@ Analyze bullet striations using nonparametric methods
     
 7. Smooth the processed bullet profiles
 
-
-```r
+```{r}
     all_smoothed <- g1_processed %>% 
         rbind(gx1_processed) %>%
         bulletSmooth(span = 0.03) %>%
@@ -145,8 +79,7 @@ Analyze bullet striations using nonparametric methods
    
 8. Detect peaks and valleys in the aligned signatures
 
-
-```r
+```{r}
     res <- bulletGetMaxCMS(filter(all_smoothed, bullet == "g1"), 
                            filter(all_smoothed, bullet == "gx1"), 
                            column = "l30", 
@@ -155,8 +88,7 @@ Analyze bullet striations using nonparametric methods
     
 9. Extract Features
 
-
-```r
+```{r}
     lofX <- res$bullets
     b12 <- unique(lofX$bullet)
 
@@ -224,14 +156,9 @@ Analyze bullet striations using nonparametric methods
     
 10. Get Predicted Probability of Match
 
-
-```r
+```{r}
     ccf$forest <- predict(rtrees, newdata = ccf, type = "prob")[,2]
 ccf$forest
-```
-
-```
-## [1] 0.16
 ```
     
 
