@@ -15,6 +15,6 @@ read_bullet(folder, ext = "x3p")
 some more description
 }
 \examples{
- b1 <- read_bullet("/Volumes/Ocean/bullet-scans/LAPD/FAU 609/Bullet A", "x3p")
- b2 <- read_bullet("/Volumes/Ocean/bullet-scans/LAPD/FAU 609/Bullet B", "x3p")
+ b1 <- read_bullet("data/Bullet1", "x3p")
+ b2 <- read_bullet("data/Bullet2", "x3p")
 }

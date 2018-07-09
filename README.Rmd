@@ -19,19 +19,20 @@ Analyze bullet striations using nonparametric methods
 
 ## HOW-TO
 
-1. Load Libraries
+1. Load libraries
     
 ```{r}
     library(dplyr)
+    library(x3ptools)
     library(bulletr)
     library(randomForest)
 ```
   
-2. Read in the bullet file data, and convert to the appropriate x3p format (if necessary):
+2. Read all the files specified in the folders and convert to the appropriate x3p format (if necessary):
 
 ```{r}
-    b1 <- read_bullet("/Volumes/Ocean/bullet-scans/LAPD/FAU 609/Bullet A", "x3p")
-    b2 <- read_bullet("/Volumes/Ocean/bullet-scans/LAPD/FAU 609/Bullet B", "x3p")
+    b1 <- read_bullet("data/Bullet1", "x3p")
+    b2 <- read_bullet("data/Bullet2/", "x3p")
 ```
     
 3. Get the ideal cross sections
