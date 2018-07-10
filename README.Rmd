@@ -55,6 +55,15 @@ bullets <- rbind(b1, b2)
   )
 ```
 
+4. Get the groove locations
+
+```{r}
+  bullets <- bullets %>% mutate(
+    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves)
+  )
+```
+
+
 HH: Nothing evaluated below
 
 
