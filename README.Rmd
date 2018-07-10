@@ -67,6 +67,8 @@ bullets <- rbind(b1, b2)
 HH: Nothing evaluated below
 
 
+
+
 ```{r, eval = FALSE}
 
     # cc_g1 <- bulletCheckCrossCut(path = "~/Downloads/H44-G-1.dat", bullet = h44_g1)
