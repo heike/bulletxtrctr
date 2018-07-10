@@ -24,8 +24,8 @@ Analyze bullet striations using nonparametric methods
 
 ```{r, message=FALSE}
   library(dplyr)
-  library(x3ptools)
   library(bulletxtrctr)
+  library(x3ptools)
   library(randomForest)
 ```
   
@@ -47,6 +47,11 @@ bullets <- rbind(b1, b2)
 ```{r}
   bullets <- bullets %>% mutate(
     crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)
+  )
+# now extract the crosscuts
+  bullets <- bullets %>% mutate(
+    ccdata = purrr::map2(.x = x3p, .y = crosscut, 
+                         .f = x3p_crosscut)
   )
 ```
 
