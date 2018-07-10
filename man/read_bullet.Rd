@@ -11,6 +11,9 @@ read_bullet(folder, ext = "x3p")
 
 \item{ext}{character value, consisting of the extension(s) describing the file format the scans are in}
 }
+\value{
+data frame with two variables, source and x3p, containing the path to the file and the corresponding x3p file
+}
 \description{
 some more description
 }

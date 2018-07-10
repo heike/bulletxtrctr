@@ -20,25 +20,41 @@ Analyze bullet striations using nonparametric methods
 ## HOW-TO
 
 1. Load libraries
-    
-```{r}
-    library(dplyr)
-    library(x3ptools)
-    library(bulletr)
-    library(randomForest)
+
+
+```{r, message=FALSE}
+  library(dplyr)
+  library(x3ptools)
+  library(bulletxtrctr)
+  library(randomForest)
 ```
   
 2. Read all the files specified in the folders and convert to the appropriate x3p format (if necessary):
 
 ```{r}
-    b1 <- read_bullet("data/Bullet1", "x3p")
-    b2 <- read_bullet("data/Bullet2/", "x3p")
+  b1 <- read_bullet("data/Bullet1", "x3p")
+  b2 <- read_bullet("data/Bullet2", "x3p")
 ```
-    
+Combine the results into a single data frame:
+```{r}
+b1$bullet <- 1
+b2$bullet <- 2
+bullets <- rbind(b1, b2)
+```
+
 3. Get the ideal cross sections
 
-
 ```{r}
+  bullets <- bullets %>% mutate(
+    crosscut = x3p %>% purrr::map_dbl(.f = get_optim_crosscut)
+  )
+```
+
+HH: Nothing evaluated below
+
+
+```{r, eval = FALSE}
+
     cc_g1 <- bulletCheckCrossCut(path = "~/Downloads/H44-G-1.dat", bullet = h44_g1)
     cc_gx1 <- bulletCheckCrossCut(path = "~/Downloads/H44-GX-1.dat", bullet = h44_gx1)
 
@@ -48,14 +64,14 @@ Analyze bullet striations using nonparametric methods
     
 4. Get the groove locations
 
-```{r}
+```{r, eval = FALSE}
     grooves_g1 <- get_grooves(bullet = ccdata_g1)
     grooves_gx1 <- get_grooves(bullet = ccdata_gx1)
 ```
     
 6. Process the bullets to extract LOESS residuals
 
-```{r}
+```{r, eval = FALSE}
     g1_processed <- processBullets(bullet = ccdata_g1,
                                name = "g1",
                                x = ccdata_g1$x[1],
@@ -71,7 +87,7 @@ Analyze bullet striations using nonparametric methods
     
 7. Smooth the processed bullet profiles
 
-```{r}
+```{r, eval = FALSE}
     all_smoothed <- g1_processed %>% 
         rbind(gx1_processed) %>%
         bulletSmooth(span = 0.03) %>%
@@ -80,7 +96,7 @@ Analyze bullet striations using nonparametric methods
    
 8. Detect peaks and valleys in the aligned signatures
 
-```{r}
+```{r, eval = FALSE}
     res <- bulletGetMaxCMS(filter(all_smoothed, bullet == "g1"), 
                            filter(all_smoothed, bullet == "gx1"), 
                            column = "l30", 
@@ -89,7 +105,7 @@ Analyze bullet striations using nonparametric methods
     
 9. Extract Features
 
-```{r}
+```{r, eval = FALSE}
     lofX <- res$bullets
     b12 <- unique(lofX$bullet)
 
@@ -157,7 +173,7 @@ Analyze bullet striations using nonparametric methods
     
 10. Get Predicted Probability of Match
 
-```{r}
+```{r, eval = FALSE}
     ccf$forest <- predict(rtrees, newdata = ccf, type = "prob")[,2]
 ccf$forest
 ```
