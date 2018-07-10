@@ -1,3 +1,30 @@
+#' Get a specified cross section
+#'
+#' @param y y coordinate of cross section
+#' @param land x3p file with land data
+#' @return cross cut data frame
+land_cc <- function(y, land) {
+  # get cross cut, and smooth it
+  ys <- unique(land$y)
+  picky <- ys[which.min(abs(y - ys))]
+  br111 <- land[land$y == picky,]
+  #inc <- bullet$header.info$incrementY
+  ## XXX    br111.groove <- bulletr::get_grooves(br111, groove_cutoff = 400, smoothfactor = 15, adjust = 10)
+  br111.groove <- quantile(br111$x, probs = c(0.15, 0.85))
+  #    br111.groove$plot
+  #    browser()
+
+  br111 <- switch_xy(br111)
+  groove <- list(groove = br111.groove, plot = NULL)
+  dframe <- bulletr::fit_loess(br111, groove)$resid$data
+  dframe <- switch_xy(dframe)
+  ### XXX need to get fit_loess out of this
+
+  #    path <- gsub(".*//", "", as.character(path))
+  #    dframe$bullet <- paste(gsub(".x3p", "", path), x)
+  dframe
+}
+
 #' Identify a reliable cross section
 #'
 #' Identifies a "representative" cross section for a bullet land engraved area.
@@ -22,27 +49,7 @@
 #' @importFrom x3ptools x3p_to_df
 #' @export
 x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), minccf = 0.9, span = 0.03, percent_missing = 50) {
-  get_cc <- function(y, mybullet) {
-    # get cross cut, and smooth it
-    ys <- unique(mybullet$y)
-    picky <- ys[which.min(abs(y - ys))]
-    br111 <- mybullet[mybullet$y == picky,]
-    #inc <- bullet$header.info$incrementY
-## XXX    br111.groove <- bulletr::get_grooves(br111, groove_cutoff = 400, smoothfactor = 15, adjust = 10)
-    br111.groove <- quantile(br111$x, probs = c(0.15, 0.85))
-    #    br111.groove$plot
-    #    browser()
 
-    br111 <- switch_xy(br111)
-    groove <- list(groove = br111.groove, plot = NULL)
-    dframe <- bulletr::fit_loess(br111, groove)$resid$data
-    dframe <- switch_xy(dframe)
-### XXX need to get fit_loess out of this
-
-#    path <- gsub(".*//", "", as.character(path))
-#    dframe$bullet <- paste(gsub(".x3p", "", path), x)
-    dframe
-  }
   bullet <- NULL
   if (is.character(x3p)) bullet <- read_x3p(x3p)
   if ("x3p" %in% class(x3p)) bullet <- x3p
@@ -52,16 +59,16 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), mincc
   if (is.na(ylimits[2])) ylimits[2] <- max(dbr111$y)
   done <- FALSE
   y <- min(ylimits)
-  first_cc <- get_cc(y, mybullet = dbr111)
+  first_cc <- land_cc(y, land = dbr111)
 
   while((dim(first_cc)[1] < bullet$header.info$sizeX*percent_missing/100) & (y < bullet$header.info$sizeY)) {
     y <- y + distance
-    first_cc <- get_cc(x, mybullet = dbr111)
+    first_cc <- land_cc(x, land = dbr111)
   }
 
   while(!done) {
     y <- y + distance
-    second_cc <- get_cc(y, mybullet = dbr111) # need to check that we have enough data
+    second_cc <- land_cc(y, land = dbr111) # need to check that we have enough data
 #    res <- ccf(first_cc$resid, second_cc$resid, lag.max = .5*min(nrow(first_cc), nrow(second_cc)), plot=FALSE)
 #    ccf <- max(res$acf)
 
