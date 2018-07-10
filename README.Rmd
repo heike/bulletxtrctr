@@ -46,7 +46,7 @@ bullets <- rbind(b1, b2)
 
 ```{r}
   bullets <- bullets %>% mutate(
-    crosscut = x3p %>% purrr::map_dbl(.f = get_optim_crosscut)
+    crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)
   )
 ```
 
@@ -55,8 +55,8 @@ HH: Nothing evaluated below
 
 ```{r, eval = FALSE}
 
-    cc_g1 <- bulletCheckCrossCut(path = "~/Downloads/H44-G-1.dat", bullet = h44_g1)
-    cc_gx1 <- bulletCheckCrossCut(path = "~/Downloads/H44-GX-1.dat", bullet = h44_gx1)
+    # cc_g1 <- bulletCheckCrossCut(path = "~/Downloads/H44-G-1.dat", bullet = h44_g1)
+    # cc_gx1 <- bulletCheckCrossCut(path = "~/Downloads/H44-GX-1.dat", bullet = h44_gx1)
 
     ccdata_g1 <- get_crosscut(bullet = h44_g1, x = cc_g1) 
     ccdata_gx1 <- get_crosscut(bullet = h44_gx1, x = cc_gx1)
