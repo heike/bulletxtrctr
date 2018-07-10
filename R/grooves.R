@@ -12,7 +12,9 @@
 #' @export
 #' @import ggplot2
 
-cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15, adjust = 10, groove_cutoff = 400, mean_left = NULL, mean_right = NULL, mean_window = 100) {
+cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15,
+                              adjust = 10, groove_cutoff = 400,
+                              mean_left = NULL, mean_right = NULL, mean_window = 100) {
   bullet <- switch_xy(bullet)
 
   if (method == "quadratic") {
