@@ -59,10 +59,38 @@ bullets <- rbind(b1, b2)
 
 ```{r}
   bullets <- bullets %>% mutate(
-    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves)
+    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle")
   )
+
+bullets$grooves[[1]]
 ```
 
+5. Extract signatures
+
+```{r}
+
+bullets <- bullets %>% mutate(
+  sigs = purrr::map2(
+    .x = ccdata, .y = grooves, 
+    .f = function(x, y) {
+      cc_get_signature(ccdata=x, grooves = y, span = 0.75)})
+)
+
+bullets$sigs[[1]] %>% ggplot(aes(x = x, y = resid)) + geom_line()
+```
+
+
+6. Smooth the processed bullet profiles
+
+```{r}
+bullets <- bullets %>% mutate(
+  
+)
+    all_smoothed <- g1_processed %>% 
+        rbind(gx1_processed) %>%
+        bulletSmooth(span = 0.03) %>%
+        filter(!is.na(l30))
+```
 
 HH: Nothing evaluated below
 
