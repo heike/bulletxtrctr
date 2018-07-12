@@ -73,24 +73,25 @@ bullets <- bullets %>% mutate(
   sigs = purrr::map2(
     .x = ccdata, .y = grooves, 
     .f = function(x, y) {
-      cc_get_signature(ccdata=x, grooves = y, span = 0.75)})
+      cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 )
 
-bullets$sigs[[1]] %>% ggplot(aes(x = x, y = resid)) + geom_line()
+bullets$sigs[[1]] %>% ggplot(aes(x = x)) + 
+  geom_line(aes(y = raw_sig)) +
+  geom_line(aes(y = sig), colour="red") 
 ```
 
+Next step: 
 
-6. Smooth the processed bullet profiles
+8. Detect peaks and valleys in the aligned signatures
 
-```{r}
-bullets <- bullets %>% mutate(
-  
-)
-    all_smoothed <- g1_processed %>% 
-        rbind(gx1_processed) %>%
-        bulletSmooth(span = 0.03) %>%
-        filter(!is.na(l30))
+```{r, eval = FALSE}
+    res <- bulletGetMaxCMS(filter(all_smoothed, bullet == "g1"), 
+                           filter(all_smoothed, bullet == "gx1"), 
+                           column = "l30", 
+                           span = 25)
 ```
+
 
 HH: Nothing evaluated below
 

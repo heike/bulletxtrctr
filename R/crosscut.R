@@ -124,5 +124,5 @@ x3p_crosscut <- function(x3p, y = NULL) {
   picky <- ys[which.min(abs(y - ys))]
   dbr111.fixx <- dbr111[dbr111$y == picky,]
 
-  return(dbr111.fixx)
+  return(na.omit(dbr111.fixx))
 }
