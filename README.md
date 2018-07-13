@@ -132,7 +132,10 @@ bullets <- bullets %>% mutate(
     .f = function(x, y) {
       cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 )
+```
 
+
+```r
 library(ggplot2)
 ```
 
@@ -148,18 +151,18 @@ library(ggplot2)
 ```
 
 ```r
-bullets$sigs[[1]] %>% ggplot(aes(x = x)) + 
-  geom_line(aes(y = raw_sig)) +
-  geom_line(aes(y = sig), colour="red") 
+signatures <- bullets %>% select(source, sigs) %>% tidyr::unnest()
+signatures %>% 
+  filter(!is.na(sig),!is.na(raw_sig)) %>%
+  ggplot(aes(x = x)) + 
+  geom_line(aes(y = raw_sig), colour = "grey70") +
+  geom_line(aes(y = sig), colour="grey30") +
+  facet_wrap(~source, ncol=6) +
+  ylim(c(-5,5)) +
+  theme_bw()
 ```
 
-```
-## Warning: Removed 382 rows containing missing values (geom_path).
-
-## Warning: Removed 382 rows containing missing values (geom_path).
-```
-
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 Next step: 
 
