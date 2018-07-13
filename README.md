@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
-date: "July 09, 2018"
+date: "July 13, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--09-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--13-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -20,44 +20,169 @@ Analyze bullet striations using nonparametric methods
 ## HOW-TO
 
 1. Load libraries
-    
+
+
 
 ```r
-    library(dplyr)
-    library(x3ptools)
-    library(bulletxtrctr)
-    library(randomForest)
+  library(dplyr)
+  library(bulletxtrctr)
+  library(x3ptools)
+  library(randomForest)
 ```
   
-2. Read all the files specified in the folders and convert to the appropriate x3p format (if necessary):
+2. Download some files from NRBTDB, if not yet available:
 
 
 ```r
-    b1 <- read_bullet("data/Bullet1", "x3p")
+if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
+  NRBTDsample_download("data")
+}
+  b1 <- read_bullet("data/Bullet1", "x3p")
 ```
 
 ```
-## 5 files found. Reading ...
+## 6 files found. Reading ...
 ```
 
 ```r
-    b2 <- read_bullet("data/Bullet2/", "x3p")
+  b2 <- read_bullet("data/Bullet2", "x3p")
 ```
 
 ```
-## 5 files found. Reading ...
+## 6 files found. Reading ...
 ```
-    
+Combine the results into a single data frame:
 
-HH: Nothing evaluated below
+```r
+b1$bullet <- 1
+b2$bullet <- 2
+bullets <- rbind(b1, b2)
+
+# turn the scans such that (0,0) is bottom left
+bullets <- bullets %>% mutate(
+  x3p = x3p %>% purrr::map(.f = function(x) x %>% 
+                             rotate_x3p(angle=-90) %>%
+                             y_flip_x3p())
+  ) %>% mutate(
+    x3p = x3p %>% purrr::map(.f = function(x) {
+      # make sure all measurements are in microns
+      x$surface.matrix <- x$surface.matrix*10^6
+      x$header.info$incrementY <- x$header.info$incrementY*10^6
+      x$header.info$incrementX <- x$header.info$incrementX*10^6
+      x
+    })
+  )
+```
 
 3. Get the ideal cross sections
 
 
+```r
+  bullets <- bullets %>% mutate(
+    crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)
+  )
+```
+
+```
+## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : k-d tree limited by memory. ncmax= 473
+```
+
+```
+## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : k-d tree limited by memory. ncmax= 512
+```
 
 ```r
-    cc_g1 <- bulletCheckCrossCut(path = "~/Downloads/H44-G-1.dat", bullet = h44_g1)
-    cc_gx1 <- bulletCheckCrossCut(path = "~/Downloads/H44-GX-1.dat", bullet = h44_gx1)
+# now extract the crosscuts
+  bullets <- bullets %>% mutate(
+    ccdata = purrr::map2(.x = x3p, .y = crosscut, 
+                         .f = x3p_crosscut)
+  )
+```
+
+4. Get the groove locations
+
+
+```r
+  bullets <- bullets %>% mutate(
+    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle")
+  )
+
+bullets$grooves[[1]]
+```
+
+```
+## $groove
+##    12.5%    87.5% 
+##  337.500 2129.688 
+## 
+## $plot
+```
+
+![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+5. Extract signatures
+
+
+```r
+bullets <- bullets %>% mutate(
+  sigs = purrr::map2(
+    .x = ccdata, .y = grooves, 
+    .f = function(x, y) {
+      cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
+)
+
+library(ggplot2)
+```
+
+```
+## 
+## Attaching package: 'ggplot2'
+```
+
+```
+## The following object is masked from 'package:randomForest':
+## 
+##     margin
+```
+
+```r
+bullets$sigs[[1]] %>% ggplot(aes(x = x)) + 
+  geom_line(aes(y = raw_sig)) +
+  geom_line(aes(y = sig), colour="red") 
+```
+
+```
+## Warning: Removed 382 rows containing missing values (geom_path).
+
+## Warning: Removed 382 rows containing missing values (geom_path).
+```
+
+![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+Next step: 
+
+8. Detect peaks and valleys in the aligned signatures
+
+
+```r
+    res <- bulletGetMaxCMS(filter(all_smoothed, bullet == "g1"), 
+                           filter(all_smoothed, bullet == "gx1"), 
+                           column = "l30", 
+                           span = 25)
+```
+
+
+HH: Nothing evaluated below
+
+
+
+
+
+```r
+    # cc_g1 <- bulletCheckCrossCut(path = "~/Downloads/H44-G-1.dat", bullet = h44_g1)
+    # cc_gx1 <- bulletCheckCrossCut(path = "~/Downloads/H44-GX-1.dat", bullet = h44_gx1)
 
     ccdata_g1 <- get_crosscut(bullet = h44_g1, x = cc_g1) 
     ccdata_gx1 <- get_crosscut(bullet = h44_gx1, x = cc_gx1)
