@@ -94,6 +94,7 @@ bullets <- bullets %>% mutate(
     .f = function(x, y) {
       cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 )
+
 ```
 
 ```{r, fig.width = 8, fig.height = 3.3}
@@ -166,6 +167,7 @@ comparisons %>%
 comparisons <- comparisons %>% mutate(
   features = results %>% purrr::map(.f = function(res) {
     lofX <- res$bullets
+    lofX$l30 <- lofX$sig
     b12 <- unique(lofX$bullet)
 
     subLOFx1 <- subset(lofX, bullet==b12[1])
@@ -190,10 +192,10 @@ comparisons <- comparisons %>% mutate(
 
     doublesmoothed <- lofX %>%
       group_by(y) %>%
-      mutate(avgl30 = mean(sig, na.rm = TRUE)) %>%
+      mutate(avgl30 = mean(l30, na.rm = TRUE)) %>%
       ungroup() %>%
       mutate(smoothavgl30 = bulletr:::smoothloess(x = y, y = avgl30, span = 0.3),
-             l50 = sig - smoothavgl30)
+             l50 = l30 - smoothavgl30)
 
     final_doublesmoothed <- doublesmoothed %>%
       filter(round(y, digits = 3) %in% ys)
@@ -220,7 +222,7 @@ comparisons <- comparisons %>% mutate(
       right_cms = max(km[length(km)] - knm[length(knm)],0) * (1000 / g1_inc_x) / length(ys),
       left_noncms = max(km[1] - knm[1], 0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
       right_noncms = max(knm[length(knm)]-km[length(km)],0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
-      sum_peaks = sum(abs(res$lines$heights[res$lines$match])) * (1000 / g1_inc_x) / length(ys)
+      sum_peaks = sum(abs(res$lines$heights[res$lines$match]), na.rm=TRUE) * (1000 / g1_inc_x) / length(ys)
 ) 
   })
 )
