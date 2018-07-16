@@ -234,7 +234,7 @@ comparisons <- comparisons %>% mutate(
 
 10. Get Predicted Probability of Match
 
-```{r}
+```{r, warning=FALSE}
   comparisons <- comparisons %>% tidyr::unnest(features)
   comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
 

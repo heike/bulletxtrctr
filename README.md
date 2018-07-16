@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
-date: "July 13, 2018"
+date: "July 16, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--13-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--16-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -225,6 +225,7 @@ comparisons %>%
 comparisons <- comparisons %>% mutate(
   features = results %>% purrr::map(.f = function(res) {
     lofX <- res$bullets
+    lofX$l30 <- lofX$sig
     b12 <- unique(lofX$bullet)
 
     subLOFx1 <- subset(lofX, bullet==b12[1])
@@ -249,10 +250,10 @@ comparisons <- comparisons %>% mutate(
 
     doublesmoothed <- lofX %>%
       group_by(y) %>%
-      mutate(avgl30 = mean(sig, na.rm = TRUE)) %>%
+      mutate(avgl30 = mean(l30, na.rm = TRUE)) %>%
       ungroup() %>%
       mutate(smoothavgl30 = bulletr:::smoothloess(x = y, y = avgl30, span = 0.3),
-             l50 = sig - smoothavgl30)
+             l50 = l30 - smoothavgl30)
 
     final_doublesmoothed <- doublesmoothed %>%
       filter(round(y, digits = 3) %in% ys)
@@ -261,7 +262,7 @@ comparisons <- comparisons %>% mutate(
                      final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[2]],
                      use = "pairwise.complete.obs")
 
-    ccf_temp <- c(
+    data.frame(
       ccf=res$ccf, 
       rough_cor = rough_cor, 
       lag=res$lag / 1000, 
@@ -279,16 +280,10 @@ comparisons <- comparisons %>% mutate(
       right_cms = max(km[length(km)] - knm[length(knm)],0) * (1000 / g1_inc_x) / length(ys),
       left_noncms = max(km[1] - knm[1], 0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
       right_noncms = max(knm[length(knm)]-km[length(km)],0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
-      sum_peaks = sum(abs(res$lines$heights[res$lines$match])) * (1000 / g1_inc_x) / length(ys)
-    )
-
-    ccf <- t(as.data.frame(ccf_temp)) %>%
-      as.data.frame() %>%
-      dplyr::select(profile1_id = b1, profile2_id = b2, ccf, rough_cor, lag, D, sd_D, signature_length, overlap,
-                    matches, mismatches, cms, non_cms, sum_peaks)
-    ccf[,-(1:2)] <- lapply(ccf[,-(1:2)], function(x) { as.numeric(as.character(x)) })
+      sum_peaks = sum(abs(res$lines$heights[res$lines$match]), na.rm=TRUE) * (1000 / g1_inc_x) / length(ys)
+) 
   })
-)  
+)
 ```
     
 
@@ -296,17 +291,20 @@ comparisons <- comparisons %>% mutate(
 
 
 ```r
+  comparisons <- comparisons %>% tidyr::unnest(features)
   comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
 
 comparisons %>% 
   ggplot(aes(x = land1, y = land2, fill=rfscore)) +
   geom_tile() +
   scale_fill_gradient2(low="grey80", high = "darkorange", 
-                       midpoint = 0.5) +
+                       midpoint = .5) +
   facet_grid(bullet1~bullet2, labeller="label_both") +
   xlab("Land 1") +
   ylab("Land 2")
 ```
+
+![](README_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
     
 
 An interactive interface for doing comparisons is available https://oaiti.org/apps/bulletmatcher/
