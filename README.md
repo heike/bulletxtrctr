@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
-date: "July 16, 2018"
+date: "July 17, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--16-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--17-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -179,12 +179,8 @@ signatures %>%
       land2 <- bullets$sigs[bullets$source==yy][[1]]
       land1$bullet <- "first-land"
       land2$bullet <- "second-land"
-      bulletr::bulletGetMaxCMS(
-        bulletxtrctr:::switch_xy(land1),
-        bulletxtrctr:::switch_xy(land2),
-        column="sig",
-        span = 25
-      )
+      
+      sig_cms_max(land1, land2, column="sig", span = 25)
     })
   )
 ```
@@ -194,7 +190,7 @@ signatures %>%
 comparisons <- comparisons %>% mutate(
   ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
   lag = results %>% purrr::map_dbl(.f = function(x) x$lag),
-  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
+#  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
 )
 comparisons <- comparisons %>% mutate(
   barrel1 = gsub(".*Barrel([1-6])_.*","\\1",b1),
@@ -225,11 +221,17 @@ comparisons %>%
 comparisons <- comparisons %>% mutate(
   features = results %>% purrr::map(.f = function(res) {
     lofX <- res$bullets
-    lofX$l30 <- lofX$sig
-    b12 <- unique(lofX$bullet)
-
-    subLOFx1 <- subset(lofX, bullet==b12[1])
-    subLOFx2 <- subset(lofX, bullet==b12[2]) 
+#    lofX$l30 <- lofX$sig
+#    b12 <- unique(lofX$bullet)
+    b12 <- c("sig1", "sig2")
+  subLOFx1 <- lofX[,c("x", "sig1")]
+  names(subLOFx1) <- c("y", "val")
+  subLOFx2 <- lofX[,c("x", "sig2")]
+  names(subLOFx2) <- c("y", "val")
+#    browser()
+    
+ #   subLOFx1 <- subset(lofX, bullet==b12[1])
+  #  subLOFx2 <- subset(lofX, bullet==b12[2]) 
 
     ys <- dplyr::intersect(round(subLOFx1$y, digits = 3), round(subLOFx2$y, digits = 3))
 
@@ -248,15 +250,16 @@ comparisons <- comparisons %>% mutate(
 
     signature.length <- min(nrow(subLOFx1), nrow(subLOFx2))
 
-    doublesmoothed <- lofX %>%
-      group_by(y) %>%
+    doublesmoothed <- lofX %>% 
+      tidyr::gather(bullet, l30, sig1:sig2) %>%
+   #   group_by(y) %>%
       mutate(avgl30 = mean(l30, na.rm = TRUE)) %>%
       ungroup() %>%
-      mutate(smoothavgl30 = bulletr:::smoothloess(x = y, y = avgl30, span = 0.3),
+      mutate(smoothavgl30 = bulletr:::smoothloess(x = x, y = avgl30, span = 0.3),
              l50 = l30 - smoothavgl30)
 
     final_doublesmoothed <- doublesmoothed %>%
-      filter(round(y, digits = 3) %in% ys)
+      filter(round(x, digits = 3) %in% ys)
 
     rough_cor <- cor(final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[1]], 
                      final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[2]],
@@ -268,7 +271,7 @@ comparisons <- comparisons %>% mutate(
       lag=res$lag / 1000, 
       D=distr.dist, 
       sd_D = distr.sd,
-      b1=b12[1], b2=b12[2],
+ #     b1=b12[1], b2=b12[2],
       signature_length = signature.length * g1_inc_x / 1000,
       overlap = length(ys) / signature.length,
       matches = sum(res$lines$match) * (1000 / g1_inc_x) / length(ys),
