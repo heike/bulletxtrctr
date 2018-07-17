@@ -102,6 +102,7 @@ switch_xy <- function(dataframe) {
 
 #' Read a crosscut from a 3d surface file
 #'
+#'XXX Is this function even necessary? Or can it be replaced with the read() functions and land_cc?
 #' @param x3p  if character, path to an x3p file. Otherwise a scan in x3p format is expected.
 #' @param y level of the crosscut to be taken. If this level does not exist, the  crosscut along the middle of the land is returned.
 #' @return data frame
