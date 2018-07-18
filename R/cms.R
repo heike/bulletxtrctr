@@ -5,15 +5,14 @@
 #' Should probably be split into four or five sub functions.
 #' @param sig1 vector of smoothed first signature
 #' @param sig2 vector of smoothed second signature
-#' @param column The column which to consider for the signature
 #' @param span positive number  for the smoothfactor to use for assessing peaks.
 #' @return list of matching parameters, data set of the identified striae, and the aligned data sets.
 #' @export
-sig_cms_max <- function(sig1, sig2, column = "resid", span = 35) {
+sig_cms_max <- function(sig1, sig2, span = 35) {
   bullet <- NULL
 
 #  t1 <- system.time({
-  bAlign = sig_align(sig1[,column], sig2[,column])
+  bAlign = sig_align(sig1, sig2)
 #  })
 #  browser()
 
@@ -53,39 +52,43 @@ sig_cms_max <- function(sig1, sig2, column = "resid", span = 35) {
   list(maxCMS = maxCMS, ccf = bAlign$ccf, lag=bAlign$lag, lines=lines, bullets=sigX)
 }
 
-#' Number of maximum consecutively matching striae
+#' Length of the longest run of TRUEs
 #'
-#' @param match is a Boolean vector of matches/non-matches
-#' @return an integer value of the maximum number of consecutive matches
+#' Identifies the length of the longest run of TRUEs in Boolean vector `x`.
+#' used to be `maxCMS`
+#' @param x  Boolean vector
+#' @return an integer value of the length of the longest run of TRUE values
 #' @export
 #' @examples
 #' x <- rbinom(100, size = 1, prob = 1/3)
 #' get_run(x == 1) # expected value for longest match is 3
 #' get_longest_run(x==1)
-get_longest_run <- function(match) {
-  cmsTable <- get_run(match)
-  as.numeric(rev(names(cmsTable)))[1]
+get_longest_run <- function(x) {
+  runTable <- get_runs(x)
+  as.numeric(rev(names(runTable)))[1]
 }
 
-#' Table of the number of consecutive matches
+#' Table of the number of runs
 #'
-#' @param match is a Boolean vector of matches/non-matches
-#' @return a table of the number of the CMS and their frequencies
+#' Identify the length of runs (of values TRUE) and their frequencies.
+#' @param x Boolean vector
+#' @return a table of the number of runs of TRUEs
 #' @export
 #' @examples
 #' x <- rbinom(100, size = 1, prob = 1/3)
-#' get_runs(x == 1) # expected value for longest match is 3
-get_run <- function(match) {
+#' get_runs(x == 1) # expected value for longest run is 3
+#' get_runs(x == 0) # expected value for longest run is 6
+get_runs <- function(x) {
   # number of runs of different lengths
 
-  y <- diff(match)
+  y <- diff(x)
   # y is -1 if change from 1 to 0,
   #       0 if unchanged
   #       1 if change from 0 to 1
-  w <- c(0, y)[match][-1]
+  w <- c(0, y)[x][-1]
 
   z <- which(w == 1)
-  z <- c(0,z,length(match[match]))
+  z <- c(0,z,length(x[x]))
 
   return(table(diff(z)))
 }

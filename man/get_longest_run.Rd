@@ -2,18 +2,19 @@
 % Please edit documentation in R/cms.R
 \name{get_longest_run}
 \alias{get_longest_run}
-\title{Number of maximum consecutively matching striae}
+\title{Length of the longest run of TRUEs}
 \usage{
-get_longest_run(match)
+get_longest_run(x)
 }
 \arguments{
-\item{match}{is a Boolean vector of matches/non-matches}
+\item{x}{Boolean vector}
 }
 \value{
-an integer value of the maximum number of consecutive matches
+an integer value of the length of the longest run of TRUE values
 }
 \description{
-Number of maximum consecutively matching striae
+Identifies the length of the longest run of TRUEs in Boolean vector `x`.
+used to be `maxCMS`
 }
 \examples{
 x <- rbinom(100, size = 1, prob = 1/3)

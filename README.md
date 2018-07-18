@@ -163,10 +163,10 @@ signatures %>%
     results = purrr::map2(.x = b1, .y = b2, .f = function(xx, yy) {
       land1 <- bullets$sigs[bullets$source==xx][[1]]
       land2 <- bullets$sigs[bullets$source==yy][[1]]
-      land1$bullet <- "first-land"
-      land2$bullet <- "second-land"
+   #  land1$bullet <- "first-land"
+   #  land2$bullet <- "second-land"
       
-      sig_cms_max(land1, land2, column="sig", span = 25)
+      sig_cms_max(land1$sig, land2$sig, span = 25)
     })
   )
 ```
