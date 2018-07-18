@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
-date: "July 17, 2018"
+date: "July 18, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--17-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--18-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
