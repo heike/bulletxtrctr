@@ -65,3 +65,53 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
 
 
 
+#' Match striation marks across two cross sections based on previously identified peaks and valleys
+#'
+#' adapted from function `striation_identify` in the bulletr package, just used internally. Not intended for public consumption.
+#' @param lines1 data frame as returned from sig_get_peaks function. data frames are expected to have
+#' the following variables: xmin, xmax, group, type, bullet, heights
+#' @param lines2 data frame as returned from sig_get_peaks function. data frames are expected to have
+#' the following variables: xmin, xmax, group, type, bullet, heights
+#' @return data frame of the same form as lines1 and lines2, but consisting of an additional variable of whether the striation marks are matches
+#' @importFrom dplyr group_by %>% summarise
+#' @importFrom reshape2 melt
+#' @importFrom stats sd
+striation_identify_matches <- function(lines1, lines2) {
+  group <- NULL
+  type <- NULL
+  bullet <- NULL
+  heights <- NULL
+  n <- NULL
+
+  lines <- rbind(lines1, lines2)
+  lines <- lines[order(lines$xmin),]
+
+  ml <- melt(lines, measure.vars=c("xmin", "xmax"))
+  ml <- ml[order(ml$value),]
+  ml$overlap <- c(1,-1)[as.numeric(ml$variable)]
+  ml$gap <- cumsum(ml$overlap)
+
+  idx <- which(ml$gap == 0)
+  lines <- data.frame(xmin = ml$value[c(1,idx[-length(idx)]+1)],
+                      xmax = ml$value[idx])
+  ml$group <- 0
+  ml$group[c(1, idx[-length(idx)]+1)] <- 1
+  ml$group <- cumsum(ml$group)
+  isMatch <- function(type, bullet) {
+    if (length(unique(bullet)) != 2) return(FALSE)
+    return (length(unique(type)) == 1)
+  }
+  groups <- ml %>% group_by(group) %>% summarise(
+    match = isMatch(type, bullet),
+    size = n(),
+    type = type[1],
+    sdheights = sd(heights),
+    heights = mean(heights))
+  lines$match <- as.vector(groups$match)
+  lines$type <- as.vector(groups$type)
+  lines$type[!lines$match] <- NA
+  lines$meany <- with(lines, (xmin+xmax)/2)
+  lines$heights <- as.vector(groups$heights)
+  lines$sdheights <- as.vector(groups$sdheights)
+  lines
+}

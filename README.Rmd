@@ -27,6 +27,7 @@ Analyze bullet striations using nonparametric methods
   library(bulletxtrctr)
   library(x3ptools)
   library(randomForest)
+  library(ggplot2)
 ```
   
 2. Download some files from NRBTDB, if not yet available:
@@ -98,7 +99,6 @@ bullets <- bullets %>% mutate(
 ```
 
 ```{r, fig.width = 8, fig.height = 3.3}
-library(ggplot2)
 signatures <- bullets %>% select(source, sigs) %>% tidyr::unnest()
 signatures %>% 
   filter(!is.na(sig),!is.na(raw_sig)) %>%
