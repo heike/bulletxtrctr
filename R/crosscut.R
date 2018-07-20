@@ -74,12 +74,11 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), mincc
 
     first_cc$bullet <- "first-bullet"
     second_cc$bullet <- "second-bullet"
-    b2 <- rbind(first_cc, second_cc)
-#browser()
-    b2 <- switch_xy(b2)
-      lofX <- bulletr::bulletSmooth(b2, span = span)
-      ccf <- bulletr::bulletAlign(lofX)$ccf
-    # would need to switch b2 back if it were to be used again
+
+    # smooth raw signatures, then align and compare:
+    first_cc$l30 <- raw_sig_smooth(first_cc$resid, span = span)
+    second_cc$l30 <- raw_sig_smooth(second_cc$resid, span = span)
+    ccf <- sig_align(first_cc$l30, second_cc$l30)$ccf
 
     if (ccf > minccf) {
       done <- TRUE
