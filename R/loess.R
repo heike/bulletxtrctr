@@ -32,10 +32,10 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
 #' The most extreme 0.25% of residuals are filtered from further consideration.
 #' The result is called the raw signature of the bullet land.
 #' @param ccdata The crosscut as returned from x3p_to_df
-#' @param span The size, in microns, of the smoothing window. Defaults to 1875, which is 75% of 2500 microns; approximately the same size as a 9mm land.
+#' @param span The size, in microns, of the smoothing window. Defaults to 600, which is 24% of 2500 microns; approximately the same size as a 9mm land.
 #' @return a list of a data frame of the original bullet measurements extended by gaussian filtration, residuals, and two plots: a plot of the fit, and a plot of the bullet's land signature.
 #' @export
-cc_fit_gaussian <- function(ccdata, span = 1875) {
+cc_fit_gaussian <- function(ccdata, span = 600) {
   value <- NULL
   x <- NULL
 
@@ -44,7 +44,7 @@ cc_fit_gaussian <- function(ccdata, span = 1875) {
 
   # HH Mar 22: we should use lowess rather than loess
 
-  gsmooth <- smoother::smth(ccdata$value, 'gaussian', window = window)
+  gsmooth <- smoother::smth(x = ccdata$value, method = 'gaussian', window = window, tails = T, na.rm = T)
   ccdata$fitted <- gsmooth
   ccdata$raw_sig <- ccdata$value - ccdata$fitted
   ccdata$se <- NA
