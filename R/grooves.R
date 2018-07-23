@@ -9,12 +9,11 @@
 #' @param mean_right If provided, the location of the average right groove
 #' @param mean_window The window around the means to use
 #' @param second_smooth Whether or not to smooth a second time
+#' @param ... parameters passed on to specific groove location methods
 #' @export
-#' @import ggplot2
-
 cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15,
                               adjust = 10, groove_cutoff = 400,
-                              mean_left = NULL, mean_right = NULL, mean_window = 100) {
+                              mean_left = NULL, mean_right = NULL, mean_window = 100, ...) {
   bullet <- switch_xy(bullet)
 
   if (method == "quadratic") {
@@ -41,9 +40,13 @@ cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15,
     )
   }
   if (method == "middle") {
+    browser()
+    names(list(...))
+
+    if (is.null(middle)) middle <- 75
     grooves <- bulletr:::get_grooves_middle(
       bullet = bullet,
-      middle = 75
+      middle = middle
     )
   }
 

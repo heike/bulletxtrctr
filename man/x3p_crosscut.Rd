@@ -15,5 +15,5 @@ x3p_crosscut(x3p, y = NULL)
 data frame
 }
 \description{
-XXX Is this function even necessary? Or can it be replaced with the read() functions and land_cc?
+Read a crosscut from a 3d surface file
 }

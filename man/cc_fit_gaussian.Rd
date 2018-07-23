@@ -4,12 +4,12 @@
 \alias{cc_fit_gaussian}
 \title{Use a gaussian filter on bullet data frame}
 \usage{
-cc_fit_gaussian(ccdata, span = 1875)
+cc_fit_gaussian(ccdata, span = 600)
 }
 \arguments{
 \item{ccdata}{The crosscut as returned from x3p_to_df}
 
-\item{span}{The size, in microns, of the smoothing window. Defaults to 1875, which is 75% of 2500 microns; approximately the same size as a 9mm land.}
+\item{span}{The size, in microns, of the smoothing window. Defaults to 600, which is 24% of 2500 microns; approximately the same size as a 9mm land.}
 }
 \value{
 a list of a data frame of the original bullet measurements extended by gaussian filtration, residuals, and two plots: a plot of the fit, and a plot of the bullet's land signature.

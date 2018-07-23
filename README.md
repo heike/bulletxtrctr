@@ -228,7 +228,7 @@ comparisons <- comparisons %>% mutate(
    #   group_by(y) %>%
       mutate(avgl30 = mean(l30, na.rm = TRUE)) %>%
       ungroup() %>%
-      mutate(smoothavgl30 = bulletr:::smoothloess(x = x, y = avgl30, span = 0.3),
+      mutate(smoothavgl30 = smoothloess(y = avgl30, span = 0.3),
              l50 = l30 - smoothavgl30)
 
     final_doublesmoothed <- doublesmoothed %>%

@@ -6,6 +6,14 @@ Author: Heike Hofmann, Susan Vanderplas, Ganesh Krishnan
 Maintainer: Heike Hofmann <hofmann@iastate.edu>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
+Imports:
+    xml2,
+    zoo,
+    dplyr,
+    x3ptools,
+    ggplot2
+Depends:
+    R (>= 3.4)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
