@@ -40,10 +40,11 @@ cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15,
     )
   }
   if (method == "middle") {
-    browser()
-    names(list(...))
+    middle <- 75
+    if ("middle" %in% names(list(...))) {
+      middle <- list(...)$middle
+    }
 
-    if (is.null(middle)) middle <- 75
     grooves <- bulletr:::get_grooves_middle(
       bullet = bullet,
       middle = middle
