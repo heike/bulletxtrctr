@@ -77,7 +77,7 @@ bullets <- bullets %>% mutate(
 
 ```{r}
   bullets <- bullets %>% mutate(
-    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle")
+    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)
   )
 
 bullets$grooves[[1]]

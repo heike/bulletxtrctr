@@ -63,7 +63,7 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), mincc
 
   while((dim(first_cc)[1] < bullet$header.info$sizeX*percent_missing/100) & (y < bullet$header.info$sizeY)) {
     y <- y + distance
-    first_cc <- land_cc(x, land = dbr111)
+    first_cc <- land_cc(y, land = dbr111)
   }
 
   while(!done) {
