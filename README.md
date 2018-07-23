@@ -92,7 +92,7 @@ bullets <- bullets %>% mutate(
 
 ```r
   bullets <- bullets %>% mutate(
-    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle", middle=50)
+    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)
   )
 
 bullets$grooves[[1]]
@@ -100,8 +100,8 @@ bullets$grooves[[1]]
 
 ```
 ## $groove
-##       25%       75% 
-##  635.9375 1829.6875 
+##       10%       90% 
+##  277.8125 2189.3750 
 ## 
 ## $plot
 ```
