@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
-date: "July 23, 2018"
+date: "July 31, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--23-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--31-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -248,8 +248,8 @@ comparisons <- comparisons %>% mutate(
       matches = sum(res$lines$match) * (1000 / g1_inc_x) / length(ys),
       mismatches = sum(!res$lines$match) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
       cms = res$maxCMS * (1000 / g1_inc_x) / length(ys),
-      cms2 = bulletr::maxCMS(subset(res$lines, type==1 | is.na(type))$match) * (1000 / g1_inc_x) / length(ys),
-      non_cms = bulletr::maxCMS(!res$lines$match) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
+      cms2 = get_longest_run(subset(res$lines, type==1 | is.na(type))$match) * (1000 / g1_inc_x) / length(ys),
+      non_cms = get_longest_run(!res$lines$match) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
       left_cms = max(knm[1] - km[1], 0) * (1000 / g1_inc_x) / length(ys),
       right_cms = max(km[length(km)] - knm[length(knm)],0) * (1000 / g1_inc_x) / length(ys),
       left_noncms = max(km[1] - knm[1], 0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),

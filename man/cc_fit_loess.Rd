@@ -7,7 +7,7 @@
 cc_fit_loess(ccdata, span = 0.75)
 }
 \arguments{
-\item{ccdata}{The crosscut as returned from x3p_to_df}
+\item{ccdata}{The crosscut as returned from x3p_to_df, grooves need to be removed ahead of time}
 
 \item{span}{The span to use for the loess regression}
 }
@@ -18,4 +18,5 @@ a list of a data frame of the original bullet measurements extended by loess fit
 A loess regression is fit to the surface measurements and residuals are calculated.
 The most extreme 0.25% of residuals are filtered from further consideration.
 The result is called the raw signature of the bullet land.
+Adapted from `fit_loess` in `bulletr`
 }

@@ -12,17 +12,19 @@ land_cc <- function(y, land) {
   ## XXX    br111.groove <- bulletr::get_grooves(br111, groove_cutoff = 400, smoothfactor = 15, adjust = 10)
   br111.groove <- quantile(br111$x, probs = c(0.15, 0.85))
   #    br111.groove$plot
-  #    browser()
+#      browser()
 
-  br111 <- switch_xy(br111)
-  groove <- list(groove = br111.groove, plot = NULL)
-  dframe <- bulletr::fit_loess(br111, groove)$resid$data
-  dframe <- switch_xy(dframe)
-  ### XXX need to get fit_loess out of this
+ groove <- br111.groove
+  br111_filter <- subset(br111, !is.na(value) & x > groove[1] & x < groove[2])
+  dframe <- cc_fit_loess(br111_filter, span = 0.75)
+  if (is.null(dframe$raw_sig)) browser()
+   dframe$resid <- dframe$raw_sig  # where are we still using resid?
 
-  #    path <- gsub(".*//", "", as.character(path))
-  #    dframe$bullet <- paste(gsub(".x3p", "", path), x)
-  dframe
+#   br111 <- switch_xy(br111)
+#   groove <- list(groove = br111.groove, plot = NULL)
+#   dframe <- bulletr::fit_loess(br111, groove)$resid$data
+#   dframe <- switch_xy(dframe)
+   dframe
 }
 
 #' Identify a reliable cross section
@@ -76,8 +78,8 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), mincc
     second_cc$bullet <- "second-bullet"
 
     # smooth raw signatures, then align and compare:
-    first_cc$l30 <- raw_sig_smooth(first_cc$resid, span = span)
-    second_cc$l30 <- raw_sig_smooth(second_cc$resid, span = span)
+    first_cc$l30 <- raw_sig_smooth(first_cc$raw_sig, span = span)
+    second_cc$l30 <- raw_sig_smooth(second_cc$raw_sig, span = span)
     ccf <- sig_align(first_cc$l30, second_cc$l30)$ccf
 
     if (ccf > minccf) {

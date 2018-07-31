@@ -74,7 +74,7 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
 #' the following variables: xmin, xmax, group, type, bullet, heights
 #' @return data frame of the same form as lines1 and lines2, but consisting of an additional variable of whether the striation marks are matches
 #' @importFrom dplyr group_by %>% summarise
-#' @importFrom reshape2 melt
+#' @importFrom tidyr gather
 #' @importFrom stats sd
 striation_identify_matches <- function(lines1, lines2) {
   group <- NULL
@@ -85,8 +85,10 @@ striation_identify_matches <- function(lines1, lines2) {
 
   lines <- rbind(lines1, lines2)
   lines <- lines[order(lines$xmin),]
-
-  ml <- melt(lines, measure.vars=c("xmin", "xmax"))
+  ml <- tidyr::gather(lines, variable, value, c("xmin", "xmax"),
+                      factor_key = TRUE)
+  ml2 <- reshape2::melt(lines, measure.vars=c("xmin", "xmax"))
+  if (!identical(ml, ml2)) browser()
   ml <- ml[order(ml$value),]
   ml$overlap <- c(1,-1)[as.numeric(ml$variable)]
   ml$gap <- cumsum(ml$overlap)

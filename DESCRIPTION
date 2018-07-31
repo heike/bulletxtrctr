@@ -10,6 +10,7 @@ Imports:
     xml2,
     zoo,
     dplyr,
+    tidyr,
     x3ptools,
     ggplot2
 Depends:
