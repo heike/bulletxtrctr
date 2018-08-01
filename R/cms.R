@@ -17,7 +17,7 @@ sig_cms_max <- function(sig1, sig2, span = 35) {
 #  browser()
 
   sigX <- bAlign$bullet
-  sigX$sig <- sigX$val
+  sigX$sig <- sigX$val ### Not sure this line does anything
 
 
 #    browser()
