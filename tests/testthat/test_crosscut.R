@@ -47,7 +47,7 @@ cc2 <- bulletxtrctr:::land_cc(50, b2_l1)
 
 test_that("land_cc works as expected", {
   expect_s3_class(cc2, "data.frame")
-  expect_equal(names(cc2), c("x", "y", "value", "fitted", "resid", "se", "abs_resid", "chop"))
+  expect_equal(names(cc2), c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop",  "resid"))
 })
 
 test_that("land_cc is numerically correct", {
