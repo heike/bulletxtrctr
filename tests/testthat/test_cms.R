@@ -114,7 +114,7 @@ b2test <- read_bullet("../../data/Bullet2", "x3p") %>%
         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
   )
 
-maxcmstest <- sig_cms_max(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
+maxcmstest <- sig_cms_max(b1test$sigs[[3]]$sig, b2test$sigs[[5]]$sig)
 
 
 test_that("sig_cms_max returns correctly structured data", {

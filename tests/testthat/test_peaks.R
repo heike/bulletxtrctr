@@ -135,7 +135,7 @@ test_that("peaks works as expected", {
   expect_equal(names(peakstest$lines), c("xmin", "xmax", "type", "extrema", "heights"))
   expect_equal(lapply(peakstest$lines, mode) %>% as.character(), rep("numeric", 5))
   expect_s3_class(peakstest$plot, "ggplot")
-  expect_equal(names(peakstest$dframe, c("x", "smoothed")))
+  expect_equal(names(peakstest$dframe), c("x", "smoothed"))
   expect_equal(lapply(peakstest$dframe, mode) %>% as.character(), c("numeric", "numeric"))
 })
 
