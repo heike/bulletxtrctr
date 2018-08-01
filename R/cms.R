@@ -81,6 +81,11 @@ get_longest_run <- function(x) {
 get_runs <- function(x) {
   # number of runs of different lengths
 
+  if (!is.logical(x)) {
+    warning("Converting x to a logical vector")
+    x <- as.logical(x)
+  }
+
   y <- diff(x)
   # y is -1 if change from 1 to 0,
   #       0 if unchanged
