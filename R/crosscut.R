@@ -4,6 +4,8 @@
 #' @param land x3p file with land data
 #' @return cross cut data frame
 land_cc <- function(y, land) {
+  value <- x <- NULL
+
   # get cross cut, and smooth it
   ys <- unique(land$y)
   picky <- ys[which.min(abs(y - ys))]

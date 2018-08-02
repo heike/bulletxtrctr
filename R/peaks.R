@@ -82,6 +82,8 @@ striation_identify_matches <- function(lines1, lines2) {
   bullet <- NULL
   heights <- NULL
   n <- NULL
+  variable <- NULL
+  value <- NULL
 
   lines <- rbind(lines1, lines2)
   lines <- lines[order(lines$xmin),]

@@ -1,6 +1,6 @@
 ---
 title: "bulletxtrctr"
-author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
+author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: 
   html_document:
@@ -77,7 +77,10 @@ bullets <- bullets %>% mutate(
 
 ```{r}
   bullets <- bullets %>% mutate(
-    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)
+    grooves = ccdata %>% 
+      purrr::map(.f = cc_locate_grooves, method = "rollapply")
+ #         purrr::map(.f = cc_locate_grooves, method = "quadratic")
+  #    purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)
   )
 
 bullets$grooves[[1]]
@@ -91,7 +94,9 @@ bullets <- bullets %>% mutate(
   sigs = purrr::map2(
     .x = ccdata, .y = grooves, 
     .f = function(x, y) {
-      cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
+      cc_get_signature(
+        ccdata=x, grooves = y, span1 = 0.75, span2=0.03)
+      })
 )
 
 ```
@@ -115,7 +120,7 @@ signatures %>%
   lands <- unique(bullets$source)
   comparisons <- data.frame(
     expand.grid(b1=lands, b2=lands), stringsAsFactors = FALSE)
-  comparisons <- comparisons %>% filter(b1 != b2)
+#  comparisons <- comparisons %>% filter(b1 != b2)
   
   comparisons <- comparisons %>% mutate(
     results = purrr::map2(.x = b1, .y = b2, .f = function(xx, yy) {
@@ -132,7 +137,7 @@ signatures %>%
 ```{r}
 comparisons <- comparisons %>% mutate(
   ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
-  lag = results %>% purrr::map_dbl(.f = function(x) x$lag),
+  lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
 #  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
 )
 comparisons <- comparisons %>% mutate(

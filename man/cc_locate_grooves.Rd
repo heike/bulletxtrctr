@@ -26,8 +26,6 @@ cc_locate_grooves(bullet, method = "rollapply", smoothfactor = 15,
 \item{mean_window}{The window around the means to use}
 
 \item{...}{parameters passed on to specific groove location methods}
-
-\item{second_smooth}{Whether or not to smooth a second time}
 }
 \description{
 Find the grooves of a bullet land

@@ -64,6 +64,7 @@ sig_align <- function (sig1, sig2)  {
 #' @param y vector
 #' @param min.overlap integer value: what is the minimal number of values between x and y that should be considered?
 #' @return list with ccf values and lags
+#' @importFrom stats na.omit
 #' @export
 #' @examples
 #' library(dplyr)

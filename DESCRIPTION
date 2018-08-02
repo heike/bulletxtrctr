@@ -2,7 +2,12 @@ Package: bulletxtrctr
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Heike Hofmann, Susan Vanderplas, Ganesh Krishnan
+Author: Heike Hofmann, Susan Vanderplas, Ganesh Krishnan, Eric Hare
+Author@R: c(
+    person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre")),
+    person("Susan", "Vanderplas", email = "srvander@iastate.edu", role = "aut"),
+    person("Ganesh", "Krishnan", email = "", role = "ctb"),
+    person("Eric", "Hare", email = "", role = "ctb"))
 Maintainer: Heike Hofmann <hofmann@iastate.edu>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.

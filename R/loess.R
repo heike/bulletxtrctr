@@ -7,6 +7,7 @@
 #' @param ccdata The crosscut as returned from x3p_to_df, grooves need to be removed ahead of time
 #' @param span The span to use for the loess regression
 #' @return a list of a data frame of the original bullet measurements extended by loess fit, residuals, and standard errors and two plots: a plot of the fit, and a plot of the bullet's land signature.
+#' @importFrom stats fitted predict quantile loess resid
 #' @export
 cc_fit_loess <- function(ccdata, span = 0.75) {
   value <- NULL
@@ -32,11 +33,12 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
 #' Use a gaussian filter on bullet data frame
 #'
 #' A gaussian filter is fit to the surface measurements and residuals are calculated.
-#' The most extreme 0.25% of residuals are filtered from further consideration.
+#' The most extreme 0.25\% of residuals are filtered from further consideration.
 #' The result is called the raw signature of the bullet land.
 #' @param ccdata The crosscut as returned from x3p_to_df
-#' @param span The size, in microns, of the smoothing window. Defaults to 600, which is 24% of 2500 microns; approximately the same size as a 9mm land.
+#' @param span The size, in microns, of the smoothing window. Defaults to 600, which is 24\% of 2500 microns; approximately the same size as a 9mm land.
 #' @return a list of a data frame of the original bullet measurements extended by gaussian filtration, residuals, and two plots: a plot of the fit, and a plot of the bullet's land signature.
+#' @importFrom stats median
 #' @export
 cc_fit_gaussian <- function(ccdata, span = 600) {
   value <- NULL
