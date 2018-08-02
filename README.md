@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
-author: "Heike Hofmann, Susan Vanderplas, Ganesh Krishnan"
-date: "July 31, 2018"
+author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
+date: "August 02, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--07--31-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--02-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -92,7 +92,11 @@ bullets <- bullets %>% mutate(
 
 ```r
   bullets <- bullets %>% mutate(
-    grooves = ccdata %>% purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)
+    grooves = ccdata %>% 
+      purrr::map(.f = cc_locate_grooves, method = "rollapply", 
+                 adjust = 30)
+ #         purrr::map(.f = cc_locate_grooves, method = "quadratic")
+  #    purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)
   )
 
 bullets$grooves[[1]]
@@ -100,8 +104,7 @@ bullets$grooves[[1]]
 
 ```
 ## $groove
-##       10%       90% 
-##  277.8125 2189.3750 
+## [1]  246.875 2159.375
 ## 
 ## $plot
 ```
@@ -116,7 +119,9 @@ bullets <- bullets %>% mutate(
   sigs = purrr::map2(
     .x = ccdata, .y = grooves, 
     .f = function(x, y) {
-      cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
+      cc_get_signature(
+        ccdata=x, grooves = y, span1 = 0.75, span2=0.03)
+      })
 )
 ```
 
@@ -142,7 +147,7 @@ signatures %>%
   lands <- unique(bullets$source)
   comparisons <- data.frame(
     expand.grid(b1=lands, b2=lands), stringsAsFactors = FALSE)
-  comparisons <- comparisons %>% filter(b1 != b2)
+#  comparisons <- comparisons %>% filter(b1 != b2)
   
   comparisons <- comparisons %>% mutate(
     results = purrr::map2(.x = b1, .y = b2, .f = function(xx, yy) {
@@ -160,7 +165,7 @@ signatures %>%
 ```r
 comparisons <- comparisons %>% mutate(
   ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
-  lag = results %>% purrr::map_dbl(.f = function(x) x$lag),
+  lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
 #  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
 )
 comparisons <- comparisons %>% mutate(
