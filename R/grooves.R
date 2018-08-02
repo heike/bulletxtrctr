@@ -14,24 +14,24 @@ cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15,
                               adjust = 10, groove_cutoff = 400,
                               mean_left = NULL, mean_right = NULL, mean_window = 100, ...) {
   x <- y <- value <- NULL
-  bullet <- switch_xy(bullet)
+#  bullet <- switch_xy(bullet)
 
   if (method == "quadratic") {
     # grooves <- get_grooves_quadratic(bullet = bullet, adjust=adjust)
-    grooves <- get_grooves_quadratic(x = bullet$y, value = bullet$value, adjust=adjust)
+    grooves <- get_grooves_quadratic(x = bullet$x, value = bullet$value, adjust=adjust)
   }
   if (method == "rollapply") {
     # make sure there is only one x
-    if (length(unique(bullet$x)) > 1) {
+    if (length(unique(bullet$y)) > 1) {
       message(sprintf("summarizing %d profiles by averaging across values\n", length(unique(bullet$x))))
-      bullet <- bullet %>% group_by(y) %>% summarize(
-        x = mean(x, na.rm = TRUE),
+      bullet <- bullet %>% group_by(x) %>% summarize(
+        y = mean(y, na.rm = TRUE),
         value = mean(value, na.rm=TRUE)
       )
     }
     grooves <- get_grooves_rollapply(
 #      bullet = bullet,
-      x = bullet$y,
+      x = bullet$x,
       value = bullet$value,
       smoothfactor = smoothfactor,
       adjust = adjust,
@@ -47,7 +47,7 @@ cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15,
     if ("middle" %in% names(list(...))) {
       middle <- list(...)$middle
     }
-    grooves <- get_grooves_middle(x = bullet$y, value = bullet$value, middle=middle)
+    grooves <- get_grooves_middle(x = bullet$x, value = bullet$value, middle=middle)
     # grooves <- get_grooves_middle(
     #   bullet = bullet,
     #   middle = middle
