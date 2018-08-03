@@ -72,7 +72,7 @@ sig_align <- function (sig1, sig2)  {
 #' get_ccf(x, lead(x, 5))
 #' get_ccf(x, lag(x, 5), min.overlap=3)
 #' x <- runif(100)
-#' get_max_ccf(x[45:50], x, min.overlap=6)
+#' get_ccf(x[45:50], x, min.overlap=6)
 get_ccf <-  function(x, y, min.overlap = round(0.1*max(length(x),length(y)))) {
   x <- as.vector(unlist(x))
   y <- as.vector(unlist(y))

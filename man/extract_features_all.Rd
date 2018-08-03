@@ -7,7 +7,8 @@
 extract_features_all(res)
 }
 \arguments{
-\item{results}{list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`}
+\item{res}{list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
+XXX this needs some fixing}
 }
 \description{
 Extract features from aligned signatures

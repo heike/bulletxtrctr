@@ -16,7 +16,8 @@
 #' data(br411)
 #' cc <- x3p_crosscut_optimize(br411)
 #' ccdata <- x3p_crosscut(br411, cc)
-#' signature <- cc_get_signature(ccdata)
+#' grooves <- cc_locate_grooves(ccdata)
+#' signature <- cc_get_signature(ccdata, grooves)
 cc_get_signature <- function(ccdata, grooves, span1 = 0.75, span2 = 0.03) {
   x <- y <- value <- raw_sig <- se <- NULL
 

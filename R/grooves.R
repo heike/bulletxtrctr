@@ -91,6 +91,7 @@ get_grooves_quadratic <- function(x, value, adjust) {
   bullet$pred <- predict(lm0, newdata=bullet)
 
   bullet$absresid <- with(bullet, abs(value-pred))
+  absresid90 <- NULL
   bullet$absresid90 <- with(
     bullet, absresid>4*median(bullet$absresid, na.rm=TRUE))
 

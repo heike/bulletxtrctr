@@ -58,7 +58,7 @@ sig_cms_max <- function(aligned, span = 35) {
 #' @export
 #' @examples
 #' x <- rbinom(100, size = 1, prob = 1/3)
-#' get_run(x == 1) # expected value for longest match is 3
+#' get_runs(x == 1) # expected value for longest match is 3
 #' get_longest_run(x==1)
 get_longest_run <- function(x) {
   runTable <- get_runs(x)

@@ -29,5 +29,6 @@ is used (see \code{?loess} for details) to remove the big structure.
 data(br411)
 cc <- x3p_crosscut_optimize(br411)
 ccdata <- x3p_crosscut(br411, cc)
-signature <- cc_get_signature(ccdata)
+grooves <- cc_locate_grooves(ccdata)
+signature <- cc_get_signature(ccdata, grooves)
 }

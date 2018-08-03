@@ -1,9 +1,12 @@
 #' Extract features from aligned signatures
 #'
-#' @param results list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
+#' @param res list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
+#' XXX this needs some fixing
 #' @export
 extract_features_all <- function(res) {
   #browser()
+  avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
+
   lofX <- res$bullets
   #    lofX$l30 <- lofX$sig
   #    b12 <- unique(lofX$bullet)

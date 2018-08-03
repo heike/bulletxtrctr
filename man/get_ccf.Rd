@@ -25,5 +25,5 @@ x <- runif(20)
 get_ccf(x, lead(x, 5))
 get_ccf(x, lag(x, 5), min.overlap=3)
 x <- runif(100)
-get_max_ccf(x[45:50], x, min.overlap=6)
+get_ccf(x[45:50], x, min.overlap=6)
 }

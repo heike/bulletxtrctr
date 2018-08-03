@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^tests$
 ^data/Bullet.$
+^README.*$
+^docs$
+^\.travis\.yml$
