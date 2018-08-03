@@ -89,8 +89,8 @@ striation_identify_matches <- function(lines1, lines2) {
   lines <- lines[order(lines$xmin),]
   ml <- tidyr::gather(lines, variable, value, c("xmin", "xmax"),
                       factor_key = TRUE)
-  ml2 <- reshape2::melt(lines, measure.vars=c("xmin", "xmax"))
-  if (!identical(ml, ml2)) browser()
+#  ml2 <- reshape2::melt(lines, measure.vars=c("xmin", "xmax"))
+#  if (!identical(ml, ml2)) browser()
   ml <- ml[order(ml$value),]
   ml$overlap <- c(1,-1)[as.numeric(ml$variable)]
   ml$gap <- cumsum(ml$overlap)

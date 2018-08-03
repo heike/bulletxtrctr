@@ -3,22 +3,19 @@
 #' adapted from `bulletGetMaxCMS`
 #' aligns two signatures, identifies peaks and valleys, matches striae, and counts longest run.
 #' Should probably be split into four or five sub functions.
-#' @param sig1 vector of smoothed first signature
-#' @param sig2 vector of smoothed second signature
+#' @param aligned data frame of location and aligned signatures
 #' @param span positive number  for the smoothfactor to use for assessing peaks.
 #' @return list of matching parameters, data set of the identified striae, and the aligned data sets.
 #' @export
-sig_cms_max <- function(sig1, sig2, span = 35) {
+sig_cms_max <- function(aligned, span = 35) {
   bullet <- NULL
 
 #  t1 <- system.time({
-  bAlign = sig_align(sig1, sig2)
+  bAlign = aligned
 #  })
 #  browser()
 
-  sigX <- bAlign$bullet
-  sigX$sig <- sigX$val ### Not sure this line does anything
-
+  sigX <- bAlign$bullets
 
 #    browser()
   peaks1 <- sig_get_peaks(sigX$sig1, smoothfactor = span)

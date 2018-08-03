@@ -1,6 +1,6 @@
 #' Find the grooves of a bullet land
 #'
-#' @param bullet data frame with topological data in x-y-z format
+#' @param ccdata data frame of the crosscut. Data frame needs location x and measured values as `value`. If multiple crosscuts are to be considered, include a variable y and use as a key.
 #' @param method method to use for identifying grooves. Defaults to "rollapply"
 #' @param smoothfactor The smoothing window to use - XXX the smoothing window seems to depend on the resolution at which the data has been collected.
 #' @param adjust positive number to adjust the grooves - XXX should be expressed in microns rather than an index
@@ -10,10 +10,11 @@
 #' @param mean_window The window around the means to use
 #' @param ... parameters passed on to specific groove location methods
 #' @export
-cc_locate_grooves <- function(bullet, method = "rollapply", smoothfactor = 15,
+cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
                               adjust = 10, groove_cutoff = 400,
                               mean_left = NULL, mean_right = NULL, mean_window = 100, ...) {
   x <- y <- value <- NULL
+  bullet <- ccdata
 #  bullet <- switch_xy(bullet)
 
   if (method == "quadratic") {
@@ -81,11 +82,12 @@ get_grooves_middle <- function(x, value, middle = 75) {
 #' @param value numeric values of surface measurements in microns
 #' @param adjust positive number to adjust the grooves
 #' @return list of groove vector and plot of crosscut with shoulder locations
+#' @importFrom MASS rlm
 get_grooves_quadratic <- function(x, value, adjust) {
 
   bullet <- data.frame(x = x, value = value)
 
-  lm0 <- MASS::rlm(value~poly(x,2), data=bullet, maxit=100)
+  lm0 <- rlm(value~poly(x,2), data=bullet, maxit=100)
   bullet$pred <- predict(lm0, newdata=bullet)
 
   bullet$absresid <- with(bullet, abs(value-pred))
@@ -117,6 +119,7 @@ get_grooves_quadratic <- function(x, value, adjust) {
 #' @import ggplot2
 #' @importFrom zoo rollapply
 #' @importFrom zoo na.fill
+#' @importFrom utils head tail
 get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10, groove_cutoff = 400, mean_left = NULL, mean_right = NULL, mean_window = 100, second_smooth = T, which_fun = mean) {
   bullet <- data.frame(y=x, value = value)
 

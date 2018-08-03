@@ -4,7 +4,7 @@
 \alias{cc_get_signature}
 \title{Extract signature from crosscut}
 \usage{
-cc_get_signature(ccdata, grooves = NULL, span1 = 0.75, span2 = 0.03)
+cc_get_signature(ccdata, grooves, span1 = 0.75, span2 = 0.03)
 }
 \arguments{
 \item{ccdata}{crosscut as returned from x3p_crosscut}
@@ -27,5 +27,7 @@ is used (see \code{?loess} for details) to remove the big structure.
 }
 \examples{
 data(br411)
-br411_processed <- processBullets(br411, name = "br411")
+cc <- x3p_crosscut_optimize(br411)
+ccdata <- x3p_crosscut(br411, cc)
+signature <- cc_get_signature(ccdata)
 }

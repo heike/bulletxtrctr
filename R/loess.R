@@ -39,6 +39,7 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
 #' @param span The size, in microns, of the smoothing window. Defaults to 600, which is 24\% of 2500 microns; approximately the same size as a 9mm land.
 #' @return a list of a data frame of the original bullet measurements extended by gaussian filtration, residuals, and two plots: a plot of the fit, and a plot of the bullet's land signature.
 #' @importFrom stats median
+#' @importFrom smoother smth
 #' @export
 cc_fit_gaussian <- function(ccdata, span = 600) {
   value <- NULL
@@ -47,9 +48,9 @@ cc_fit_gaussian <- function(ccdata, span = 600) {
   dx <- median(diff(ccdata$x), na.rm = T)
   window <- span/dx
 
-  # HH Mar 22: we should use lowess rather than loess
+  # Alternative to loess fit
 
-  gsmooth <- smoother::smth(x = ccdata$value, method = 'gaussian', window = window, tails = T, na.rm = T)
+  gsmooth <- smth(x = ccdata$value, method = 'gaussian', window = window, tails = T, na.rm = T)
   ccdata$fitted <- gsmooth
   ccdata$raw_sig <- ccdata$value - ccdata$fitted
   ccdata$se <- NA

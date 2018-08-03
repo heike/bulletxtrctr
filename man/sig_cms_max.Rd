@@ -4,12 +4,10 @@
 \alias{sig_cms_max}
 \title{Identify the number of maximum CMS between two signatures}
 \usage{
-sig_cms_max(sig1, sig2, span = 35)
+sig_cms_max(aligned, span = 35)
 }
 \arguments{
-\item{sig1}{vector of smoothed first signature}
-
-\item{sig2}{vector of smoothed second signature}
+\item{aligned}{data frame of location and aligned signatures}
 
 \item{span}{positive number  for the smoothfactor to use for assessing peaks.}
 }

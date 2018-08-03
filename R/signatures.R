@@ -14,8 +14,10 @@
 #' @export
 #' @examples
 #' data(br411)
-#' br411_processed <- processBullets(br411, name = "br411")
-cc_get_signature <- function(ccdata, grooves = NULL, span1 = 0.75, span2 = 0.03) {
+#' cc <- x3p_crosscut_optimize(br411)
+#' ccdata <- x3p_crosscut(br411, cc)
+#' signature <- cc_get_signature(ccdata)
+cc_get_signature <- function(ccdata, grooves, span1 = 0.75, span2 = 0.03) {
   x <- y <- value <- raw_sig <- se <- NULL
 
     br111 <- na.trim(ccdata) %>%
