@@ -47,14 +47,19 @@ b2 <- read_bullet("../../data/Bullet1", "x3p") %>%
   filter(row_number() == 1) %>%
   mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
   mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
-  mutate(grooves = purrr::map(ccdata, cc_locate_grooves)) %>%
-  mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle"))
+  mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
+  mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle", return_plot = T))
 
 test_that("grooves works as expected", {
   expect_silent(cc_locate_grooves(b2$ccdata[[1]]))
   expect_length(b2$grooves[[1]], 2)
   expect_equal(names(b2$grooves[[1]]), c("groove", "plot"))
   expect_s3_class(b2$grooves[[1]]$plot, "ggplot")
+
+  tmp <- cc_locate_grooves(b2$ccdata[[1]])
+  expect_length(tmp, 1)
+  expect_length(tmp$groove, 2)
+  expect_is(tmp$groove, "numeric")
 
   expect_silent(cc_locate_grooves(b2$ccdata[[1]], "middle"))
   expect_length(b2$grooves_mid[[1]], 2)
@@ -66,8 +71,9 @@ test_that("grooves works as expected", {
 
 test_that("grooves is numerically correct", {
   # Not identical because of plots
-  expect_equal(b1$grooves, b2$grooves)
-  expect_equal(b1$grooves_mid, b2$grooves_mid)
+  # expect_equal(b1$grooves, b2$grooves)
+  # expect_equal(b1$grooves_mid, b2$grooves_mid)
+
   # Check numerically identical for groove locations, at least...
   expect_identical(b1$grooves[[1]]$groove, b2$grooves[[1]]$groove)
   expect_identical(b1$grooves_mid[[1]]$groove, b2$grooves_mid[[1]]$groove)
