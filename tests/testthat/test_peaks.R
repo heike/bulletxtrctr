@@ -57,11 +57,13 @@ library(tidyverse)
 #         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 #   )
 #
-# bAlign <- sig_align(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
+# bAlign <- sig_align(b1$sigs[[2]]$sig, b2$sigs[[4]]$sig)
 #
 # peaks <- sig_get_peaks(bAlign$bullet$sig1)
+# peaks2 <- sig_get_peaks(bAlign$bullet$sig2)
+# matches <- bulletxtrctr:::striation_identify_matches(peaks$lines, peaks2$lines)
 #
-# save(peaks, file = "../../tests/testdata/correct_data_test_peaks.Rdata")
+# save(peaks, matches, file = "../../tests/testdata/correct_data_test_peaks.Rdata")
 
 load("../testdata/correct_data_test_peaks.Rdata")
 b1test <- read_bullet("../../data/Bullet1", "x3p") %>%
@@ -116,11 +118,11 @@ b2test <- read_bullet("../../data/Bullet2", "x3p") %>%
         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
   )
 
-# maxcmstest <- sig_cms_max(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
-
-bAligntest <- sig_align(b1test$sigs[[3]]$sig, b2test$sigs[[5]]$sig)
+bAligntest <- sig_align(b1test$sigs[[2]]$sig, b2test$sigs[[4]]$sig)
 
 peakstest <- sig_get_peaks(bAligntest$bullet$sig1)
+peakstest2 <- sig_get_peaks(bAligntest$bullet$sig2)
+
 test_that("peaks works as expected", {
   expect_equal(names(peakstest), c("peaks", "valleys", "extrema", "peaks.heights",
                                    "valleys.heights", "lines", "plot", "dframe"))
@@ -144,3 +146,19 @@ test_that("peaks is numerically correct", {
 })
 
 ### Need to do striation_identify_matches
+
+matchestest <- bulletxtrctr:::striation_identify_matches(peakstest$lines, peakstest2$lines)
+
+test_that("striation_identify_matches works as expected",
+          {
+            expect_equal(names(matchestest), c("xmin", "xmax", "match", "type",
+                                               "meany", "heights", "sdheights"))
+            expect_is(matchestest$xmin, "numeric")
+            expect_is(matchestest$xmax, "numeric")
+            expect_is(matchestest$match, "logical")
+            expect_is(matchestest$meany, "numeric")
+            expect_is(matchestest$heights, "numeric")
+            expect_is(matchestest$sdheights, "numeric")
+          })
+
+test_that("striation_identify_matches is numerically consistent", expect_equal(matches, matchestest))
