@@ -65,7 +65,7 @@ library(tidyverse)
 load("../testdata/correct_data_test_cms.Rdata")
 
 # featuresorig <- extract_features_all(maxcms)
-save(featuresorig, file = "../../tests/testdata/correct_data_extract_features.Rdata")
+# save(featuresorig, file = "../../tests/testdata/correct_data_extract_features.Rdata")
 
 featurestest <- extract_features_all(maxcms)
 load("../testdata/correct_data_extract_features.Rdata")
