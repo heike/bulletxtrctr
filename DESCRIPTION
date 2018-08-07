@@ -6,8 +6,9 @@ Author: Heike Hofmann, Susan Vanderplas, Ganesh Krishnan, Eric Hare
 Authors@R: c(
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre")),
     person("Susan", "Vanderplas", email = "srvander@iastate.edu", role = "aut"),
-    person("Ganesh", "Krishnan", email = "", role = "ctb"),
-    person("Eric", "Hare", email = "", role = "ctb"))
+    person("Ganesh", "Krishnan", role = c("aut"), email = "ganeshk@iastate.edu"),
+    person("Eric", "Hare", email = "eric@oaiti.org", role = "aut")
+    )
 Maintainer: Heike Hofmann <hofmann@iastate.edu>
 Date: 2018-08-02
 Description: Analyze bullet lands in x3p format. We provide a

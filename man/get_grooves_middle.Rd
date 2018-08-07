@@ -4,7 +4,7 @@
 \alias{get_grooves_middle}
 \title{Use the center of a crosscut}
 \usage{
-get_grooves_middle(x, value, middle = 75)
+get_grooves_middle(x, value, middle = 75, return_plot = F)
 }
 \arguments{
 \item{x}{numeric vector of locations in microns}
@@ -12,6 +12,8 @@ get_grooves_middle(x, value, middle = 75)
 \item{value}{numeric vector of surface measurements in microns}
 
 \item{middle}{middle percent to use for the identification}
+
+\item{return_plot}{return plot?}
 }
 \value{
 list of groove vector and plot of crosscut with

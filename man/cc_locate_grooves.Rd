@@ -6,7 +6,7 @@
 \usage{
 cc_locate_grooves(ccdata, method = "rollapply", smoothfactor = 15,
   adjust = 10, groove_cutoff = 400, mean_left = NULL, mean_right = NULL,
-  mean_window = 100, ...)
+  mean_window = 100, return_plot = F, ...)
 }
 \arguments{
 \item{ccdata}{data frame of the crosscut. Data frame needs location x and measured values as `value`. If multiple crosscuts are to be considered, include a variable y and use as a key.}
@@ -24,6 +24,8 @@ cc_locate_grooves(ccdata, method = "rollapply", smoothfactor = 15,
 \item{mean_right}{If provided, the location of the average right groove}
 
 \item{mean_window}{The window around the means to use}
+
+\item{return_plot}{Return plot of grooves?}
 
 \item{...}{parameters passed on to specific groove location methods}
 }

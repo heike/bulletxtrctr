@@ -4,7 +4,7 @@
 \alias{get_grooves_quadratic}
 \title{Quadratic fit to find groove locations}
 \usage{
-get_grooves_quadratic(x, value, adjust)
+get_grooves_quadratic(x, value, adjust, return_plot = F)
 }
 \arguments{
 \item{x}{numeric vector of locations (in microns)}
@@ -12,6 +12,8 @@ get_grooves_quadratic(x, value, adjust)
 \item{value}{numeric values of surface measurements in microns}
 
 \item{adjust}{positive number to adjust the grooves}
+
+\item{return_plot}{return plot of grooves?}
 }
 \value{
 list of groove vector and plot of crosscut with shoulder locations

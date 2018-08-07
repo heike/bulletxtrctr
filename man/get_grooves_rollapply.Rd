@@ -6,7 +6,8 @@
 \usage{
 get_grooves_rollapply(x, value, smoothfactor = 15, adjust = 10,
   groove_cutoff = 400, mean_left = NULL, mean_right = NULL,
-  mean_window = 100, second_smooth = T, which_fun = mean)
+  mean_window = 100, second_smooth = T, which_fun = mean,
+  return_plot = F)
 }
 \arguments{
 \item{x}{numeric vector of locations (in microns)}
@@ -28,6 +29,8 @@ get_grooves_rollapply(x, value, smoothfactor = 15, adjust = 10,
 \item{second_smooth}{Whether or not to smooth a second time}
 
 \item{which_fun}{Which function to use in the rollapply statement}
+
+\item{return_plot}{return plot of grooves?}
 }
 \description{
 Using rollapply to find grooves in a crosscut
