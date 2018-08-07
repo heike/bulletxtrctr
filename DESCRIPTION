@@ -1,7 +1,7 @@
 Package: bulletxtrctr
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
+Title: Automatic Matching of Bullet Striae
+Version: 0.2.0
 Author: Heike Hofmann, Susan Vanderplas, Ganesh Krishnan, Eric Hare
 Authors@R: c(
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre")),
