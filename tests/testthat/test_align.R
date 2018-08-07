@@ -2,10 +2,10 @@ context("align")
 
 
 library(x3ptools)
-library(bulletxtrctr)
 library(tidyverse)
+library(bulletxtrctr)
 
-# b1 <- read_bullet("../../data/Bullet1", "x3p") %>%
+# b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 # # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -31,7 +31,7 @@ library(tidyverse)
 #         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 #   )
 #
-# b2 <- read_bullet("../../data/Bullet2", "x3p") %>%
+# b2 <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
 #   # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -57,9 +57,9 @@ library(tidyverse)
 #         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 #   )
 #
-# alignment <- bulletxtrctr::sig_align(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
+# alignment <- sig_align(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
 #
-# save(alignment, file = "../../tests/testdata/correct_data_test_align.Rdata")
+# save(alignment, file = here::here("tests/testdata/correct_data_test_align.Rdata"))
 
 test_that("cross-correlation works", {
   tmp <- get_ccf(1:5, 6:2)
@@ -68,8 +68,8 @@ test_that("cross-correlation works", {
   expect_equal(tmp$ccf, c(NA, NA, rep(-1, 7), NA, NA))
 })
 
-load("../testdata/correct_data_test_align.Rdata")
-b1test <- read_bullet("../../data/Bullet1", "x3p") %>%
+load(here::here("tests/testdata/correct_data_test_align.Rdata"))
+b1test <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
   # turn the scans such that (0,0) is bottom left
   mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -95,7 +95,7 @@ b1test <- read_bullet("../../data/Bullet1", "x3p") %>%
         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
   )
 
-b2test <- read_bullet("../../data/Bullet2", "x3p") %>%
+b2test <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
   # turn the scans such that (0,0) is bottom left
   mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -121,9 +121,10 @@ b2test <- read_bullet("../../data/Bullet2", "x3p") %>%
         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
   )
 
-aligntest <- bulletxtrctr::sig_align(b1test$sigs[[3]]$sig, b2test$sigs[[5]]$sig)
+aligntest <- sig_align(b1test$sigs[[3]]$sig, b2test$sigs[[5]]$sig)
 
-test_that("sig_align returns expected structure values", {
+test_that("sig_align is working as expected", {
+  skip_if_not(exists("aligntest"), "Could not find aligntest object - check whether file paths are the issue")
   expect_equal(names(aligntest), c("ccf", "lag", "bullets"))
   expect_is(aligntest$ccf, "numeric")
   expect_is(aligntest$lag, "numeric")
@@ -132,9 +133,5 @@ test_that("sig_align returns expected structure values", {
   expect_is(aligntest$bullets$x, "integer")
   expect_is(aligntest$bullets$sig1, "numeric")
   expect_is(aligntest$bullets$sig2, "numeric")
+  expect_equal(aligntest, alignment)
 })
-
-test_that("sig_align is numerically correct",
-          {
-            expect_equal(aligntest, alignment)
-          })

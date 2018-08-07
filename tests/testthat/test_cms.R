@@ -4,8 +4,9 @@ context("cms")
 library(x3ptools)
 library(bulletxtrctr)
 library(tidyverse)
+# library(here)
 
-# b1 <- read_bullet("../../data/Bullet1", "x3p") %>%
+# b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 # # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -31,7 +32,7 @@ library(tidyverse)
 #         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 #   )
 #
-# b2 <- read_bullet("../../data/Bullet2", "x3p") %>%
+# b2 <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
 #   # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -57,12 +58,13 @@ library(tidyverse)
 #         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 #   )
 #
-# maxcms <- sig_cms_max(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
+# align <- sig_align(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
+# maxcms <- sig_cms_max(align)
 #
-# save(maxcms, file = "../../tests/testdata/correct_data_test_cms.Rdata")
+# save(maxcms, file = here::here("tests/testdata/correct_data_test_cms.Rdata"))
 
-load("../testdata/correct_data_test_cms.Rdata")
-b1test <- read_bullet("../../data/Bullet1", "x3p") %>%
+load(here::here("tests/testdata/correct_data_test_cms.Rdata"))
+b1test <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
   # turn the scans such that (0,0) is bottom left
   mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -88,7 +90,7 @@ b1test <- read_bullet("../../data/Bullet1", "x3p") %>%
         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
   )
 
-b2test <- read_bullet("../../data/Bullet2", "x3p") %>%
+b2test <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
   # turn the scans such that (0,0) is bottom left
   mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -114,10 +116,11 @@ b2test <- read_bullet("../../data/Bullet2", "x3p") %>%
         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
   )
 
-maxcmstest <- sig_cms_max(b1test$sigs[[3]]$sig, b2test$sigs[[5]]$sig)
+aligntest <- sig_align(b1test$sigs[[3]]$sig, b2test$sigs[[5]]$sig)
+maxcmstest <- sig_cms_max(aligntest)
 
 
-test_that("sig_cms_max returns correctly structured data", {
+test_that("sig_cms_max works", {
   expect_equal(names(maxcmstest), c("maxCMS", "ccf", "lag", "lines", "bullets"))
   expect_equal(names(maxcmstest$lines), c("xmin", "xmax", "match", "type", "meany", "heights", "sdheights"))
   expect_equal(names(maxcmstest$bullets), c("x", "sig1", "sig2"))
@@ -136,11 +139,6 @@ test_that("sig_cms_max returns correctly structured data", {
   expect_is(maxcmstest$bullets$x, "integer")
   expect_is(maxcmstest$bullets$sig1, "numeric")
   expect_is(maxcmstest$bullets$sig2, "numeric")
-
-})
-
-
-test_that("sig_cms_max returns numerically correct results", {
   expect_equal(maxcmstest, maxcms)
   })
 

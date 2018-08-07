@@ -4,7 +4,7 @@ library(x3ptools)
 library(bulletxtrctr)
 library(tidyverse)
 
-# b1 <- read_bullet("../../data/Bullet1", "x3p") %>%
+# b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 # # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -25,11 +25,11 @@ library(tidyverse)
 #   mutate(grooves = purrr::map(ccdata, cc_locate_grooves)) %>%
 #   mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle"))
 #
-# save(b1, file = "../../tests/testdata/correct_data_test_grooves.Rdata")
+# save(b1, file = here::here("tests/testdata/correct_data_test_grooves.Rdata"))
 
 load("../testdata/correct_data_test_grooves.Rdata")
 
-b2 <- read_bullet("../../data/Bullet1", "x3p") %>%
+b2 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 # turn the scans such that (0,0) is bottom left
   mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%

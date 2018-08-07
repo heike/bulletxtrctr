@@ -10,7 +10,7 @@ tmp <- data_frame(
 # sigsmoothres <- raw_sig_smooth(tmp$y, .5, c(-5, 5))
 # save(sigsmoothres, smoothres, file = "../../tests/testdata/correct_test_smooth.Rdata")
 
-load("../../tests/testdata/correct_test_smooth.Rdata")
+load(here::here("tests/testdata/correct_test_smooth.Rdata"))
 
 smoothrestest <- smoothloess(tmp$y, .5)
 sigsmoothrestest <- raw_sig_smooth(tmp$y, .5, c(-5, 5))

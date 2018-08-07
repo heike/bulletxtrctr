@@ -5,7 +5,7 @@ library(x3ptools)
 library(bulletxtrctr)
 library(tidyverse)
 
-# b1 <- read_bullet("../../data/Bullet1", "x3p") %>%
+# b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 # # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -31,7 +31,7 @@ library(tidyverse)
 #         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
 #   )
 #
-# b2 <- read_bullet("../../data/Bullet2", "x3p") %>%
+# b2 <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
 #   # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -63,10 +63,10 @@ library(tidyverse)
 # peaks2 <- sig_get_peaks(bAlign$bullet$sig2)
 # matches <- bulletxtrctr:::striation_identify_matches(peaks$lines, peaks2$lines)
 #
-# save(peaks, matches, file = "../../tests/testdata/correct_data_test_peaks.Rdata")
+# save(peaks, matches, file = here::here("tests/testdata/correct_data_test_peaks.Rdata"))
 
-load("../testdata/correct_data_test_peaks.Rdata")
-b1test <- read_bullet("../../data/Bullet1", "x3p") %>%
+load(here::here("tests/testdata/correct_data_test_peaks.Rdata"))
+b1test <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
   # turn the scans such that (0,0) is bottom left
   mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -92,7 +92,7 @@ b1test <- read_bullet("../../data/Bullet1", "x3p") %>%
         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
   )
 
-b2test <- read_bullet("../../data/Bullet2", "x3p") %>%
+b2test <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
   # turn the scans such that (0,0) is bottom left
   mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -139,26 +139,19 @@ test_that("peaks works as expected", {
   expect_s3_class(peakstest$plot, "ggplot")
   expect_equal(names(peakstest$dframe), c("x", "smoothed"))
   expect_equal(lapply(peakstest$dframe, mode) %>% as.character(), c("numeric", "numeric"))
-})
-
-test_that("peaks is numerically correct", {
   expect_equal(peaks, peakstest)
 })
 
-### Need to do striation_identify_matches
+matchestest <- striation_identify_matches(peakstest$lines, peakstest2$lines)
 
-matchestest <- bulletxtrctr:::striation_identify_matches(peakstest$lines, peakstest2$lines)
-
-test_that("striation_identify_matches works as expected",
-          {
-            expect_equal(names(matchestest), c("xmin", "xmax", "match", "type",
-                                               "meany", "heights", "sdheights"))
-            expect_is(matchestest$xmin, "numeric")
-            expect_is(matchestest$xmax, "numeric")
-            expect_is(matchestest$match, "logical")
-            expect_is(matchestest$meany, "numeric")
-            expect_is(matchestest$heights, "numeric")
-            expect_is(matchestest$sdheights, "numeric")
-          })
-
-test_that("striation_identify_matches is numerically consistent", expect_equal(matches, matchestest))
+test_that("striation_identify_matches works as expected", {
+  expect_equal(names(matchestest), c("xmin", "xmax", "match", "type",
+                                     "meany", "heights", "sdheights"))
+  expect_is(matchestest$xmin, "numeric")
+  expect_is(matchestest$xmax, "numeric")
+  expect_is(matchestest$match, "logical")
+  expect_is(matchestest$meany, "numeric")
+  expect_is(matchestest$heights, "numeric")
+  expect_is(matchestest$sdheights, "numeric")
+  expect_equal(matches, matchestest)
+})
