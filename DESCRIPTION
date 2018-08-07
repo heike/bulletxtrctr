@@ -6,8 +6,8 @@ Author: Heike Hofmann, Susan Vanderplas, Ganesh Krishnan, Eric Hare
 Authors@R: c(
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre")),
     person("Susan", "Vanderplas", email = "srvander@iastate.edu", role = "aut"),
-    person("Ganesh", "Krishnan", role = c("aut"), email = "ganeshk@iastate.edu"),
-    person("Eric", "Hare", email = "eric@oaiti.org", role = "aut")
+    person("Ganesh", "Krishnan", role = "aut", email = "ganeshk@iastate.edu"),
+    person("Eric", "Hare", email = "eric@oaiti.org", role = "ctb")
     )
 Maintainer: Heike Hofmann <hofmann@iastate.edu>
 Date: 2018-08-02
