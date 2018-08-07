@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 02, 2018"
+date: "August 07, 2018"
 output: 
   html_document:
     keep_md: true
@@ -9,8 +9,8 @@ output:
 
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/isu-csafe/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--02-yellowgreen.svg)](/commits/master)
+[![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--07-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -29,7 +29,10 @@ Analyze bullet striations using nonparametric methods
   library(ggplot2)
 ```
   
-2. Download some files from NRBTDB, if not yet available:
+2. `bulletxtrctr` only works on x3p files. See package `x3ptools` for ways to convert different file formats onto x3p standard files.
+The (NIST Research Ballistics Toolmarks data base (NRBTD))[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.  
+
+Download some files from NRBTD, if not yet available:
 
 
 ```r
