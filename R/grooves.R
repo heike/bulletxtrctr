@@ -1,5 +1,6 @@
 grooves_plot <- function(land, grooves) {
   ### TODO: assertions
+  x <- value <- NULL
 
   land %>% ggplot(aes(x = x, y = value)) + geom_line(size = .5) + theme_bw() +
     geom_vline(xintercept=grooves[1], colour = "blue") +
