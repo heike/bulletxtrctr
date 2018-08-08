@@ -1,7 +1,6 @@
 context("features")
 
 library(x3ptools)
-library(bulletxtrctr)
 library(tidyverse)
 
 load(here::here("tests/testdata/correct_data_test_cms.Rdata"))

@@ -2,7 +2,6 @@ context("peaks")
 
 
 library(x3ptools)
-library(bulletxtrctr)
 library(tidyverse)
 
 # b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%

@@ -2,7 +2,6 @@ context("cms")
 
 
 library(x3ptools)
-library(bulletxtrctr)
 library(tidyverse)
 # library(here)
 

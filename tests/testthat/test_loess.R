@@ -1,6 +1,5 @@
 context("loess")
 
-library(bulletxtrctr)
 library(x3ptools)
 library(tidyverse)
 

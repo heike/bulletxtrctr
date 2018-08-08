@@ -3,7 +3,6 @@ context("align")
 
 library(x3ptools)
 library(tidyverse)
-library(bulletxtrctr)
 
 # b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 # # turn the scans such that (0,0) is bottom left
