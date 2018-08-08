@@ -111,10 +111,10 @@ We are working under the assumption that the scans are aligned such that the bot
 
 
 ```r
-image_x3p(bullets$x3p[[1]], file="temp-before.png")
+image_x3p(bullets$x3p[[1]], file="README_files/temp-before.png")
 ```
 
-![Raw scan - needs to be rotated.](temp-before.png)
+![Raw scan - needs to be rotated.](README_files/temp-before.png)
 
 
 
@@ -130,10 +130,10 @@ bullets <- bullets %>% mutate(
 
 
 ```r
-image_x3p(bullets$x3p[[1]], file="temp-after.png")
+image_x3p(bullets$x3p[[1]], file="README_files//temp-after.png")
 ```
 
-![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](temp-after.png)
+![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](README_files/temp-after.png)
 
 3. Get the ideal cross sections
 
@@ -217,7 +217,29 @@ signatures %>%
       sig_align(land1$sig, land2$sig)
     })
   )
+```
+Some features are based on aligned signatures:
 
+
+```r
+comparisons <- comparisons %>% mutate(
+  ccf0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
+  lag0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
+  D0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet)),
+  length0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_length(x$bullet)),
+  overlap0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$bullet))
+)
+```
+
+Other features also need an evaluation of peaks and valleys to match between signatures:
+
+
+```r
   comparisons <- comparisons %>% mutate(
     results = aligned %>% purrr::map(.f = sig_cms_max, span = 75) 
   )
@@ -225,11 +247,12 @@ signatures %>%
 
 
 ```r
-comparisons <- comparisons %>% mutate(
-  ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
-  lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
-#  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
-)
+## ccf and lag are extracted below
+# comparisons <- comparisons %>% mutate(
+#   ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
+#   lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
+# #  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
+# )
 comparisons <- comparisons %>% mutate(
   barrel1 = gsub(".*Barrel([1-6])_.*","\\1",b1),
   barrel2 = gsub(".*Barrel([1-6])_.*","\\1",b2),
@@ -238,6 +261,17 @@ comparisons <- comparisons %>% mutate(
   land1 = gsub(".*Land([1-6]).x3p","\\1",b1),
   land2 = gsub(".*Land([1-6]).x3p","\\1",b2)
 )
+```
+
+9. Extract Features
+
+
+```r
+comparisons <- comparisons %>% mutate(
+  features = results %>% purrr::map(.f = extract_features_all)
+)
+
+comparisons <- comparisons %>% tidyr::unnest(features)
 
 # quick visualization:
 comparisons %>% 
@@ -250,32 +284,13 @@ comparisons %>%
   ylab("Land 2")
 ```
 
-![](README_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
-
-9. Extract Features
-
-
-```r
-comparisons <- comparisons %>% mutate(
-  ccf0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
-  lag0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
-  D0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet))
-)
-
-comparisons <- comparisons %>% mutate(
-  features = results %>% purrr::map(.f = extract_features_all)
-)
-```
+![](README_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
     
 
 10. Get Predicted Probability of Match
 
 
 ```r
-  comparisons <- comparisons %>% tidyr::unnest(features)
   comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
 
 comparisons %>% 
@@ -288,7 +303,7 @@ comparisons %>%
   ylab("Land 2")
 ```
 
-![](README_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
     
 
 An interactive interface for doing comparisons is available https://oaiti.org/apps/bulletmatcher/
