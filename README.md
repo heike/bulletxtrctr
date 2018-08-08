@@ -11,7 +11,7 @@ output:
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
 [![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--08-yellowgreen.svg)](/commits/master)
-
+[![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
 Analyze bullet striations using nonparametric methods
 
@@ -36,10 +36,10 @@ Download some files from NRBTD, if not yet available:
 
 
 ```r
-if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
-  NRBTDsample_download("data")
+if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
+  NRBTDsample_download("README_files/data")
 }
-  b1 <- read_bullet("data/Bullet1", "x3p")
+  b1 <- read_bullet("README_files/data/Bullet1", "x3p")
 ```
 
 ```
@@ -47,7 +47,7 @@ if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
 ```
 
 ```r
-  b2 <- read_bullet("data/Bullet2", "x3p")
+  b2 <- read_bullet("README_files/data/Bullet2", "x3p")
 ```
 
 ```
@@ -114,6 +114,7 @@ We are working under the assumption that the scans are aligned such that the bot
 image_x3p(bullets$x3p[[1]], file="README_files/temp-before.png")
 ```
 
+The raw scan needs to be flipped such that the heel is along the bottom of the image rather than along the left hand side.
 ![Raw scan - needs to be rotated.](README_files/temp-before.png)
 
 
@@ -132,6 +133,8 @@ bullets <- bullets %>% mutate(
 ```r
 image_x3p(bullets$x3p[[1]], file="README_files//temp-after.png")
 ```
+
+Scan after the transformation: a clear right twist is visible in the right slant of striae and grooves.
 
 ![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](README_files/temp-after.png)
 

@@ -20,11 +20,12 @@ Imports:
     zoo,
     dplyr,
     tidyr,
-    x3ptools,
+    x3ptools (>= 0.1.9000),
     readr,
     MASS,
     smoother,
     ggplot2
+Remotes: heike/x3ptools    
 Depends:
     R (>= 3.4)
 Suggests:
