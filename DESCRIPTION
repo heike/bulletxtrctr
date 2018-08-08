@@ -20,7 +20,7 @@ Imports:
     zoo,
     dplyr,
     tidyr,
-    x3ptools (>= 0.1.9000),
+    x3ptools (>= 0.0.1.9000),
     readr,
     MASS,
     smoother,
