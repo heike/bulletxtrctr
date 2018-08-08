@@ -171,18 +171,39 @@ signatures %>%
       sig_align(land1$sig, land2$sig)
     })
   )
+```
+Some features are based on aligned signatures:
 
+```{r}
+comparisons <- comparisons %>% mutate(
+  ccf0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
+  lag0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
+  D0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet)),
+  length0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_length(x$bullet)),
+  overlap0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$bullet))
+)
+```
+
+Other features also need an evaluation of peaks and valleys to match between signatures:
+
+```{r}
   comparisons <- comparisons %>% mutate(
     results = aligned %>% purrr::map(.f = sig_cms_max, span = 75) 
   )
 ```
 
 ```{r}
-comparisons <- comparisons %>% mutate(
-  ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
-  lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
-#  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
-)
+## ccf and lag are extracted below
+# comparisons <- comparisons %>% mutate(
+#   ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
+#   lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
+# #  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
+# )
 comparisons <- comparisons %>% mutate(
   barrel1 = gsub(".*Barrel([1-6])_.*","\\1",b1),
   barrel2 = gsub(".*Barrel([1-6])_.*","\\1",b2),
@@ -206,18 +227,6 @@ comparisons %>%
 9. Extract Features
 
 ```{r}
-comparisons <- comparisons %>% mutate(
-  ccf0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
-  lag0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
-  D0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet)),
-  length0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_length(x$bullet)),
-  overlap0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$bullet))
-)
 
 comparisons <- comparisons %>% mutate(
   features = results %>% purrr::map(.f = extract_features_all)
