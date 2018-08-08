@@ -111,10 +111,10 @@ We are working under the assumption that the scans are aligned such that the bot
 
 
 ```r
-image_x3p(bullets$x3p[[1]], file="temp-before.png")
+image_x3p(bullets$x3p[[1]], file="README_files/temp-before.png")
 ```
 
-![Raw scan - needs to be rotated.](temp-before.png)
+![Raw scan - needs to be rotated.](README_files/temp-before.png)
 
 
 
@@ -130,10 +130,10 @@ bullets <- bullets %>% mutate(
 
 
 ```r
-image_x3p(bullets$x3p[[1]], file="temp-after.png")
+image_x3p(bullets$x3p[[1]], file="README_files//temp-after.png")
 ```
 
-![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](temp-after.png)
+![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](README_files/temp-after.png)
 
 3. Get the ideal cross sections
 
