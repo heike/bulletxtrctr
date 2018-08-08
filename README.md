@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 07, 2018"
+date: "August 08, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--07-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--08-yellowgreen.svg)](/commits/master)
 
 
 Analyze bullet striations using nonparametric methods
@@ -29,8 +29,8 @@ Analyze bullet striations using nonparametric methods
   library(ggplot2)
 ```
   
-2. `bulletxtrctr` only works on x3p files. See package `x3ptools` for ways to convert different file formats onto x3p standard files.
-The (NIST Research Ballistics Toolmarks data base (NRBTD))[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.  
+2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
+The NIST Research Ballistics Toolmarks data base (NRBTD) [https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.  
 
 Download some files from NRBTD, if not yet available:
 
@@ -55,17 +55,47 @@ if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
 ```
 Combine the results into a single data frame:
 
+
 ```r
 b1$bullet <- 1
 b2$bullet <- 2
 bullets <- rbind(b1, b2)
+```
 
-# turn the scans such that (0,0) is bottom left
+We expect data to be recorded at the micron level.
+The scans posted give measurements in meters:
+
+
+```r
+bullets$x3p[[1]]$header.info$incrementY
+```
+
+```
+## [1] 1.5625e-06
+```
+
+```r
+bullets$x3p[[1]]$header.info$incrementX
+```
+
+```
+## [1] 1.5625e-06
+```
+
+```r
+summary(as.vector(bullets$x3p[[1]]$surface.matrix))
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##       0       0       0       0       0       0   24829
+```
+
+Change measurements to microns:
+
+
+```r
 bullets <- bullets %>% mutate(
-  x3p = x3p %>% purrr::map(.f = function(x) x %>% 
-                             rotate_x3p(angle=-90) %>%
-                             y_flip_x3p())
-  ) %>% mutate(
     x3p = x3p %>% purrr::map(.f = function(x) {
       # make sure all measurements are in microns
       x$surface.matrix <- x$surface.matrix*10^6
@@ -75,6 +105,35 @@ bullets <- bullets %>% mutate(
     })
   )
 ```
+
+
+We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
+
+
+```r
+image_x3p(bullets$x3p[[1]], file="temp-before.png")
+```
+
+![Raw scan - needs to be rotated.](temp-before.png)
+
+
+
+```r
+# turn the scans such that (0,0) is bottom left
+bullets <- bullets %>% mutate(
+  x3p = x3p %>% purrr::map(.f = function(x) x %>% 
+                             rotate_x3p(angle=-90) %>%
+                             y_flip_x3p())
+  ) 
+```
+
+
+
+```r
+image_x3p(bullets$x3p[[1]], file="temp-after.png")
+```
+
+![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](temp-after.png)
 
 3. Get the ideal cross sections
 
@@ -108,11 +167,7 @@ bullets$grooves[[1]]
 ```
 ## $groove
 ## [1]  246.875 2159.375
-## 
-## $plot
 ```
-
-![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 5. Extract signatures
 
@@ -141,7 +196,7 @@ signatures %>%
   theme_bw()
 ```
 
-![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 8. Detect peaks and valleys in the aligned signatures
 
@@ -195,12 +250,21 @@ comparisons %>%
   ylab("Land 2")
 ```
 
-![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 9. Extract Features
 
 
 ```r
+comparisons <- comparisons %>% mutate(
+  ccf0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
+  lag0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
+  D0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet))
+)
+
 comparisons <- comparisons %>% mutate(
   features = results %>% purrr::map(.f = extract_features_all)
 )
@@ -224,7 +288,7 @@ comparisons %>%
   ylab("Land 2")
 ```
 
-![](README_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
     
 
 An interactive interface for doing comparisons is available https://oaiti.org/apps/bulletmatcher/

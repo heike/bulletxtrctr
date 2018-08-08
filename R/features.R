@@ -2,6 +2,7 @@
 #'
 #' @param aligned data frame with variable x (for location) and two or more measurements
 #' @return (matrix) of correlations
+#' @importFrom stats cor
 #' @export
 extract_feature_ccf <- function(aligned) {
   if (dim(aligned)[2] == 3) # only two signatures to compare
@@ -25,6 +26,46 @@ extract_feature_lag <- function(aligned) {
 
   if (length(lags) == 2) return(diff(lags))
   lags
+}
+
+#' Extract average distance between two (or more) aligned signatures
+#'
+#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @param ... arguments for function `dist`
+#' @return object of class distance
+#' @importFrom stats dist as.dist
+#' @export
+extract_feature_D <- function(aligned, ...) {
+  dists <- dist(t(aligned[,-1]), ...)
+  ns <- t(!is.na(aligned[,-1])) %*% !is.na(aligned[,-1])
+
+  dists/as.dist(ns)
+}
+
+#' Extract length of two (aligned) signatures
+#'
+#' Signatures will usually be of different lengths. In a comparison, the length of the shorter signature represents the potential length for a match.
+#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @return integer value of the length of the shorter signature.
+#' @export
+extract_feature_length <- function(aligned) {
+  # only smaller of the length of the first two signatures
+  n1 <- sum(!is.na(aligned[,2]))
+  n2 <- sum(!is.na(aligned[,3]))
+
+  min(n1, n2)
+}
+
+#' Extract overlap between two aligned signatures
+#'
+#' The overlap of two aligned signatures is defined as the ratio of the number of non-missing overlapping values of the two aligned signatures and
+#' the length of the shorter signature. A larger overlap indicates a higher level of agreement between the signatures.
+#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @return value between 0 and 1, ratio of length of overlap compared to smaller length of the signature
+#' @export
+extract_feature_overlap <- function(aligned) {
+  # compute non-missing overlap of the first two signatures
+  sum(!is.na(aligned[,2]) & !is.na(aligned[,3]))/extract_feature_length(aligned)
 }
 
 #' Extract features from aligned signatures
