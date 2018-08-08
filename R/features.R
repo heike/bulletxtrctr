@@ -1,3 +1,32 @@
+#' Extract ccf from two (or more) aligned signatures
+#'
+#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @return (matrix) of correlations
+#' @export
+extract_feature_ccf <- function(aligned) {
+  if (dim(aligned)[2] == 3) # only two signatures to compare
+    return(cor(aligned[,2], aligned[,3], use="pairwise"))
+  cor(aligned[,-1])
+}
+
+#' Extract lag from two (or more) aligned signatures
+#'
+#' In the case of two signatures the result is an integer definining the number of indices by which the second signature is shifted compared to the first signature in the alignment. Note that this lag can be negative.
+#' In the case of multiple signatures the result is a vector of non-negative integers of the same length as signatures. Each element gives the number of indices by which the corresponding signature is shifted compared to the *first* signature. By definition, one of the numbers has to be 0 indicating the *first* signature.
+#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @return (vector) of lags
+#' @export
+extract_feature_lag <- function(aligned) {
+  lags <- sapply(aligned[,-1], function(x) {
+    if (!is.na(x[1])) return(0)
+    diffs <- diff(is.na(x))
+    which(diffs==-1)
+  })
+
+  if (length(lags) == 2) return(diff(lags))
+  lags
+}
+
 #' Extract features from aligned signatures
 #'
 #' @param res list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`

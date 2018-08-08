@@ -171,6 +171,12 @@ comparisons %>%
 9. Extract Features
 
 ```{r}
+comparisons <- comparisons %>% mutate(
+  ccf0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
+  lag0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet))
+)
 
 comparisons <- comparisons %>% mutate(
   features = results %>% purrr::map(.f = extract_features_all)
