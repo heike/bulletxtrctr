@@ -74,7 +74,7 @@ b2 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 
 test_that("signatures works as expected", {
   expect_s3_class(b2$sigs[[1]], "data.frame")
-  expect_equal(names(b2$sigs[[1]]), c("x", "y", "value", "raw_sig", "se", "sig"))
+  expect_equivalent(names(b2$sigs[[1]]), c("x", "y", "value", "raw_sig", "se", "sig"))
   expect_type(b2$sigs[[1]]$x, "double")
   expect_type(b2$sigs[[1]]$y, "double")
   expect_type(b2$sigs[[1]]$value, "double")
@@ -85,9 +85,9 @@ test_that("signatures works as expected", {
 })
 
 test_that("signatures is numerically correct", {
-  expect_identical(b1$sigs, b2$sigs)
-  expect_error(expect_identical(b2$sigs[[1]]$sig, b2$sigs1[[1]]$sig))
-  expect_error(expect_identical(b2$sigs[[1]]$sig, b2$sigs2[[1]]$sig))
-  expect_error(expect_identical(b2$sigs[[1]]$sig, b2$sigs3[[1]]$sig))
+  expect_equivalent(b1$sigs, b2$sigs)
+  expect_error(expect_equivalent(b2$sigs[[1]]$sig, b2$sigs1[[1]]$sig))
+  expect_error(expect_equivalent(b2$sigs[[1]]$sig, b2$sigs2[[1]]$sig))
+  expect_error(expect_equivalent(b2$sigs[[1]]$sig, b2$sigs3[[1]]$sig))
 })
 

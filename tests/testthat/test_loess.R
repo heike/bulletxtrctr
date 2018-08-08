@@ -58,11 +58,11 @@ ex_names <- c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop")
 
 test_that("loess works as expected", {
   expect_s3_class(b2$loess[[1]], "data.frame")
-  expect_identical(names(b2$loess[[1]]), ex_names)
-  expect_identical(summarize_all(b2$loess[[1]], mode) %>% as.character(),
+  expect_equivalent(names(b2$loess[[1]]), ex_names)
+  expect_equivalent(summarize_all(b2$loess[[1]], mode) %>% as.character(),
                    c(rep("numeric", 7), "logical"))
-  expect_identical(b1$loess, b2$loess)
-  expect_identical(b1$loess2, b2$loess2)
-  expect_identical(b1$gauss, b2$gauss)
-  expect_identical(b1$gauss2, b2$gauss2)
+  expect_equivalent(b1$loess, b2$loess)
+  expect_equivalent(b1$loess2, b2$loess2)
+  expect_equivalent(b1$gauss, b2$gauss)
+  expect_equivalent(b1$gauss2, b2$gauss2)
 })

@@ -46,6 +46,6 @@ test_that("read works as expected", {
   expect_s3_class(b2, "tbl_df")
   expect_s3_class(b2, "tbl")
   expect_s3_class(b2, "data.frame")
-  expect_identical(b1, b3)
+  expect_equivalent(b1, b3)
 })
 

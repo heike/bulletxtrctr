@@ -48,7 +48,7 @@ cc2 <- bulletxtrctr:::land_cc(50, b2_l1)
 test_that("land_cc works as expected", {
   expect_s3_class(cc2, "data.frame")
   expect_equal(names(cc2), c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop",  "resid"))
-  expect_identical(cc1, cc2)
+  expect_equivalent(cc1, cc2)
 })
 
 cco2 <- x3p_crosscut_optimize(b2$x3p[[1]])
@@ -57,7 +57,7 @@ test_that("x3p_crosscut_optimize works as expected", {
   expect_silent(x3p_crosscut_optimize(b2$x3p[[1]]))
   expect_gte(cco2, 50)
   expect(is.numeric(cco2))
-  expect_identical(cco1, cco2)
+  expect_equivalent(cco1, cco2)
 })
 
 fullcc2 <- x3p_crosscut(b2$x3p[[1]], x3p_crosscut_optimize(b2$x3p[[1]]))
@@ -67,5 +67,5 @@ test_that("x3p_crosscut works as expected", {
   expect_equal(names(fullcc2), c("x", "y", "value"))
   expect_length(attr(fullcc2, "header.info"), 4)
   expect_equal(sort(names(attr(fullcc2, "header.info"))), sort(c("sizeY", "sizeX", "incrementY", "incrementX")))
-  expect_identical(fullcc2, fullcc1)
+  expect_equivalent(fullcc2, fullcc1)
 })
