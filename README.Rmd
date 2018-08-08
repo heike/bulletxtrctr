@@ -41,17 +41,26 @@ if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
   b2 <- read_bullet("data/Bullet2", "x3p")
 ```
 Combine the results into a single data frame:
+
 ```{r}
 b1$bullet <- 1
 b2$bullet <- 2
 bullets <- rbind(b1, b2)
+```
 
-# turn the scans such that (0,0) is bottom left
+We expect data to be recorded at the micron level.
+The scans posted give measurements in meters:
+
+```{r}
+bullets$x3p[[1]]$header.info$incrementY
+bullets$x3p[[1]]$header.info$incrementX
+summary(as.vector(bullets$x3p[[1]]$surface.matrix))
+```
+
+Change measurements to microns:
+
+```{r}
 bullets <- bullets %>% mutate(
-  x3p = x3p %>% purrr::map(.f = function(x) x %>% 
-                             rotate_x3p(angle=-90) %>%
-                             y_flip_x3p())
-  ) %>% mutate(
     x3p = x3p %>% purrr::map(.f = function(x) {
       # make sure all measurements are in microns
       x$surface.matrix <- x$surface.matrix*10^6
@@ -60,8 +69,34 @@ bullets <- bullets %>% mutate(
       x
     })
   )
+```
+
+
+We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
+
+```{r}
+image_x3p(bullets$x3p[[1]], file="temp-before.png")
+```
+
+![Raw scan - needs to be rotated.](temp-before.png)
+
+
+```{r}
+# turn the scans such that (0,0) is bottom left
+bullets <- bullets %>% mutate(
+  x3p = x3p %>% purrr::map(.f = function(x) x %>% 
+                             rotate_x3p(angle=-90) %>%
+                             y_flip_x3p())
+  ) 
 
 ```
+
+
+```{r}
+image_x3p(bullets$x3p[[1]], file="temp-after.png")
+```
+
+![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](temp-after.png)
 
 3. Get the ideal cross sections
 
@@ -175,7 +210,9 @@ comparisons <- comparisons %>% mutate(
   ccf0 = aligned %>% 
     purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
   lag0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet))
+    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
+  D0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet))
 )
 
 comparisons <- comparisons %>% mutate(

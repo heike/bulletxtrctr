@@ -2,6 +2,7 @@
 #'
 #' @param aligned data frame with variable x (for location) and two or more measurements
 #' @return (matrix) of correlations
+#' @importFrom stats cor
 #' @export
 extract_feature_ccf <- function(aligned) {
   if (dim(aligned)[2] == 3) # only two signatures to compare
@@ -26,6 +27,21 @@ extract_feature_lag <- function(aligned) {
   if (length(lags) == 2) return(diff(lags))
   lags
 }
+
+#' Extract average distance between two (or more) aligned signatures
+#'
+#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @param ... arguments for function `dist`
+#' @return object of class distance
+#' @importFrom stats dist as.dist
+#' @export
+extract_feature_D <- function(aligned, ...) {
+  dists <- dist(t(aligned[,-1]), ...)
+  ns <- t(!is.na(aligned[,-1])) %*% !is.na(aligned[,-1])
+
+  dists/as.dist(ns)
+}
+
 
 #' Extract features from aligned signatures
 #'
