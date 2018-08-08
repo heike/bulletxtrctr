@@ -50,7 +50,7 @@ cc_fit_gaussian <- function(ccdata, span = 600) {
 
   # Alternative to loess fit
 
-  gsmooth <- smth(x = ccdata$value, method = 'gaussian', window = window, tails = T, na.rm = T)
+  gsmooth <- smoother::smth(x = ccdata$value, method = 'gaussian', window = window, tails = T, na.rm = T)
   ccdata$fitted <- gsmooth
   ccdata$raw_sig <- ccdata$value - ccdata$fitted
   ccdata$se <- NA
