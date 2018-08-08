@@ -27,6 +27,11 @@ Imports:
     ggplot2
 Depends:
     R (>= 3.4)
+Suggests:
+    here,
+    covr,
+    testthat,
+    testthis
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
