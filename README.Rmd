@@ -213,15 +213,7 @@ comparisons <- comparisons %>% mutate(
   land2 = gsub(".*Land([1-6]).x3p","\\1",b2)
 )
 
-# quick visualization:
-comparisons %>% 
-  ggplot(aes(x = land1, y = land2, fill=ccf)) +
-  geom_tile() +
-  scale_fill_gradient2(low="grey80", high = "darkorange", 
-                       midpoint = 0.5) +
-  facet_grid(bullet1~bullet2, labeller="label_both") +
-  xlab("Land 1") +
-  ylab("Land 2")
+
 ```
 
 9. Extract Features
@@ -232,15 +224,23 @@ comparisons <- comparisons %>% mutate(
   features = results %>% purrr::map(.f = extract_features_all)
 )
 
+comparisons <- comparisons %>% tidyr::unnest(features)
 
-
+# quick visualization:
+comparisons %>% 
+  ggplot(aes(x = land1, y = land2, fill=ccf)) +
+  geom_tile() +
+  scale_fill_gradient2(low="grey80", high = "darkorange", 
+                       midpoint = 0.5) +
+  facet_grid(bullet1~bullet2, labeller="label_both") +
+  xlab("Land 1") +
+  ylab("Land 2")
 ```
     
 
 10. Get Predicted Probability of Match
 
 ```{r, warning=FALSE}
-  comparisons <- comparisons %>% tidyr::unnest(features)
   comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
 
 comparisons %>% 
