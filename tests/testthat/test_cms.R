@@ -1,123 +1,12 @@
 context("cms")
 
+load(here::here("tests/bullets_match.Rdata"))
 
-library(x3ptools)
-library(tidyverse)
-# library(here)
+maxcmstest <- sig_cms_max(match$alignment)
 
-# b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
-# # turn the scans such that (0,0) is bottom left
-#   mutate(
-#     x3p = x3p %>% purrr::map(.f = function(x) x %>%
-#                                rotate_x3p(angle=-90) %>%
-#                                y_flip_x3p())
-#   ) %>% mutate(
-#     x3p = x3p %>% purrr::map(.f = function(x) {
-#       # make sure all measurements are in microns
-#       x$surface.matrix <- x$surface.matrix*10^6
-#       x$header.info$incrementY <- x$header.info$incrementY*10^6
-#       x$header.info$incrementX <- x$header.info$incrementX*10^6
-#       x
-#     })
-#   ) %>%
-#   # filter(row_number() == 1) %>%
-#   mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-#   mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
-#   mutate(grooves = purrr::map(ccdata, cc_locate_grooves, method = "middle")) %>%
-#   mutate(
-#     sigs = purrr::map2(
-#       .x = ccdata, .y = grooves,
-#       .f = function(x, y) {
-#         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
-#   )
-#
-# b2 <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
-#   # turn the scans such that (0,0) is bottom left
-#   mutate(
-#     x3p = x3p %>% purrr::map(.f = function(x) x %>%
-#                                rotate_x3p(angle=-90) %>%
-#                                y_flip_x3p())
-#   ) %>% mutate(
-#     x3p = x3p %>% purrr::map(.f = function(x) {
-#       # make sure all measurements are in microns
-#       x$surface.matrix <- x$surface.matrix*10^6
-#       x$header.info$incrementY <- x$header.info$incrementY*10^6
-#       x$header.info$incrementX <- x$header.info$incrementX*10^6
-#       x
-#     })
-#   ) %>%
-#   # filter(row_number() == 1) %>%
-#   mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-#   mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
-#   mutate(grooves = purrr::map(ccdata, cc_locate_grooves, method = "middle")) %>%
-#   mutate(
-#     sigs = purrr::map2(
-#       .x = ccdata, .y = grooves,
-#       .f = function(x, y) {
-#         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
-#   )
-#
-# align <- sig_align(b1$sigs[[3]]$sig, b2$sigs[[5]]$sig)
-# maxcms <- sig_cms_max(align)
-#
-# save(maxcms, file = here::here("tests/testdata/correct_data_test_cms.Rdata"))
-
-load(here::here("tests/testdata/correct_data_test_cms.Rdata"))
-b1test <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
-  # turn the scans such that (0,0) is bottom left
-  mutate(
-    x3p = x3p %>% purrr::map(.f = function(x) x %>%
-                               rotate_x3p(angle=-90) %>%
-                               y_flip_x3p())
-  ) %>% mutate(
-    x3p = x3p %>% purrr::map(.f = function(x) {
-      # make sure all measurements are in microns
-      x$surface.matrix <- x$surface.matrix*10^6
-      x$header.info$incrementY <- x$header.info$incrementY*10^6
-      x$header.info$incrementX <- x$header.info$incrementX*10^6
-      x
-    })
-  ) %>%
-  # filter(row_number() == 1) %>%
-  mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-  mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
-  mutate(grooves = purrr::map(ccdata, cc_locate_grooves, method = "middle")) %>%
-  mutate(
-    sigs = purrr::map2(
-      .x = ccdata, .y = grooves,
-      .f = function(x, y) {
-        cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
-  )
-
-b2test <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
-  # turn the scans such that (0,0) is bottom left
-  mutate(
-    x3p = x3p %>% purrr::map(.f = function(x) x %>%
-                               rotate_x3p(angle=-90) %>%
-                               y_flip_x3p())
-  ) %>% mutate(
-    x3p = x3p %>% purrr::map(.f = function(x) {
-      # make sure all measurements are in microns
-      x$surface.matrix <- x$surface.matrix*10^6
-      x$header.info$incrementY <- x$header.info$incrementY*10^6
-      x$header.info$incrementX <- x$header.info$incrementX*10^6
-      x
-    })
-  ) %>%
-  # filter(row_number() == 1) %>%
-  mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-  mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
-  mutate(grooves = purrr::map(ccdata, cc_locate_grooves, method = "middle")) %>%
-  mutate(
-    sigs = purrr::map2(
-      .x = ccdata, .y = grooves,
-      .f = function(x, y) {
-        cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
-  )
-
-aligntest <- sig_align(b1test$sigs[[3]]$sig, b2test$sigs[[5]]$sig)
-maxcmstest <- sig_cms_max(aligntest)
-
+x <- c(rep(0, 5), rep(1, 3), 0, rep(1, 6))
+y <- as.table(c("3" = 1, "6" = 1))
+dimnames(y) <- list(c("3", "6"))
 
 test_that("sig_cms_max works", {
   expect_equal(names(maxcmstest), c("maxCMS", "ccf", "lag", "lines", "bullets"))
@@ -138,18 +27,12 @@ test_that("sig_cms_max works", {
   expect_is(maxcmstest$bullets$x, "integer")
   expect_is(maxcmstest$bullets$sig1, "numeric")
   expect_is(maxcmstest$bullets$sig2, "numeric")
-  expect_equal(maxcmstest, maxcms)
-  })
+  expect_equal(maxcmstest, match$maxcms)
+})
 
-test_that(
-  "get_runs works as expected",
-  {
-    x <- c(rep(0, 5), rep(1, 3), 0, rep(1, 6))
-    y <- as.table(c("3" = 1, "6" = 1))
-    dimnames(y) <- list(c("3", "6"))
-    expect_warning(get_runs(x), "Converting .* to a logical vector")
-    expect_equivalent(get_runs(x == 1), y)
-
-    expect_equal(get_longest_run(x == 1), 6)
-  })
+test_that("get_runs works as expected", {
+  expect_warning(get_runs(x), "Converting .* to a logical vector")
+  expect_equivalent(get_runs(x == 1), y)
+  expect_equal(get_longest_run(x == 1), 6)
+})
 

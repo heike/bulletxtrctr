@@ -1,93 +1,46 @@
 context("signatures")
 
+load(here::here("tests/bullet1_only.Rdata"))
 
-library(x3ptools)
-library(tidyverse)
-
-# b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
-# # turn the scans such that (0,0) is bottom left
-#   mutate(
-#     x3p = x3p %>% purrr::map(.f = function(x) x %>%
-#                                rotate_x3p(angle=-90) %>%
-#                                y_flip_x3p())
-#   ) %>% mutate(
-#     x3p = x3p %>% purrr::map(.f = function(x) {
-#       # make sure all measurements are in microns
-#       x$surface.matrix <- x$surface.matrix*10^6
-#       x$header.info$incrementY <- x$header.info$incrementY*10^6
-#       x$header.info$incrementX <- x$header.info$incrementX*10^6
-#       x
-#     })
-#   ) %>%
-#   filter(row_number() == 1) %>%
-#   mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-#   mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
-#   mutate(grooves = purrr::map(ccdata, cc_locate_grooves, method = "middle")) %>%
-#   mutate(
-#     sigs = purrr::map2(
-#       .x = ccdata, .y = grooves,
-#       .f = function(x, y) {
-#         cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
-#   )
-#
-# save(b1, file = here::here("tests/testdata/correct_data_test_signatures.Rdata"))
-
-load(here::here("tests/testdata/correct_data_test_signatures.Rdata"))
-
-b2 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
-  # turn the scans such that (0,0) is bottom left
-  mutate(
-    x3p = x3p %>% purrr::map(.f = function(x) x %>%
-                               rotate_x3p(angle=-90) %>%
-                               y_flip_x3p())
-  ) %>% mutate(
-    x3p = x3p %>% purrr::map(.f = function(x) {
-      # make sure all measurements are in microns
-      x$surface.matrix <- x$surface.matrix*10^6
-      x$header.info$incrementY <- x$header.info$incrementY*10^6
-      x$header.info$incrementX <- x$header.info$incrementX*10^6
-      x
-    })
-  ) %>%
-  filter(row_number() == 1) %>%
-  mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-  mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
-  mutate(grooves = purrr::map(ccdata, cc_locate_grooves, method = "middle")) %>%
-  mutate(
-    sigs = purrr::map2(
-      .x = ccdata, .y = grooves,
-      .f = function(x, y) {
-        cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)}),
-    sigs1 = purrr::map2(
-      .x = ccdata, .y = grooves,
-      .f = function(x, y) {
-        cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.01)}),
-    sigs2 = purrr::map2(
-      .x = ccdata, .y = grooves,
-      .f = function(x, y) {
-        cc_get_signature(ccdata=x, grooves = y, span1 = 0.25, span2=0.03)}),
-    sigs3 = purrr::map2(
-      .x = ccdata, .y = grooves,
-      .f = function(x, y) {
-        cc_get_signature(ccdata=x, grooves = y, span1 = 0.25, span2=0.01)})
-  )
+suppressWarnings({
+  testb1 <- b1_l3_x3p %>%
+    dplyr::select(-sigs) %>%
+    dplyr::mutate(
+      sigsLL = purrr::map2(
+        .x = ccdata, .y = grooves,
+        .f = function(x, y) {
+          cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)}),
+      sigsLS = purrr::map2(
+        .x = ccdata, .y = grooves,
+        .f = function(x, y) {
+          cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.01)}),
+      sigsSL = purrr::map2(
+        .x = ccdata, .y = grooves,
+        .f = function(x, y) {
+          cc_get_signature(ccdata=x, grooves = y, span1 = 0.25, span2=0.03)}),
+      sigsSS = purrr::map2(
+        .x = ccdata, .y = grooves,
+        .f = function(x, y) {
+          cc_get_signature(ccdata=x, grooves = y, span1 = 0.25, span2=0.01)})
+    )
+})
 
 test_that("signatures works as expected", {
-  expect_s3_class(b2$sigs[[1]], "data.frame")
-  expect_equivalent(names(b2$sigs[[1]]), c("x", "y", "value", "raw_sig", "se", "sig"))
-  expect_type(b2$sigs[[1]]$x, "double")
-  expect_type(b2$sigs[[1]]$y, "double")
-  expect_type(b2$sigs[[1]]$value, "double")
-  expect_type(b2$sigs[[1]]$raw_sig, "double")
-  expect_type(b2$sigs[[1]]$se, "double")
-  expect_type(b2$sigs[[1]]$sig, "double")
-  expect_length(unique(b2$sigs[[1]]$y), 1)
+  expect_s3_class(testb1$sigsLL[[1]], "data.frame")
+  expect_equivalent(names(testb1$sigsLL[[1]]), c("x", "y", "value", "raw_sig", "se", "sig"))
+  expect_type(testb1$sigsLL[[1]]$x, "double")
+  expect_type(testb1$sigsLL[[1]]$y, "double")
+  expect_type(testb1$sigsLL[[1]]$value, "double")
+  expect_type(testb1$sigsLL[[1]]$raw_sig, "double")
+  expect_type(testb1$sigsLL[[1]]$se, "double")
+  expect_type(testb1$sigsLL[[1]]$sig, "double")
+  expect_length(unique(testb1$sigsLL[[1]]$y), 1)
 })
 
 test_that("signatures is numerically correct", {
-  expect_equivalent(b1$sigs, b2$sigs)
-  expect_error(expect_equivalent(b2$sigs[[1]]$sig, b2$sigs1[[1]]$sig))
-  expect_error(expect_equivalent(b2$sigs[[1]]$sig, b2$sigs2[[1]]$sig))
-  expect_error(expect_equivalent(b2$sigs[[1]]$sig, b2$sigs3[[1]]$sig))
+  expect_equivalent(b1_l3_x3p$sigs, testb1$sigsLL)
+  expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsLS[[1]]$sig))
+  expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsSL[[1]]$sig))
+  expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsSS[[1]]$sig))
 })
 
