@@ -212,7 +212,11 @@ comparisons <- comparisons %>% mutate(
   lag0 = aligned %>% 
     purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
   D0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet))
+    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet)),
+  length0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_length(x$bullet)),
+  overlap0 = aligned %>% 
+    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$bullet))
 )
 
 comparisons <- comparisons %>% mutate(

@@ -107,14 +107,14 @@ bullets <- bullets %>% mutate(
 ```
 
 
-We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
+We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
 
 
 ```r
 image_x3p(bullets$x3p[[1]], file="temp-before.png")
 ```
 
-![raw scan - needs to be rotated](temp-before.png)
+![Raw scan - needs to be rotated.](temp-before.png)
 
 
 
@@ -133,7 +133,7 @@ bullets <- bullets %>% mutate(
 image_x3p(bullets$x3p[[1]], file="temp-after.png")
 ```
 
-![scan after rotation](temp-after.png)
+![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](temp-after.png)
 
 3. Get the ideal cross sections
 
