@@ -1,15 +1,13 @@
 context("read")
 
-library(bulletxtrctr)
 library(tidyverse)
-
 
 # b1 <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
 # # turn the scans such that (0,0) is bottom left
 #   mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) x %>%
-#                                rotate_x3p(angle=-90) %>%
-#                                y_flip_x3p())
+#                                x3ptools::rotate_x3p(angle = -90) %>%
+#                                x3ptools::y_flip_x3p()
 #   ) %>% mutate(
 #     x3p = x3p %>% purrr::map(.f = function(x) {
 #       # make sure all measurements are in microns
@@ -28,8 +26,8 @@ o1 <- capture.output(b2 <- read_bullet(here::here("data/Bullet1"), "x3p"), split
 b3 <- b2 %>%
   mutate(x3p = x3p %>% purrr::map(.f = function(x) {
     x %>%
-      rotate_x3p(angle = -90) %>%
-      y_flip_x3p()
+      x3ptools::rotate_x3p(angle = -90) %>%
+      x3ptools::y_flip_x3p()
   })) %>%
   mutate(x3p = x3p %>% purrr::map(.f = function(x) {
     # make sure all measurements are in microns
@@ -46,6 +44,6 @@ test_that("read works as expected", {
   expect_s3_class(b2, "tbl_df")
   expect_s3_class(b2, "tbl")
   expect_s3_class(b2, "data.frame")
-  expect_equivalent(b1, b3)
+  expect_equal(b1$x3p, b3$x3p)
 })
 
