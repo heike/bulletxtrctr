@@ -2,7 +2,7 @@ grooves_plot <- function(land, grooves) {
   ### TODO: assertions
   x <- value <- NULL
 
-  land %>% ggplot(aes(x = x, y = value)) + geom_line(size = .5) + theme_bw() +
+  ggplot(aes(x = x, y = value), data = land) + geom_line(size = .5) + theme_bw() +
     geom_vline(xintercept=grooves[1], colour = "blue") +
     geom_vline(xintercept=grooves[2], colour = "blue")
 }
@@ -23,7 +23,8 @@ grooves_plot <- function(land, grooves) {
 #' @export
 cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
                               adjust = 10, groove_cutoff = 400,
-                              mean_left = NULL, mean_right = NULL, mean_window = 100, return_plot = F, ...) {
+                              mean_left = NULL, mean_right = NULL, mean_window = 100,
+                              return_plot = F, ...) {
   x <- y <- value <- NULL
   bullet <- ccdata
 #  bullet <- switch_xy(bullet)
@@ -36,7 +37,8 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   if (method == "rollapply") {
     # make sure there is only one x
     if (length(unique(bullet$y)) > 1) {
-      message(sprintf("summarizing %d profiles by averaging across values\n", length(unique(bullet$x))))
+      message(sprintf("summarizing %d profiles by averaging across values\n",
+                      length(unique(bullet$x))))
       bullet <- bullet %>% group_by(x) %>% summarize(
         y = mean(y, na.rm = TRUE),
         value = mean(value, na.rm=TRUE)
@@ -61,7 +63,8 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
     if ("middle" %in% names(list(...))) {
       middle <- list(...)$middle
     }
-    grooves <- get_grooves_middle(x = bullet$x, value = bullet$value, middle=middle, return_plot = return_plot)
+    grooves <- get_grooves_middle(x = bullet$x, value = bullet$value, middle=middle,
+                                  return_plot = return_plot)
   }
 
   return(grooves)
@@ -139,7 +142,11 @@ get_grooves_quadratic <- function(x, value, adjust, return_plot = F) {
 #' @importFrom zoo rollapply
 #' @importFrom zoo na.fill
 #' @importFrom utils head tail
-get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10, groove_cutoff = 400, mean_left = NULL, mean_right = NULL, mean_window = 100, second_smooth = T, which_fun = mean, return_plot = F) {
+get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
+                                  groove_cutoff = 400, mean_left = NULL,
+                                  mean_right = NULL, mean_window = 100,
+                                  second_smooth = T, which_fun = mean,
+                                  return_plot = F) {
   bullet <- data.frame(x = x, value = value)
   original_bullet <- bullet
 
@@ -153,7 +160,8 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10, groo
     window.right.left <- mean.right.ind - mean_window
     window.right.right <- min(length(bullet$x), mean.right.ind + mean_window)
 
-    bullet <- bullet[c(window.left.left:window.left.right, window.right.left:window.right.right), ]
+    bullet <- bullet[c(window.left.left:window.left.right,
+                       window.right.left:window.right.right), ]
 
     groove_cutoff <- Inf
   }
