@@ -2,6 +2,22 @@ context("read")
 
 load(here::here("tests/bullet1_only.Rdata"))
 
+setup({
+  # Download data if it is not present
+  if (!dir.exists(here::here("tests/Bullet1"))) {
+    dir.create(here::here("tests/Bullet1"))
+  }
+  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))) {
+    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/2ea4efe4-beeb-4291-993d-ae7726c624f4",
+                  destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"), quiet = T)
+  }
+})
+
+teardown({
+  file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
+  unlink(here::here("tests/Bullet1"), recursive = T)
+})
+
 o1 <- capture.output(b2 <- read_bullet(here::here("tests/Bullet1"), "x3p"), split = T)
 b3 <- b2 %>%
   # turn the scans such that (0,0) is bottom left
