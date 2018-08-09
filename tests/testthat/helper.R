@@ -1,12 +1,39 @@
 `%>%` <- magrittr::`%>%`
+if (!exists("okfiles")) {
+  okfiles <- list.files(here::here("tests/"), ".Rdata", full.names = T)
+}
+
+setup({
+  # Download data if it is not present
+  if (!dir.exists(here::here("tests/Bullet1")) |
+      !dir.exists(here::here("tests/Bullet2"))) {
+    dir.create(here::here("tests/Bullet1"))
+    dir.create(here::here("tests/Bullet2"))
+  }
+  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))) {
+    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/2ea4efe4-beeb-4291-993d-ae7726c624f4",
+                  destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"), quiet = T)
+  }
+  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet2_Land5.x3p"))) {
+    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/d6dfaef6-f066-4b76-bf42-f0e8c06d6241",
+                  destfile = here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"), quiet = T)
+  }
+})
+
+teardown({
+  file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
+  unlink(here::here("tests/Bullet1"), recursive = T)
+  file.remove(here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"))
+  unlink(here::here("tests/Bullet2"), recursive = T)
+})
 
 # test_read.R
 # test_grooves.R
 # test_signatures.R
 if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
   message("Generating data file for bullet 1 land 3 with crosscuts, grooves, and signatures")
-  b1_l3_x3p <- read_bullet(here::here("data/Bullet1"), "x3p") %>%
-    dplyr::filter(dplyr::row_number() == 3) %>%
+  b1_l3_x3p <- read_bullet(here::here("tests/Bullet1"), "x3p") %>%
+    # dplyr::filter(dplyr::row_number() == 3) %>%
     # turn the scans such that (0,0) is bottom left
     dplyr::mutate(
       x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -26,8 +53,11 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
     dplyr::mutate(loess = purrr::map(ccdata, cc_fit_loess, span = .75),
                   gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600)) %>%
     dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
-    dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle",
+    dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves,
+                                           method = "middle",
                                            return_plot = T)) %>%
+    dplyr::mutate(grooves_quad = purrr::map(ccdata, cc_locate_grooves,
+                                            method = "quadratic", return_plot = F)) %>%
     dplyr::mutate(
       sigs = purrr::map2(
         .x = ccdata, .y = grooves,
@@ -35,20 +65,24 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
           cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
     )
 
+  save(b1_l3_x3p, file = here::here("tests/bullet1_only.Rdata"))
+}
+
+if (!file.exists(here::here("tests/bullet1_crosscut_extra.Rdata"))) {
+  load(here::here("tests/bullet1_only.Rdata"))
+
   b1_l3 <- b1_l3_x3p$x3p[[1]]
   b1_l3_df <- x3ptools::x3p_to_df(b1_l3)
   cc1 <- land_cc(50, b1_l3_df)
   save(b1_l3, b1_l3_df, cc1, file = here::here("tests/bullet1_crosscut_extra.Rdata"))
-
-  save(b1_l3_x3p, file = here::here("tests/bullet1_only.Rdata"))
 }
 
 if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
   message("Generating data file for bullet 1 land 3 and bullet 2 land 5 with crosscut, ccdata, grooves, and sigs.")
   load(here::here("tests/bullet1_only.Rdata"))
 
-  b2_l5_x3p <- read_bullet(here::here("data/Bullet2"), "x3p") %>%
-    dplyr::filter(dplyr::row_number() == 5) %>%
+  b2_l5_x3p <- read_bullet(here::here("tests/Bullet2"), "x3p") %>%
+    # dplyr::filter(dplyr::row_number() == 5) %>%
     # turn the scans such that (0,0) is bottom left
     dplyr::mutate(
       x3p = x3p %>% purrr::map(.f = function(x) x %>%
