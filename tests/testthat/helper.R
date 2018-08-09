@@ -3,7 +3,7 @@ if (!exists("okfiles")) {
   okfiles <- list.files(here::here("tests/"), ".Rdata", full.names = T)
 }
 
-setup({
+testthat::setup({
   # Download data if it is not present
   if (!dir.exists(here::here("tests/Bullet1")) |
       !dir.exists(here::here("tests/Bullet2"))) {
@@ -20,7 +20,7 @@ setup({
   }
 })
 
-teardown({
+testthat::teardown({
   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
   unlink(here::here("tests/Bullet1"), recursive = T)
   file.remove(here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"))
