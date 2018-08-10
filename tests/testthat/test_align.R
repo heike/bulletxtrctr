@@ -5,6 +5,9 @@ load(here::here("tests/bullets_match.Rdata"))
 
 ccftest <- get_ccf(1:5, 6:2)
 aligntest <- sig_align(b1_l3_x3p$sigs[[1]]$sig, b2_l5_x3p$sigs[[1]]$sig)
+aligntest2 <- sig_align(b2_l5_x3p$sigs[[1]]$sig, b1_l3_x3p$sigs[[1]]$sig)
+
+trivial <- sig_align((1:10 - 5)^2, (3:6 - 5)^2)
 
 test_that("cross-correlation works", {
   expect_equal(names(ccftest), c("lag", "ccf"))
@@ -23,4 +26,7 @@ test_that("sig_align is working as expected", {
   expect_is(aligntest$bullets$sig1, "numeric")
   expect_is(aligntest$bullets$sig2, "numeric")
   expect_equal(aligntest, match$alignment)
+  expect_failure(expect_equal(aligntest2, match$alignment))
+  expect_true(is.na(trivial$bullets$sig2[1]))
+  expect_true(is.na(trivial$bullets$sig2[10]))
 })

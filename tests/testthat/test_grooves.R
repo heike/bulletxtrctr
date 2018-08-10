@@ -49,9 +49,14 @@ test_that("grooves works as expected", {
   ## Middle - middle argument trims things
   expect_equal(names(cc_locate_grooves(testb1$ccdata[[1]], "middle", middle = 50)$groove),
                c("25%", "75%"))
-  ## Rollapply - multiple y valuesu
+  ## Rollapply - multiple y values
   expect_message(cc_locate_grooves(rbind(testb1$ccdata[[1]], testb1$ccdata[[1]] %>% dplyr::mutate(y = 100))),
                  "summarizing \\d{1,} profiles by averaging across values")
+
+  ## Rollapply - mean left and mean right
+  tmp3 <- cc_locate_grooves(testb1$ccdata[[1]], method = "rollapply",
+                            mean_left = 200, mean_right = 2000, second_smooth = F)
+  expect_error(expect_equivalent(b1_l3_x3p$grooves[[1]]$groove, tmp3$groove))
 
   # Check numerically identical for groove locations, at least...
   expect_identical(b1_l3_x3p$grooves[[1]]$groove, testb1$grooves[[1]]$groove)
@@ -60,5 +65,3 @@ test_that("grooves works as expected", {
 
   ## What other groove methods should be tested?
 })
-cc_locate_grooves(testb1$ccdata[[1]], "middle", middle = 80)
-cc_locate_grooves(testb1$ccdata[[1]], "middle", middle = 75)

@@ -13,6 +13,7 @@ testb1 <- testb1 %>%
   dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut))
 
 
+
 test_that("land_cc works as expected", {
   expect_s3_class(testcc1, "data.frame")
   expect_equal(names(testcc1), c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop",  "resid"))
@@ -21,6 +22,7 @@ test_that("land_cc works as expected", {
 
 test_that("x3p_crosscut_optimize works as expected", {
   expect_silent(x3p_crosscut_optimize(b1_l3))
+  expect_silent(suppressWarnings(x3p_crosscut_optimize(hamby252demo$bullet1[3])))
   expect_gte(testb1$crosscut, 50)
   expect(is.numeric(testb1$crosscut))
   expect_equivalent(testb1$crosscut, b1_l3_x3p$crosscut)
@@ -28,9 +30,14 @@ test_that("x3p_crosscut_optimize works as expected", {
 
 test_that("x3p_crosscut works as expected", {
   expect_silent(x3p_crosscut(testb1_l3, testb1$crosscut))
+  expect_silent(suppressWarnings(x3p_crosscut(hamby252demo$bullet1[3])))
   expect_s3_class(testb1$ccdata[[1]], "data.frame")
   expect_equal(names(testb1$ccdata[[1]]), c("x", "y", "value"))
   expect_length(attr(testb1$ccdata[[1]], "header.info"), 4)
   expect_equal(sort(names(attr(testb1$ccdata[[1]], "header.info"))), sort(c("sizeY", "sizeX", "incrementY", "incrementX")))
   expect_equivalent(testb1$ccdata[[1]], b1_l3_x3p$ccdata[[1]])
+})
+
+test_that("switch_xy works as expected", {
+  expect_equal(switch_xy(data.frame(x = 1:3, y = 5:7)), data.frame(y = 1:3, x = 5:7))
 })
