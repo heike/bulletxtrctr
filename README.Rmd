@@ -29,7 +29,7 @@ Analyze bullet striations using nonparametric methods
 ```
   
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
-The NIST Research Ballistics Toolmarks data base (NRBTD) [https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.  
+The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.  
 
 Download some files from NRBTD, if not yet available:
 
