@@ -75,7 +75,7 @@ bullets <- bullets %>% mutate(
 We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
 
 ```{r}
-image_x3p(bullets$x3p[[1]], file="README_files/temp-before.png")
+image_x3p(bullets$x3p[[1]], file = "README_files/temp-before.png")
 ```
 
 The raw scan needs to be flipped such that the heel is along the bottom of the image rather than along the left hand side.
