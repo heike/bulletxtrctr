@@ -4,12 +4,14 @@
 \alias{read_bullet}
 \title{Reading all scans from a folder}
 \usage{
-read_bullet(folder, ext = "x3p")
+read_bullet(folder = NULL, ext = "x3p", urllist = NULL)
 }
 \arguments{
 \item{folder}{character describing the path to a folder}
 
 \item{ext}{character value, consisting of the extension(s) describing the file format the scans are in}
+
+\item{urllist}{list of URLs pointing to x3p files}
 }
 \value{
 data frame with two variables, source and x3p, containing the path to the file and the corresponding x3p file
