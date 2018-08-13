@@ -34,6 +34,9 @@ The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov
 Download some files from NRBTD, if not yet available:
 
 ```{r}
+if (!dir.exists("README_files/data")) {
+  dir.create("README_files/data", recursive = T)
+}
 if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
   NRBTDsample_download("README_files/data")
 }
@@ -92,7 +95,7 @@ The raw scan needs to be flipped such that the heel is along the bottom of the i
 # turn the scans such that (0,0) is bottom left
 bullets <- bullets %>% mutate(
   x3p = x3p %>% purrr::map(.f = function(x) x %>% 
-                             rotate_x3p(angle=-90) %>%
+                             rotate_x3p(angle = -90) %>%
                              y_flip_x3p())
   ) 
 
@@ -100,7 +103,7 @@ bullets <- bullets %>% mutate(
 
 
 ```{r}
-image_x3p(bullets$x3p[[1]], file="README_files//temp-after.png")
+image_x3p(bullets$x3p[[1]], file = "README_files/temp-after.png")
 ```
 
 Scan after the transformation: a clear right twist is visible in the right slant of striae and grooves.
@@ -239,9 +242,9 @@ comparisons <- comparisons %>% tidyr::unnest(features)
 comparisons %>% 
   ggplot(aes(x = land1, y = land2, fill=ccf)) +
   geom_tile() +
-  scale_fill_gradient2(low="grey80", high = "darkorange", 
+  scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = 0.5) +
-  facet_grid(bullet1~bullet2, labeller="label_both") +
+  facet_grid(bullet1~bullet2, labeller = "label_both") +
   xlab("Land 1") +
   ylab("Land 2")
 ```
@@ -255,9 +258,9 @@ comparisons %>%
 comparisons %>% 
   ggplot(aes(x = land1, y = land2, fill=rfscore)) +
   geom_tile() +
-  scale_fill_gradient2(low="grey80", high = "darkorange", 
+  scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  facet_grid(bullet1~bullet2, labeller="label_both") +
+  facet_grid(bullet1~bullet2, labeller = "label_both") +
   xlab("Land 1") +
   ylab("Land 2")
 ```
@@ -265,10 +268,10 @@ comparisons %>%
 11. Determine bullet-to-bullet scores
 
 ```{r}
-bullet_scores <- comparisons %>% group_by(bullet1, bullet2) %>% nest()
+bullet_scores <- comparisons %>% group_by(bullet1, bullet2) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
-    .f = function(d) max(bulletr::compute_average_scores(land1=d$land1, land2=d$land2, d$rfscore)))
+    .f = function(d) max(bulletr::compute_average_scores(land1 = d$land1, land2 = d$land2, d$rfscore)))
 )
 bullet_scores %>% select(-data)
 ```
