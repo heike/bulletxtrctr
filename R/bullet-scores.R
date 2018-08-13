@@ -6,6 +6,7 @@
 #' @param score numeric vector of scores to be summarized into a single number
 #' @export
 #' @importFrom readr parse_number
+#' @importFrom stats xtabs
 #' @return numeric vector of average scores. Length is the same as the number of land engraved areas on the bullets.
 compute_average_scores <- function(land1, land2, score) {
   land1 <- readr::parse_number(land1)
