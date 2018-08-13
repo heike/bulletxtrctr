@@ -9,8 +9,13 @@
 #' @importFrom x3ptools read_x3p
 #' @importFrom dplyr as.tbl
 #' @examples
-#'  b1 <- read_bullet("data/Bullet1", "x3p")
-#'  b2 <- read_bullet("data/Bullet2", "x3p")
+#' \dontrun{
+#' dir.create("data")
+#' x3ptools::NRBTDsample_download("data")
+#' b1 <- read_bullet("data/Bullet1", "x3p")
+#' b2 <- read_bullet("data/Bullet2", "x3p")
+#' on.exit(unlink("data", recursive = T))
+#' }
 read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
   stopifnot(!is.null(folder) | !is.null(urllist))
   if (!is.null(folder) & !is.null(urllist)) {
