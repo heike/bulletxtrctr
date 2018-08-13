@@ -71,6 +71,12 @@ bullets <- bullets %>% mutate(
   )
 ```
 
+```{r}
+bullets$x3p[[1]]$header.info$incrementY
+bullets$x3p[[1]]$header.info$incrementX
+summary(as.vector(bullets$x3p[[1]]$surface.matrix))
+```
+
 
 We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
 
@@ -241,7 +247,7 @@ comparisons %>%
 ```
     
 
-10. Get Predicted Probability of Match
+10. Get Score predictions for each land to land comparison
 
 ```{r, warning=FALSE}
   comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
@@ -256,5 +262,17 @@ comparisons %>%
   ylab("Land 2")
 ```
     
+11. Determine bullet-to-bullet scores
+
+```{r}
+bullet_scores <- comparisons %>% group_by(bullet1, bullet2) %>% nest()
+bullet_scores <- bullet_scores %>% mutate(
+  bullet_score = data %>% purrr::map_dbl(
+    .f = function(d) max(bulletr::compute_average_scores(land1=d$land1, land2=d$land2, d$rfscore)))
+)
+bullet_scores %>% select(-data)
+```
+
+
 
 An interactive interface for doing comparisons is available https://oaiti.org/apps/bulletmatcher/
