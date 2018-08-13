@@ -28,6 +28,7 @@ read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
   } else {
     set <- urllist
   }
+  if (length(set) == 0) stop("No files found. Check path/URL.")
 
   if (ext == "x3p") {
     scans <- lapply(set, FUN = read_x3p)
