@@ -13,9 +13,11 @@ output:
 [![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--14-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
+# bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
+
 Analyze bullet striations using nonparametric methods
 
-# Comparing lands from two bullets
+## Comparing lands from two bullets
 
 1. Load libraries
 
@@ -36,13 +38,21 @@ Download some files from NRBTD, if not yet available:
 
 
 ```r
+<<<<<<< HEAD
 if (!dir.exists("README_files/data")) {
   dir.create("README_files/data", recursive = T)
 }
 if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
   NRBTDsample_download("README_files/data")
+=======
+if (!dir.exists("tests/data")) {
+  dir.create("tests/data", recursive = T)
 }
-  b1 <- read_bullet("README_files/data/Bullet1", "x3p")
+if (!file.exists("tests/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
+  NRBTDsample_download("tests/data")
+>>>>>>> website updated
+}
+  b1 <- read_bullet("tests/data/Bullet1", "x3p")
 ```
 
 ```
@@ -50,7 +60,7 @@ if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")
 ```
 
 ```r
-  b2 <- read_bullet("README_files/data/Bullet2", "x3p")
+  b2 <- read_bullet("tests/data/Bullet2", "x3p")
 ```
 
 ```
@@ -341,12 +351,19 @@ comparisons %>%
 
 
 ```r
+<<<<<<< HEAD
 parse_number <- readr::parse_number
 bullet_scores <- comparisons %>% group_by(bullet1, bullet2) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
     .f = function(d) max(bulletr::compute_average_scores(
       land1 = d$land1, land2 = d$land2, d$rfscore)))
+=======
+bullet_scores <- comparisons %>% group_by(bullet1, bullet2) %>% tidyr::nest()
+bullet_scores <- bullet_scores %>% mutate(
+  bullet_score = data %>% purrr::map_dbl(
+    .f = function(d) max(compute_average_scores(land1 = d$land1, land2 = d$land2, d$rfscore)))
+>>>>>>> website updated
 )
 bullet_scores %>% select(-data)
 ```

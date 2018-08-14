@@ -13,9 +13,14 @@ output:
 [![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
+# bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
+
 Analyze bullet striations using nonparametric methods
 
-# Comparing lands from two bullets
+
+## Comparing lands from two bullets
+
+Stria comparisons between bullets are based on land-to-land comparisons. 
 
 1. Load libraries
 

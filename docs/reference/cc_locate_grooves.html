@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bulletxtrctr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.0</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
 
     <pre class="usage"><span class='fu'>cc_locate_grooves</span>(<span class='no'>ccdata</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"rollapply"</span>, <span class='kw'>smoothfactor</span> <span class='kw'>=</span> <span class='fl'>15</span>,
   <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>groove_cutoff</span> <span class='kw'>=</span> <span class='fl'>400</span>, <span class='kw'>mean_left</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mean_right</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mean_window</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>mean_window</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>return_plot</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,6 +143,10 @@
       <td><p>The window around the means to use</p></td>
     </tr>
     <tr>
+      <th>return_plot</th>
+      <td><p>Return plot of grooves?</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>parameters passed on to specific groove location methods</p></td>
     </tr>
@@ -161,7 +165,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Heike Hofmann, Susan Vanderplas.</p>
+  <p>Developed by Heike Hofmann, Susan Vanderplas, Ganesh Krishnan.</p>
 </div>
 
 <div class="pkgdown">
