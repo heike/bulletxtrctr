@@ -20,6 +20,11 @@ data frame with two variables, source and x3p, containing the path to the file a
 some more description
 }
 \examples{
- b1 <- read_bullet("data/Bullet1", "x3p")
- b2 <- read_bullet("data/Bullet2", "x3p")
+\dontrun{
+dir.create("data")
+x3ptools::NRBTDsample_download("data")
+b1 <- read_bullet("data/Bullet1", "x3p")
+b2 <- read_bullet("data/Bullet2", "x3p")
+on.exit(unlink("data", recursive = T))
+}
 }
