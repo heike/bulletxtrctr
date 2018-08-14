@@ -2,20 +2,23 @@
 % Please edit documentation in R/peaks.R
 \name{striation_identify_matches}
 \alias{striation_identify_matches}
-\title{Match striation marks across two cross sections based on previously identified peaks and valleys}
+\title{Match striation marks across two aligned signatures}
 \usage{
-striation_identify_matches(lines1, lines2)
+striation_identify_matches(striae1, striae2)
 }
 \arguments{
-\item{lines1}{data frame as returned from sig_get_peaks function. data frames are expected to have
+\item{striae1}{data frame as returned from sig_get_peaks function. data frames are expected to have
 the following variables: xmin, xmax, group, type, bullet, heights}
 
-\item{lines2}{data frame as returned from sig_get_peaks function. data frames are expected to have
+\item{striae2}{data frame as returned from sig_get_peaks function. data frames are expected to have
 the following variables: xmin, xmax, group, type, bullet, heights}
 }
 \value{
 data frame of the same form as lines1 and lines2, but consisting of an additional variable of whether the striation marks are matches
 }
 \description{
+`striae1` and `striae2` are data frames of previously identified peaks and valleys returned by `sig_get_peaks`
+}
+\details{
 adapted from function `striation_identify` in the bulletr package, just used internally. Not intended for public consumption.
 }

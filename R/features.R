@@ -1,3 +1,24 @@
+#' Extract information for striation marks from two aligned signatures
+#'
+#' @param striae data frames of striation marks based on two aligned signatures
+#' @param type one of "peak", "valley" or "all"
+#' @param match binary setting: TRUE for matching striae, FALSE for non-matching striae
+#' @return number of striae
+#' @export
+extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
+  striae$type__ <- TRUE
+
+  if (type == "peak") striae$type__ <- striae$type == 1
+  if (type == "valley") striae$type__ <- striae$type == 1
+
+  if (match)
+    n <- sum(striae$match & striae$type__)
+  else
+    n <- sum(!striae$match & striae$type__)
+
+  return(n)
+}
+
 #' Extract ccf from two (or more) aligned signatures
 #'
 #' @param aligned data frame with variable x (for location) and two or more measurements

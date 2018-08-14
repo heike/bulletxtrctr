@@ -273,12 +273,25 @@ comparisons <- comparisons %>% mutate(
 )
 ```
 
-Other features also need an evaluation of peaks and valleys to match between signatures:
+Other features need an evaluation of striation marks between two aligned signatures:
 
 
 ```r
   comparisons <- comparisons %>% mutate(
-    results = aligned %>% purrr::map(.f = sig_cms_max, span = 75) 
+    striae = aligned %>% purrr::map(.f = sig_cms_max, span = 75) 
+  )
+```
+
+
+```r
+  comparisons <- comparisons %>% mutate(
+    matches0 = striae %>% purrr::map_dbl(.f = function(s) {
+      extract_feature_n_striae(s$lines, type="peaks", match=TRUE)
+    }),
+    mismatches0 = striae %>% purrr::map_dbl(.f = function(s) {
+      extract_feature_n_striae(s$lines, type="peaks", match=FALSE)
+    })
+    
   )
 ```
 
@@ -305,7 +318,7 @@ comparisons <- comparisons %>% mutate(
 
 ```r
 comparisons <- comparisons %>% mutate(
-  features = results %>% purrr::map(.f = extract_features_all)
+  features = striae %>% purrr::map(.f = extract_features_all)
 )
 
 comparisons <- comparisons %>% tidyr::unnest(features)
@@ -321,7 +334,7 @@ comparisons %>%
   ylab("Land 2")
 ```
 
-![](README_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
     
 
 10. Get Score predictions for each land to land comparison
@@ -340,7 +353,7 @@ comparisons %>%
   ylab("Land 2")
 ```
 
-![](README_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
     
 11. Determine bullet-to-bullet scores
 
