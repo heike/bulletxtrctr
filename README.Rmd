@@ -21,11 +21,11 @@ Analyze bullet striations using nonparametric methods
 
 
 ```{r, message=FALSE}
-  library(dplyr)
-  library(bulletxtrctr)
-  library(x3ptools)
-  library(randomForest)
-  library(ggplot2)
+library(dplyr)
+library(bulletxtrctr)
+library(x3ptools)
+library(randomForest)
+library(ggplot2)
 ```
   
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
@@ -268,10 +268,12 @@ comparisons %>%
 11. Determine bullet-to-bullet scores
 
 ```{r}
+parse_number <- readr::parse_number
 bullet_scores <- comparisons %>% group_by(bullet1, bullet2) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
-    .f = function(d) max(bulletr::compute_average_scores(land1 = d$land1, land2 = d$land2, d$rfscore)))
+    .f = function(d) max(bulletr::compute_average_scores(
+      land1 = d$land1, land2 = d$land2, d$rfscore)))
 )
 bullet_scores %>% select(-data)
 ```
