@@ -10,6 +10,9 @@
 #' @param ... additional arguments to cc_locate_grooves and cc_get_signature
 #' @return a data_frame with bullet x3p files and processed data steps
 #' @export
+#' @importFrom dplyr mutate,select,bind_rows
+#' @importFrom purrr map,map2,map_dbl
+#' @import assertthat
 bullet_pipeline <- function(
   location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
 
@@ -22,8 +25,8 @@ bullet_pipeline <- function(
 
   if (length(unlist(location)) > 1 | min(grepl("^(http|www)", location)) == 1) {
     land_list <- purrr::map(location, function(x) read_bullet(urllist = x)) %>%
-      bind_rows(.id = "bullet") %>%
-      select(source, bullet, x3p)
+      dplyr::bind_rows(.id = "bullet") %>%
+      dplyr::select(source, bullet, x3p)
   } else {
     assert_that(dir.exists(location))
 
@@ -35,7 +38,7 @@ bullet_pipeline <- function(
       # I don't know if this will work on Windows...
       dplyr::mutate(bullet = sub(pattern = "(.*)/(.*?)$", replacement = "\\2",
                                  dirname(as.character(source)))) %>%
-      select(source, bullet, x3p)
+      dplyr::select(source, bullet, x3p)
   }
 
 
@@ -46,7 +49,7 @@ bullet_pipeline <- function(
   if (stop_at_step == "read") return(land_list)
 
   land_list <- land_list %>%
-    mutate(x3p = purrr::map(x3p, .f = x3p_clean))
+    dplyr::mutate(x3p = purrr::map(x3p, .f = x3p_clean))
 
   if (stop_at_step == "clean") return(land_list)
 
@@ -54,7 +57,7 @@ bullet_pipeline <- function(
   ccargs <- dots[names(dots) %in% ccnames]
 
   land_list <- land_list %>%
-    mutate(
+    dplyr::mutate(
       cclist = lapply(x3p, function(x) {
         ccargs$x3p <- x
         return(ccargs)
@@ -64,8 +67,8 @@ bullet_pipeline <- function(
         .f = ~do.call("x3p_crosscut_optimize", .x)
       )
     ) %>%
-    mutate(ccdata = purrr::map2(x3p, crosscut, x3p_crosscut)) %>%
-    select(-cclist)
+    dplyr::mutate(ccdata = purrr::map2(x3p, crosscut, x3p_crosscut)) %>%
+    dplyr::select(-cclist)
 
   assert_that(has_name(land_list, "crosscut"),
               has_name(land_list, "ccdata"))
@@ -75,16 +78,17 @@ bullet_pipeline <- function(
   gnames <- names(formals(cc_locate_grooves))
   gargs <- dots[names(dots) %in% gnames]
 
-  land_list <- land_list %>% mutate(
-    glist = lapply(ccdata, function(x) {
-      gargs$ccdata <- x
-      return(gargs)
-    }),
-    grooves = purrr::map(
-      .x = glist,
-      .f = ~do.call("cc_locate_grooves", .x))
-  ) %>%
-    select(-glist)
+  land_list <- land_list %>%
+    dplyr::mutate(
+      glist = lapply(ccdata, function(x) {
+        gargs$ccdata <- x
+        return(gargs)
+      }),
+      grooves = purrr::map(
+        .x = glist,
+        .f = ~do.call("cc_locate_grooves", .x))
+    ) %>%
+    dplyr::select(-glist)
 
   assert_that(has_name(land_list, "grooves"))
 
@@ -93,18 +97,19 @@ bullet_pipeline <- function(
   snames <- names(formals(cc_get_signature))
   sargs <- dots[names(dots) %in% snames]
 
-  land_list <- land_list %>% mutate(
-    slist = purrr::map2(ccdata, grooves, function(x, y) {
+  land_list <- land_list %>%
+    dplyr::mutate(
+      slist = purrr::map2(ccdata, grooves, function(x, y) {
 
-      sargs$ccdata <- x
-      sargs$grooves <- y
-      return(sargs)
-    }),
-    sigs = purrr::map(
-      .x = slist,
-      .f = ~do.call("cc_get_signature", .x))
-  ) %>%
-    select(-slist)
+        sargs$ccdata <- x
+        sargs$grooves <- y
+        return(sargs)
+      }),
+      sigs = purrr::map(
+        .x = slist,
+        .f = ~do.call("cc_get_signature", .x))
+    ) %>%
+    dplyr::select(-slist)
 
   assert_that(has_name(land_list, "sigs"))
 
@@ -117,10 +122,13 @@ bullet_pipeline <- function(
 #' @param x3p x3p data read in using read_x3p or read_bullet
 #' @return x3p with header information in microns
 #' @export
+#' @import assertthat
 x3pheader_to_microns <- function(x3p) {
-    # make sure all measurements are in microns
-    x3p$surface.matrix <- x3p$surface.matrix*10^6
-    x3p$header.info$incrementY <- x3p$header.info$incrementY*10^6
-    x3p$header.info$incrementX <- x3p$header.info$incrementX*10^6
-    x3p
+  assert_that("x3p" %in% class(x3p))
+
+  # make sure all measurements are in microns
+  x3p$surface.matrix <- x3p$surface.matrix*10^6
+  x3p$header.info$incrementY <- x3p$header.info$incrementY*10^6
+  x3p$header.info$incrementX <- x3p$header.info$incrementX*10^6
+  x3p
 }
