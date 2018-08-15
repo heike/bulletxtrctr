@@ -65,18 +65,20 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
 
 
 
-#' Match striation marks across two cross sections based on previously identified peaks and valleys
+#' Match striation marks across two aligned signatures
+#'
+#' `striae1` and `striae2` are data frames of previously identified peaks and valleys returned by `sig_get_peaks`
 #'
 #' adapted from function `striation_identify` in the bulletr package, just used internally. Not intended for public consumption.
-#' @param lines1 data frame as returned from sig_get_peaks function. data frames are expected to have
+#' @param striae1 data frame as returned from sig_get_peaks function. data frames are expected to have
 #' the following variables: xmin, xmax, group, type, bullet, heights
-#' @param lines2 data frame as returned from sig_get_peaks function. data frames are expected to have
+#' @param striae2 data frame as returned from sig_get_peaks function. data frames are expected to have
 #' the following variables: xmin, xmax, group, type, bullet, heights
 #' @return data frame of the same form as lines1 and lines2, but consisting of an additional variable of whether the striation marks are matches
 #' @importFrom dplyr group_by %>% summarise
 #' @importFrom tidyr gather
 #' @importFrom stats sd
-striation_identify_matches <- function(lines1, lines2) {
+striation_identify_matches <- function(striae1, striae2) {
   group <- NULL
   type <- NULL
   bullet <- NULL
@@ -84,6 +86,9 @@ striation_identify_matches <- function(lines1, lines2) {
   n <- NULL
   variable <- NULL
   value <- NULL
+
+  lines1 <- striae1
+  lines2 <- striae2
 
   lines <- rbind(lines1, lines2)
   lines <- lines[order(lines$xmin),]

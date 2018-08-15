@@ -2,7 +2,7 @@
 #'
 #' adapted from `bulletGetMaxCMS`
 #' aligns two signatures, identifies peaks and valleys, matches striae, and counts longest run.
-#' Should probably be split into four or five sub functions.
+#' Should probably be split into four or five sub functions. XXX really. split it.
 #' @param aligned data frame of location and aligned signatures
 #' @param span positive number  for the smoothfactor to use for assessing peaks.
 #' @return list of matching parameters, data set of the identified striae, and the aligned data sets.
