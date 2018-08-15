@@ -2,9 +2,11 @@
 #'
 #' some more description
 #' @param folder character describing the path to a folder
-#' @param ext character value, consisting of the extension(s) describing the file format the scans are in
+#' @param ext character value, consisting of the extension(s) describing the
+#'          file format the scans are in
 #' @param urllist list of URLs pointing to x3p files
-#' @return data frame with two variables, source and x3p, containing the path to the file and the corresponding x3p file
+#' @return data frame with two variables, source and x3p, containing the path
+#'           to the file and the corresponding x3p file
 #' @export
 #' @import assertthat
 #' @importFrom x3ptools read_x3p
@@ -21,7 +23,7 @@ read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
   assert_that(!is.null(folder) | !is.null(urllist))
 
   if (!is.null(folder) & !is.null(urllist)) {
-    message("folder and urllist both provided. Defaulting to reading x3p files from folder.")
+    message("folder and urllist both provided. Reading x3p files from folder.")
   }
 
   if (!is.null(folder)) {

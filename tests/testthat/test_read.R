@@ -8,8 +8,10 @@ setup({
     dir.create(here::here("tests/Bullet1"))
   }
   if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))) {
-    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/2ea4efe4-beeb-4291-993d-ae7726c624f4",
-                  destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"), quiet = T)
+    download.file(
+      "https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/2ea4efe4-beeb-4291-993d-ae7726c624f4",
+      destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"),
+      quiet = T)
   }
 })
 
@@ -18,7 +20,9 @@ setup({
 #   unlink(here::here("tests/Bullet1"), recursive = T)
 # })
 
-o1 <- capture.output(b2 <- read_bullet(here::here("tests/Bullet1"), "x3p"), split = T)
+o1 <- capture.output(
+  b2 <- read_bullet(here::here("tests/Bullet1"), "x3p"),
+  split = T)
 b3 <- b2 %>%
   # turn the scans such that (0,0) is bottom left
   dplyr::mutate(
@@ -61,7 +65,8 @@ test_that("read works as expected", {
 
   # If conditions
   expect_message(read_bullet(folder = here::here("tests/Bullet1/"),
-                             urllist = hamby252demo$bullet1[3]), "folder and urllist both provided")
+                             urllist = hamby252demo$bullet1[3]),
+                 "folder and urllist both provided")
   expect_error(read_bullet())
 })
 
