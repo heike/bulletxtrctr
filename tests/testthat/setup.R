@@ -21,12 +21,12 @@ testthat::setup({
   }
 })
 
-testthat::teardown({
-  file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
-  unlink(here::here("tests/Bullet1"), recursive = T)
-  file.remove(here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"))
-  unlink(here::here("tests/Bullet2"), recursive = T)
-})
+# testthat::teardown({
+#   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
+#   unlink(here::here("tests/Bullet1"), recursive = T)
+#   file.remove(here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"))
+#   unlink(here::here("tests/Bullet2"), recursive = T)
+# })
 
 # test_read.R
 # test_grooves.R

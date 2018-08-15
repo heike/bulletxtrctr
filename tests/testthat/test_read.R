@@ -13,17 +13,17 @@ setup({
   }
 })
 
-teardown({
-  file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
-  unlink(here::here("tests/Bullet1"), recursive = T)
-})
+# teardown({
+#   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
+#   unlink(here::here("tests/Bullet1"), recursive = T)
+# })
 
 o1 <- capture.output(b2 <- read_bullet(here::here("tests/Bullet1"), "x3p"), split = T)
 b3 <- b2 %>%
   # turn the scans such that (0,0) is bottom left
   dplyr::mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
-                               x3ptools::rotate_x3p(angle=-90) %>%
+                               x3ptools::rotate_x3p(angle = -90) %>%
                                x3ptools::y_flip_x3p())
   ) %>% dplyr::mutate(
     x3p = x3p %>% purrr::map(.f = function(x) {
@@ -39,7 +39,7 @@ b4 <- read_bullet(urllist = hamby252demo$bullet1[3]) %>%
   # turn the scans such that (0,0) is bottom left
   dplyr::mutate(
     x3p = x3p %>% purrr::map(.f = function(x) x %>%
-                               x3ptools::rotate_x3p(angle=-90) %>%
+                               x3ptools::rotate_x3p(angle = -90) %>%
                                x3ptools::y_flip_x3p())
   ) %>% dplyr::mutate(
     x3p = x3p %>% purrr::map(.f = function(x) {
@@ -60,7 +60,7 @@ test_that("read works as expected", {
   expect_equal(b1_l3_x3p$x3p, b4$x3p)
 
   # If conditions
-  expect_message(read_bullet(folder = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"),
+  expect_message(read_bullet(folder = here::here("tests/Bullet1/"),
                              urllist = hamby252demo$bullet1[3]), "folder and urllist both provided")
   expect_error(read_bullet())
 })
