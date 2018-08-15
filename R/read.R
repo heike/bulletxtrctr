@@ -33,5 +33,5 @@ read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
   if (ext == "x3p") {
     scans <- lapply(set, FUN = read_x3p)
   }
-  as.tbl(data.frame(source = set, x3p = I(scans)))
+  as.tbl(data.frame(source = set, x3p = I(scans), stringsAsFactors = F))
 }
