@@ -35,5 +35,5 @@ there should be some investigation, whether this cross section is usable.
 There is the risk of tank rash.
 }
 \details{
-XXX still to do: are missing values only on the right hand side (leading shoulder)?
+TODO are missing values only on the right hand side (leading shoulder)?
 }
