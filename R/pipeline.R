@@ -8,6 +8,8 @@
 #' @param x3p_clean function to use to clean the x3p file - convert header info
 #'          to correct units, rotate the surface matrix, etc.
 #' @param ... additional arguments to cc_locate_grooves and cc_get_signature
+#' @return a data_frame with bullet x3p files and processed data steps
+#' @export
 bullet_pipeline <- function(
   location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
 
@@ -18,7 +20,7 @@ bullet_pipeline <- function(
 
   dots <- list(...)
 
-  if (length(unlist(location)) > 1 & min(grepl("^(http|www)", location)) == 1) {
+  if (length(unlist(location)) > 1 | min(grepl("^(http|www)", location)) == 1) {
     land_list <- purrr::map(location, function(x) read_bullet(urllist = x)) %>%
       bind_rows(.id = "bullet") %>%
       select(source, bullet, x3p)
