@@ -9,7 +9,6 @@
 #' @import assertthat
 #' @importFrom x3ptools read_x3p
 #' @importFrom dplyr as.tbl
-#' @importFrom purrr walk
 #' @examples
 #' \dontrun{
 #' dir.create("data")
@@ -26,11 +25,11 @@ read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
   }
 
   if (!is.null(folder)) {
-    assert_that(is.dir(folder))
+    lapply(folder, function(x) assert_that(is.dir(x)))
     set <- dir(folder, pattern = ext, recursive = TRUE, full.names = TRUE)
     message(sprintf("%d files found. Reading ...", length(set)))
   } else {
-    purrr::walk(unlist(urllist), function(x) {
+    lapply(unlist(urllist), function(x) {
       assert_that(grepl("^(http|www)", x))
     })
     set <- unlist(urllist)
