@@ -34,6 +34,13 @@ test_that("bullet_pipeline works as expected", {
   expect_equal(names(tmp), c("source", "bullet", "x3p"))
   expect_equal(tmp$bullet, c("Bullet1", "Bullet2"))
 
+  tmp <- bullet_pipeline(
+    list(Bullet1 = c(hamby252demo$bullet1[3]),
+         Bullet2 = c(hamby252demo$bullet2[5])),
+    stop_at_step = "read")
+  expect_equal(names(tmp), c("source", "bullet", "x3p"))
+  expect_equal(tmp$bullet, c("Bullet1", "Bullet2"))
+
   tmp <- bullet_pipeline(here::here("tests"), stop_at_step = "clean",
                          x3p_clean = cleanfun)
   expect_equal(names(tmp), c("source", "bullet", "x3p"))

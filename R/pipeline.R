@@ -1,33 +1,41 @@
 #' Helper file to setup data
 #'
-#' @param directory directory containing x3p files. If there are sub-directories,
-#'          this function will assume that each sub-directory contains lands
-#'          from different bullets and will separate them accordingly
+#' @param location directory or list of urls containing x3p files.
+#'          If there are sub-directories or sub-lists, this function will assume
+#'          that each sub-directory contains lands from different bullets and
+#'          will separate them accordingly
 #' @param stop_at_step One of read, clean, crosscut, grooves, signatures
 #' @param x3p_clean function to use to clean the x3p file - convert header info
 #'          to correct units, rotate the surface matrix, etc.
 #' @param ... additional arguments to cc_locate_grooves and cc_get_signature
 bullet_pipeline <- function(
-  directory, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
+  location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
 
   if (is.null(stop_at_step)) stop_at_step <- "signatures"
 
-  assert_that(dir.exists(directory))
   assert_that("function" %in% class(x3p_clean))
   assert_that(stop_at_step %in% c("read", "clean", "crosscut", "grooves", "signatures"))
 
   dots <- list(...)
 
-  dirfiles <- list.files(directory, pattern = "x3p", full.names = T, recursive = T)
-  dirs <- dirname(dirfiles) %>% unique()
+  if (length(unlist(location)) > 1 & min(grepl("^(http|www)", location)) == 1) {
+    land_list <- purrr::map(location, function(x) read_bullet(urllist = x)) %>%
+      bind_rows(.id = "bullet") %>%
+      select(source, bullet, x3p)
+  } else {
+    assert_that(dir.exists(location))
 
-  assert_that(length(dirfiles) > 0)
+    dirfiles <- list.files(location, pattern = "x3p", full.names = T, recursive = T)
+    dirs <- dirname(dirfiles) %>% unique()
 
-  land_list <- read_bullet(dirs) %>%
-    # I don't know if this will work on Windows...
-    dplyr::mutate(bullet = sub(pattern = "(.*)/(.*?)$", replacement = "\\2",
-                               dirname(as.character(source)))) %>%
-    select(source, bullet, x3p)
+    assert_that(length(dirfiles) > 0)
+    land_list <- read_bullet(dirs) %>%
+      # I don't know if this will work on Windows...
+      dplyr::mutate(bullet = sub(pattern = "(.*)/(.*?)$", replacement = "\\2",
+                                 dirname(as.character(source)))) %>%
+      select(source, bullet, x3p)
+  }
+
 
   assert_that(has_name(land_list, "source"),
               has_name(land_list, "bullet"),
