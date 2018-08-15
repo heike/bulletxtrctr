@@ -13,10 +13,8 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr bind_rows
-#' @importFrom purrr map
-#' @importFrom purrr map2
-#' @importFrom purrr map_dbl
 #' @import assertthat
+#' @importFrom dplyr "%>%"
 bullet_pipeline <- function(
   location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
 
@@ -31,7 +29,7 @@ bullet_pipeline <- function(
   dots <- list(...)
 
   if (length(unlist(location)) > 1 | min(grepl("^(http|www)", location)) == 1) {
-    land_list <- purrr::map(location, function(x) read_bullet(urllist = x)) %>%
+    land_list <- lapply(location, function(x) read_bullet(urllist = x)) %>%
       dplyr::bind_rows(.id = "bullet") %>%
       dplyr::select(source, bullet, x3p)
   } else {
@@ -57,7 +55,7 @@ bullet_pipeline <- function(
   if (stop_at_step == "read") return(land_list)
 
   land_list <- land_list %>%
-    dplyr::mutate(x3p = purrr::map(x3p, .f = x3p_clean))
+    dplyr::mutate(x3p = lapply(x3p, x3p_clean))
 
   if (stop_at_step == "clean") return(land_list)
 
@@ -70,12 +68,16 @@ bullet_pipeline <- function(
         ccargs$x3p <- x
         return(ccargs)
       }),
-      crosscut = purrr::map_dbl(
-        .x = cclist,
-        .f = ~do.call("x3p_crosscut_optimize", .x)
-      )
+      crosscut = lapply(
+        cclist,
+        FUN = function(x) do.call("x3p_crosscut_optimize", x)
+      ) %>% as.numeric()
     ) %>%
-    dplyr::mutate(ccdata = purrr::map2(x3p, crosscut, x3p_crosscut)) %>%
+    dplyr::mutate(
+      ccdata = lapply(1:length(x3p),
+                      function(i) x3p_crosscut(x3p[i][[1]],
+                                               crosscut[i][[1]]))
+    ) %>%
     dplyr::select(-cclist)
 
   assert_that(has_name(land_list, "crosscut"),
@@ -92,9 +94,7 @@ bullet_pipeline <- function(
         gargs$ccdata <- x
         return(gargs)
       }),
-      grooves = purrr::map(
-        .x = glist,
-        .f = ~do.call("cc_locate_grooves", .x))
+      grooves = lapply(glist, function(.x) do.call("cc_locate_grooves", .x))
     ) %>%
     dplyr::select(-glist)
 
@@ -107,15 +107,12 @@ bullet_pipeline <- function(
 
   land_list <- land_list %>%
     dplyr::mutate(
-      slist = purrr::map2(ccdata, grooves, function(x, y) {
-
-        sargs$ccdata <- x
-        sargs$grooves <- y
+      slist = lapply(1:length(x3p), function(i) {
+        sargs$ccdata <- ccdata[i][[1]]
+        sargs$grooves <- grooves[i][[1]]
         return(sargs)
       }),
-      sigs = purrr::map(
-        .x = slist,
-        .f = ~do.call("cc_get_signature", .x))
+      sigs = lapply(slist, function(.x) do.call("cc_get_signature", .x))
     ) %>%
     dplyr::select(-slist)
 
