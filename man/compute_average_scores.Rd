@@ -14,8 +14,11 @@ compute_average_scores(land1, land2, score)
 \item{score}{numeric vector of scores to be summarized into a single number}
 }
 \value{
-numeric vector of average scores. Length is the same as the number of land engraved areas on the bullets.
+numeric vector of average scores. Length is the same as the number of
+          land engraved areas on the bullets.
 }
 \description{
-Note that the combination of `land1` and `land2` are a key to the scores, i.e. if a bullet has six lands, each of the input vectors should have length 36.
+Note that the combination of `land1` and `land2` are a key to the scores,
+i.e. if a bullet has six lands, each of the input vectors should have
+length 36.
 }
