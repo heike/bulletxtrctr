@@ -25,7 +25,8 @@ Imports:
     MASS,
     smoother,
     ggplot2,
-    assertthat
+    assertthat,
+    purrr
 Remotes: heike/x3ptools    
 Depends:
     R (>= 3.4)

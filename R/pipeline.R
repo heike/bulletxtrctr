@@ -10,11 +10,18 @@
 #' @param ... additional arguments to cc_locate_grooves and cc_get_signature
 #' @return a data_frame with bullet x3p files and processed data steps
 #' @export
-#' @importFrom dplyr mutate,select,bind_rows
-#' @importFrom purrr map,map2,map_dbl
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr bind_rows
+#' @importFrom purrr map
+#' @importFrom purrr map2
+#' @importFrom purrr map_dbl
 #' @import assertthat
 bullet_pipeline <- function(
   location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
+
+  # Define variables to make CRAN happy
+  bullet <- x3p <- cclist <- crosscut <- ccdata <- glist <- grooves <- slist <- NULL
 
   if (is.null(stop_at_step)) stop_at_step <- "signatures"
 
@@ -45,6 +52,7 @@ bullet_pipeline <- function(
   assert_that(has_name(land_list, "source"),
               has_name(land_list, "bullet"),
               has_name(land_list, "x3p"))
+  lapply(land_list$x3p, function(x) assert_that("x3p" %in% class(x)))
 
   if (stop_at_step == "read") return(land_list)
 
