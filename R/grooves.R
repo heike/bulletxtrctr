@@ -1,26 +1,44 @@
+#' Internal function to plot crosscut + grooves
+#'
+#' @param land data.frame with columns x and value
+#' @param grooves numeric vector of length 2 identifying both grooves.
+#'        If only one groove is identified, the other should be NA
+#' @import assertthat
+#' @return a ggplot2 object
 grooves_plot <- function(land, grooves) {
-  ### TODO: assertions
+  assert_that(has_name(land, "x"))
+  assert_that(has_name(land, "value"))
+  assert_that(is.numeric(grooves), sum(!is.na(grooves)) >= 1)
   x <- value <- NULL
 
   ggplot(aes(x = x, y = value), data = land) + geom_line(size = .5) + theme_bw() +
-    geom_vline(xintercept=grooves[1], colour = "blue") +
-    geom_vline(xintercept=grooves[2], colour = "blue")
+    geom_vline(xintercept = grooves[1], colour = "blue") +
+    geom_vline(xintercept = grooves[2], colour = "blue")
 }
 
 
 #' Find the grooves of a bullet land
 #'
-#' @param ccdata data frame of the crosscut. Data frame needs location x and measured values as `value`. If multiple crosscuts are to be considered, include a variable y and use as a key.
+#' @param ccdata data frame of the crosscut. Data frame needs location x and
+#'          measured values as `value`. If multiple crosscuts are to be
+#'          considered, include a variable y and use as a key.
 #' @param method method to use for identifying grooves. Defaults to "rollapply"
-#' @param smoothfactor The smoothing window to use - XXX the smoothing window seems to depend on the resolution at which the data has been collected.
-#' @param adjust positive number to adjust the grooves - XXX should be expressed in microns rather than an index
-#' @param groove_cutoff The index at which a groove cannot exist past - XXX this parameter should be expressed in microns rather than as an index to be able to properly deal with different resolutions
+#' @param smoothfactor The smoothing window to use - XXX the smoothing window
+#'          seems to depend on the resolution at which the data has been
+#'          collected.
+#' @param adjust positive number to adjust the grooves - XXX should be
+#'          expressed in microns rather than an index
+#' @param groove_cutoff The index at which a groove cannot exist past - XXX
+#'          this parameter should be expressed in microns rather than as an
+#'          index to be able to properly deal with different resolutions
 #' @param mean_left If provided, the location of the average left groove
 #' @param mean_right If provided, the location of the average right groove
 #' @param mean_window The window around the means to use
 #' @param return_plot Return plot of grooves?
 #' @param ... parameters passed on to specific groove location methods
 #' @export
+#' @examples ### TODO: Examples
+#'
 cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
                               adjust = 10, groove_cutoff = 400,
                               mean_left = NULL, mean_right = NULL, mean_window = 100,
