@@ -10,6 +10,7 @@ aligntest2 <- sig_align(b2_l5_x3p$sigs[[1]]$sig, b1_l3_x3p$sigs[[1]]$sig)
 trivial <- sig_align((1:10 - 5)^2, (3:6 - 5)^2)
 
 test_that("cross-correlation works", {
+  skip_if(skipall)
   expect_equal(names(ccftest), c("lag", "ccf"))
   expect_equal(ccftest$lag, -5:5)
   expect_equal(ccftest$ccf, c(NA, NA, rep(-1, 7), NA, NA))

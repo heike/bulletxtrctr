@@ -4,6 +4,11 @@ if (!exists("okfiles")) {
 }
 `%>%` <- magrittr::`%>%`
 
+if (!requireNamespace("here", quietly = TRUE) |
+    !requireNamespace("purrr", quietly = TRUE)) {
+  skipall <- T
+}
+
 testthat::setup({
   # Download data if it is not present
   if (!dir.exists(here::here("tests/Bullet1")) |
@@ -38,7 +43,7 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
     # turn the scans such that (0,0) is bottom left
     dplyr::mutate(
       x3p = x3p %>% purrr::map(.f = function(x) x %>%
-                                 x3ptools::rotate_x3p(angle=-90) %>%
+                                 x3ptools::rotate_x3p(angle = -90) %>%
                                  x3ptools::y_flip_x3p())
     ) %>% dplyr::mutate(
       x3p = x3p %>% purrr::map(.f = function(x) {
@@ -63,7 +68,7 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
       sigs = purrr::map2(
         .x = ccdata, .y = grooves,
         .f = function(x, y) {
-          cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
+          cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)})
     )
 
   save(b1_l3_x3p, file = here::here("tests/bullet1_only.Rdata"))
@@ -87,7 +92,7 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
     # turn the scans such that (0,0) is bottom left
     dplyr::mutate(
       x3p = x3p %>% purrr::map(.f = function(x) x %>%
-                                 x3ptools::rotate_x3p(angle=-90) %>%
+                                 x3ptools::rotate_x3p(angle = -90) %>%
                                  x3ptools::y_flip_x3p())
     ) %>% dplyr::mutate(
       x3p = x3p %>% purrr::map(.f = function(x) {
@@ -109,7 +114,7 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
       sigs = purrr::map2(
         .x = ccdata, .y = grooves,
         .f = function(x, y) {
-          cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)})
+          cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)})
     )
 
   save(b1_l3_x3p, b2_l5_x3p, file = here::here("tests/bullets_signatures.Rdata"))
@@ -131,6 +136,11 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
   match <- list(alignment = alignment, peaks = peaks, matches = matches,
                 maxcms = maxcms, features = features)
   save(match, file = here::here("tests/bullets_match.Rdata"))
+
+  features_single <- data_frame(
+    npeaks = extract_feature_n_striae(striae = maxcms, type = "peak"),
+    nvalley = extract_feature_n_striae(striae = maxcms, type = "valley")
+  )
 }
 
 

@@ -12,15 +12,15 @@ testb1 <- testb1 %>%
   dplyr::mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
   dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut))
 
-
-
 test_that("land_cc works as expected", {
+  skip_if(skipall)
   expect_s3_class(testcc1, "data.frame")
   expect_equal(names(testcc1), c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop",  "resid"))
   expect_equivalent(testcc1, cc1)
 })
 
 test_that("x3p_crosscut_optimize works as expected", {
+  skip_if(skipall)
   expect_silent(x3p_crosscut_optimize(b1_l3))
   expect_silent(suppressWarnings(x3p_crosscut_optimize(hamby252demo$bullet1[3])))
   expect_gte(testb1$crosscut, 50)
@@ -29,6 +29,7 @@ test_that("x3p_crosscut_optimize works as expected", {
 })
 
 test_that("x3p_crosscut works as expected", {
+  skip_if(skipall)
   expect_silent(x3p_crosscut(testb1_l3, testb1$crosscut))
   expect_silent(suppressWarnings(x3p_crosscut(hamby252demo$bullet1[3])))
   expect_s3_class(testb1$ccdata[[1]], "data.frame")

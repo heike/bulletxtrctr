@@ -8,6 +8,7 @@ testb1 <- b1_l3_x3p %>%
   dplyr::mutate(grooves_quad = purrr::map(ccdata, cc_locate_grooves, method = "quadratic", return_plot = F))
 
 test_that("grooves works as expected", {
+  skip_if(skipall)
   expect_silent(tmp <- cc_locate_grooves(testb1$ccdata[[1]]))
   expect_silent(cc_locate_grooves(testb1$ccdata[[1]], "middle"))
 
@@ -62,6 +63,4 @@ test_that("grooves works as expected", {
   expect_identical(b1_l3_x3p$grooves[[1]]$groove, testb1$grooves[[1]]$groove)
   expect_identical(b1_l3_x3p$grooves_mid[[1]]$groove, testb1$grooves_mid[[1]]$groove)
   expect_identical(b1_l3_x3p$grooves_quad[[1]]$groove, testb1$grooves_quad[[1]]$groove)
-
-  ## What other groove methods should be tested?
 })

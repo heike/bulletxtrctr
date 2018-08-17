@@ -1,6 +1,5 @@
 context("smooth")
 
-load(here::here("tests/smooth.Rdata"))
 
 set.seed(3240583)
 tmp <- dplyr::data_frame(
@@ -14,10 +13,12 @@ test_that("smooth functions works as expected", {
   expect_is(smoothrestest, "numeric")
   expect_is(sigsmoothrestest, "numeric")
 
-  expect_equivalent(smoothrestest[smoothrestest<5],
-                    sigsmoothrestest[smoothrestest<5])
-  expect_equivalent(sigsmoothrestest[smoothrestest>=5], 5)
+  expect_equivalent(smoothrestest[smoothrestest < 5],
+                    sigsmoothrestest[smoothrestest < 5])
+  expect_equivalent(sigsmoothrestest[smoothrestest >= 5], 5)
 
+  skip_if(skipall)
+  load(here::here("tests/smooth.Rdata"))
   expect_equivalent(smoothres, smoothrestest)
   expect_equivalent(sigsmoothres, sigsmoothrestest)
 

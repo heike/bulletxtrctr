@@ -57,6 +57,7 @@ b4 <- read_bullet(urllist = hamby252demo$bullet1[3]) %>%
 
 test_that("read works as expected", {
   expect_length(o1, 0)
+  skip_if(skipall)
   expect_s3_class(b2, "tbl_df")
   expect_s3_class(b2, "tbl")
   expect_s3_class(b2, "data.frame")

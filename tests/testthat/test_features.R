@@ -1,4 +1,5 @@
 context("features")
+requireNamespace("here", quietly = TRUE)
 
 load(here::here("tests/bullets_match.Rdata"))
 

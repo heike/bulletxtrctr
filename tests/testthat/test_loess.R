@@ -11,6 +11,7 @@ testb1 <- b1_l3_x3p %>%
 ex_names <- c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop")
 
 test_that("loess works as expected", {
+  skip_if(skipall)
   expect_s3_class(testb1$loess[[1]], "data.frame")
   expect_equivalent(names(testb1$loess[[1]]), ex_names)
   expect_equivalent(summarize_all(testb1$loess[[1]], mode) %>% as.character(),

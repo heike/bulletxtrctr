@@ -7,6 +7,7 @@ peakstest2 <- sig_get_peaks(match$alignment$bullets$sig2)
 matchestest <- striation_identify_matches(peakstest$lines, peakstest2$lines)
 
 test_that("peaks works as expected", {
+  skip_if(skipall)
   expect_equal(names(peakstest), c("peaks", "valleys", "extrema", "peaks.heights",
                                    "valleys.heights", "lines", "plot", "dframe"))
   expect_is(peakstest$peaks, "integer")

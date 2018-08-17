@@ -9,6 +9,7 @@ y <- as.table(c("3" = 1, "6" = 1))
 dimnames(y) <- list(c("3", "6"))
 
 test_that("sig_cms_max works", {
+  skip_if(skipall)
   expect_equal(names(maxcmstest), c("maxCMS", "ccf", "lag", "lines", "bullets"))
   expect_equal(names(maxcmstest$lines), c("xmin", "xmax", "match", "type", "meany", "heights", "sdheights"))
   expect_equal(names(maxcmstest$bullets), c("x", "sig1", "sig2"))

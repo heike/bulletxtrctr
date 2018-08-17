@@ -9,23 +9,24 @@ suppressWarnings({
       sigsLL = purrr::map2(
         .x = ccdata, .y = grooves,
         .f = function(x, y) {
-          cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.03)}),
+          cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)}),
       sigsLS = purrr::map2(
         .x = ccdata, .y = grooves,
         .f = function(x, y) {
-          cc_get_signature(ccdata=x, grooves = y, span1 = 0.75, span2=0.01)}),
+          cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.01)}),
       sigsSL = purrr::map2(
         .x = ccdata, .y = grooves,
         .f = function(x, y) {
-          cc_get_signature(ccdata=x, grooves = y, span1 = 0.25, span2=0.03)}),
+          cc_get_signature(ccdata = x, grooves = y, span1 = 0.25, span2 = 0.03)}),
       sigsSS = purrr::map2(
         .x = ccdata, .y = grooves,
         .f = function(x, y) {
-          cc_get_signature(ccdata=x, grooves = y, span1 = 0.25, span2=0.01)})
+          cc_get_signature(ccdata = x, grooves = y, span1 = 0.25, span2 = 0.01)})
     )
 })
 
 test_that("signatures works as expected", {
+  skip_if(skipall)
   expect_s3_class(testb1$sigsLL[[1]], "data.frame")
   expect_equivalent(names(testb1$sigsLL[[1]]), c("x", "y", "value", "raw_sig", "se", "sig"))
   expect_type(testb1$sigsLL[[1]]$x, "double")
@@ -38,6 +39,7 @@ test_that("signatures works as expected", {
 })
 
 test_that("signatures is numerically correct", {
+  skip_if(skipall)
   expect_equivalent(b1_l3_x3p$sigs, testb1$sigsLL)
   expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsLS[[1]]$sig))
   expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsSL[[1]]$sig))
