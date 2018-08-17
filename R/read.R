@@ -18,6 +18,9 @@
 #' b1 <- read_bullet("data/Bullet1", "x3p")
 #' b2 <- read_bullet("data/Bullet2", "x3p")
 #' on.exit(unlink("data", recursive = T))
+#'
+#' b1 <- read_bullet(urllist = hamby252demo[[1]])
+#' b2 <- read_bullet(urllist = hamby252demo[[2]])
 #' }
 read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
   assert_that(!is.null(folder) | !is.null(urllist))
