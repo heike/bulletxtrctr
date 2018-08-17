@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 14, 2018"
+date: "August 17, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--14-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--17-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
@@ -33,40 +33,39 @@ library(x3ptools)
 library(randomForest)
 library(ggplot2)
 ```
-  
+
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
 The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.  
 
-Download some files from NRBTD, if not yet available:
+In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 x3p files are provided in the `hamby252demo` object.
 
 
 ```r
-if (!dir.exists("tests/data")) {
-  dir.create("tests/data", recursive = T)
-}
-if (!file.exists("tests/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
-  NRBTDsample_download("tests/data")
-}
-  b1 <- read_bullet("tests/data/Bullet1", "x3p")
+b1 <- read_bullet(urllist = hamby252demo[[1]])
+b2 <- read_bullet(urllist = hamby252demo[[2]])
 ```
 
-```
-## 6 files found. Reading ...
-```
+If instead we wanted to download the files into a folder named "data" in our working directory, we would run this sequence of commands:
 
 ```r
-  b2 <- read_bullet("tests/data/Bullet2", "x3p")
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
+  NRBTDsample_download("data")
+}
+b1 <- read_bullet("data/Bullet1", "x3p")
+b2 <- read_bullet("data/Bullet2", "x3p")
 ```
 
-```
-## 6 files found. Reading ...
-```
 Combine the results into a single data frame:
 
 
 ```r
 b1$bullet <- 1
+b1$land <- paste0("1-", 1:6)
 b2$bullet <- 2
+b2$land <- paste0("2-", 1:6)
 bullets <- rbind(b1, b2)
 ```
 
@@ -104,15 +103,17 @@ Change measurements to microns:
 
 ```r
 bullets <- bullets %>% mutate(
-    x3p = x3p %>% purrr::map(.f = function(x) {
-      # make sure all measurements are in microns
-      x$surface.matrix <- x$surface.matrix*10^6
-      x$header.info$incrementY <- x$header.info$incrementY*10^6
-      x$header.info$incrementX <- x$header.info$incrementX*10^6
-      x
-    })
-  )
+  x3p = x3p %>% purrr::map(.f = function(x) {
+    # make sure all measurements are in microns
+    x$surface.matrix <- x$surface.matrix*10^6
+    x$header.info$incrementY <- x$header.info$incrementY*10^6
+    x$header.info$incrementX <- x$header.info$incrementX*10^6
+    x
+  })
+)
 ```
+
+<!-- This could also be done with the `x3pheader_to_microns` function.  -->
 
 
 ```r
@@ -159,7 +160,7 @@ bullets <- bullets %>% mutate(
   x3p = x3p %>% purrr::map(.f = function(x) x %>% 
                              rotate_x3p(angle = -90) %>%
                              y_flip_x3p())
-  ) 
+) 
 ```
 
 
@@ -176,27 +177,25 @@ Scan after the transformation: a clear right twist is visible in the right slant
 
 
 ```r
-  bullets <- bullets %>% mutate(
-    crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)
-  )
+bullets <- bullets %>% mutate(
+  crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)
+)
 # now extract the crosscuts
-  bullets <- bullets %>% mutate(
-    ccdata = purrr::map2(.x = x3p, .y = crosscut, 
-                         .f = x3p_crosscut)
-  )
+bullets <- bullets %>% mutate(
+  ccdata = purrr::map2(.x = x3p, .y = crosscut, 
+                       .f = x3p_crosscut)
+)
 ```
 
 4. Get the groove locations
 
 
 ```r
-  bullets <- bullets %>% mutate(
-    grooves = ccdata %>% 
-      purrr::map(.f = cc_locate_grooves, method = "rollapply", 
-                 adjust = 30)
- #         purrr::map(.f = cc_locate_grooves, method = "quadratic")
-  #    purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)
-  )
+bullets <- bullets %>% mutate(
+  grooves = ccdata %>% 
+    purrr::map(.f = cc_locate_grooves, method = "rollapply", 
+               adjust = 30, return_plot = TRUE)
+)
 
 bullets$grooves[[1]]
 ```
@@ -204,7 +203,11 @@ bullets$grooves[[1]]
 ```
 ## $groove
 ## [1]  246.875 2159.375
+## 
+## $plot
 ```
+
+![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 5. Extract signatures
 
@@ -215,8 +218,8 @@ bullets <- bullets %>% mutate(
     .x = ccdata, .y = grooves, 
     .f = function(x, y) {
       cc_get_signature(
-        ccdata=x, grooves = y, span1 = 0.75, span2=0.03)
-      })
+        ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)
+    })
 )
 ```
 
@@ -227,33 +230,41 @@ signatures %>%
   filter(!is.na(sig),!is.na(raw_sig)) %>%
   ggplot(aes(x = x)) + 
   geom_line(aes(y = raw_sig), colour = "grey70") +
-  geom_line(aes(y = sig), colour="grey30") +
-  facet_wrap(~source, ncol=6) +
+  geom_line(aes(y = sig), colour = "grey30") +
+  facet_wrap(~source, ncol = 6) +
   ylim(c(-5,5)) +
   theme_bw()
 ```
 
-![](README_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+```
+## Warning: Removed 25 rows containing missing values (geom_path).
+```
+
+```
+## Warning: Removed 38 rows containing missing values (geom_path).
+```
+
+![](README_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 8. Detect peaks and valleys in the aligned signatures
 
 
 ```r
-  lands <- unique(bullets$source)
-  comparisons <- data.frame(
-    expand.grid(b1=lands, b2=lands), stringsAsFactors = FALSE)
+lands <- unique(bullets$land)
+comparisons <- data.frame(
+  expand.grid(landA = lands, landB = lands), stringsAsFactors = FALSE)
 #  comparisons <- comparisons %>% filter(b1 != b2)
-  
-  comparisons <- comparisons %>% mutate(
-    aligned = purrr::map2(.x = b1, .y = b2, .f = function(xx, yy) {
-      land1 <- bullets$sigs[bullets$source==xx][[1]]
-      land2 <- bullets$sigs[bullets$source==yy][[1]]
-   #  land1$bullet <- "first-land"
-   #  land2$bullet <- "second-land"
-      
-      sig_align(land1$sig, land2$sig)
-    })
-  )
+
+comparisons <- comparisons %>% mutate(
+  aligned = purrr::map2(.x = landA, .y = landB, .f = function(xx, yy) {
+    land1 <- bullets$sigs[bullets$land == xx][[1]]
+    land2 <- bullets$sigs[bullets$land == yy][[1]]
+    #  land1$bullet <- "first-land"
+    #  land2$bullet <- "second-land"
+    
+    sig_align(land1$sig, land2$sig)
+  })
+)
 ```
 Some features are based on aligned signatures:
 
@@ -277,22 +288,22 @@ Other features need an evaluation of striation marks between two aligned signatu
 
 
 ```r
-  comparisons <- comparisons %>% mutate(
-    striae = aligned %>% purrr::map(.f = sig_cms_max, span = 75) 
-  )
+comparisons <- comparisons %>% mutate(
+  striae = aligned %>% purrr::map(.f = sig_cms_max, span = 75) 
+)
 ```
 
 
 ```r
-  comparisons <- comparisons %>% mutate(
-    matches0 = striae %>% purrr::map_dbl(.f = function(s) {
-      extract_feature_n_striae(s$lines, type="peaks", match=TRUE)
-    }),
-    mismatches0 = striae %>% purrr::map_dbl(.f = function(s) {
-      extract_feature_n_striae(s$lines, type="peaks", match=FALSE)
-    })
-    
-  )
+comparisons <- comparisons %>% mutate(
+  matches0 = striae %>% purrr::map_dbl(.f = function(s) {
+    extract_feature_n_striae(s$lines, type = "peaks", match = TRUE)
+  }),
+  mismatches0 = striae %>% purrr::map_dbl(.f = function(s) {
+    extract_feature_n_striae(s$lines, type = "peaks", match = FALSE)
+  })
+  
+)
 ```
 
 
@@ -303,13 +314,13 @@ Other features need an evaluation of striation marks between two aligned signatu
 #   lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
 # #  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
 # )
+
 comparisons <- comparisons %>% mutate(
-  barrel1 = gsub(".*Barrel([1-6])_.*","\\1",b1),
-  barrel2 = gsub(".*Barrel([1-6])_.*","\\1",b2),
-  bullet1 = gsub(".*Bullet([1-6])_.*","\\1",b1),
-  bullet2 = gsub(".*Bullet([1-6])_.*","\\1",b2),
-  land1 = gsub(".*Land([1-6]).x3p","\\1",b1),
-  land2 = gsub(".*Land([1-6]).x3p","\\1",b2)
+  land1 = landA, land2 = landB,
+  bulletA = gsub("([1-2])-([1-6])","\\1",land1),
+  bulletB = gsub("([1-2])-([1-6])","\\1",land2),
+  landA = gsub("([1-2])-([1-6])","\\2",land1),
+  landB = gsub("([1-2])-([1-6])","\\2",land2)
 )
 ```
 
@@ -325,52 +336,52 @@ comparisons <- comparisons %>% tidyr::unnest(features)
 
 # quick visualization:
 comparisons %>% 
-  ggplot(aes(x = land1, y = land2, fill=ccf)) +
+  ggplot(aes(x = landA, y = landB, fill = ccf)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = 0.5) +
-  facet_grid(bullet1~bullet2, labeller = "label_both") +
-  xlab("Land 1") +
-  ylab("Land 2")
+  facet_grid(bulletB~bulletA, labeller = "label_both") +
+  xlab("Land A") +
+  ylab("Land B")
 ```
 
-![](README_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
-    
+![](README_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
 
 10. Get Score predictions for each land to land comparison
 
 
 ```r
-  comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
+comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
 
 comparisons %>% 
-  ggplot(aes(x = land1, y = land2, fill=rfscore)) +
+  ggplot(aes(x = landA, y = landB, fill = rfscore)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  facet_grid(bullet1~bullet2, labeller = "label_both") +
-  xlab("Land 1") +
-  ylab("Land 2")
+  facet_grid(bulletB~bulletA, labeller = "label_both") +
+  xlab("Land A") +
+  ylab("Land B")
 ```
 
-![](README_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
-    
+![](README_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+
 11. Determine bullet-to-bullet scores
 
 
 ```r
 parse_number <- readr::parse_number
-bullet_scores <- comparisons %>% group_by(bullet1, bullet2) %>% tidyr::nest()
+bullet_scores <- comparisons %>% group_by(bulletA, bulletB) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
-    .f = function(d) max(compute_average_scores(land1 = d$land1, land2 = d$land2, d$rfscore)))
+    .f = function(d) max(compute_average_scores(land1 = d$landA, land2 = d$landB, d$rfscore)))
 )
 bullet_scores %>% select(-data)
 ```
 
 ```
 ## # A tibble: 4 x 3
-##   bullet1 bullet2 bullet_score
+##   bulletA bulletB bullet_score
 ##   <chr>   <chr>          <dbl>
 ## 1 1       1              0.982
 ## 2 2       1              0.674
