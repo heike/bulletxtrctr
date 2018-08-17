@@ -49,7 +49,7 @@ test_that("bullet_pipeline works as expected", {
                          x3p_clean = cleanfun)
   expect_equal(names(tmp), c("source", "bullet", "x3p"))
   expect_equal(tmp$x3p[[1]]$header.info$incrementY, 1.5625)
-  expect_equal(tmp$x3p[[1]]$header.info$sizeY, 502)
+  expect_equal(tmp$x3p[[1]]$header.info$sizeY, 500)
 
   tmp <- bullet_pipeline(here::here("tests"), stop_at_step = "crosscut",
                          x3p_clean = cleanfun, ylimits = c(200, NA))

@@ -56,7 +56,7 @@ test_that("grooves works as expected", {
   expect_equal(names(cc_locate_grooves(testb1$ccdata[[1]], "middle", middle = 50)$groove),
                c("25%", "75%"))
   ## Rollapply - multiple y values
-  expect_message(cc_locate_grooves(rbind(testb1$ccdata[[1]], testb1$ccdata[[1]] %>% dplyr::mutate(y = 100))),
+  expect_message(cc_locate_grooves(rbind(testb1$ccdata[[1]], testb1$ccdata[[1]] %>% dplyr::mutate(y = 103))),
                  "summarizing \\d{1,} profiles by averaging across values")
 
   ## Rollapply - mean left and mean right
