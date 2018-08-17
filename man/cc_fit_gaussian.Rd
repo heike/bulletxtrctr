@@ -24,3 +24,9 @@ calculated.
 The most extreme 0.25\% of residuals are filtered from further consideration.
 The result is called the raw signature of the bullet land.
 }
+\examples{
+library(dplyr)
+ccdata <- data_frame(x = seq(0, 6000, 1),
+                     value = 10 - (3 - x/1000)^2 + rnorm(length(x), sd = .25))
+cc_fit_gaussian(ccdata = ccdata)
+}

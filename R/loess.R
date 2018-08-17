@@ -14,6 +14,11 @@
 #' @importFrom stats fitted predict quantile loess resid
 #' @import assertthat
 #' @export
+#' @examples
+#' library(dplyr)
+#' ccdata <- data_frame(x = seq(0, 6, .001),
+#'                      value = 10 - (3 - x)^2 + rnorm(length(x), sd = .25))
+#' cc_fit_loess(ccdata = ccdata)
 cc_fit_loess <- function(ccdata, span = 0.75) {
   value <- NULL
   x <- NULL
@@ -59,6 +64,11 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
 #' @importFrom smoother smth
 #' @import assertthat
 #' @export
+#' @examples
+#' library(dplyr)
+#' ccdata <- data_frame(x = seq(0, 6000, 1),
+#'                      value = 10 - (3 - x/1000)^2 + rnorm(length(x), sd = .25))
+#' cc_fit_gaussian(ccdata = ccdata)
 cc_fit_gaussian <- function(ccdata, span = 600) {
   value <- NULL
   x <- NULL
