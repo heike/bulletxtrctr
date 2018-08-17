@@ -1,11 +1,16 @@
 context("grooves")
 
-load(here::here("tests/bullet1_only.Rdata"))
-testb1 <- b1_l3_x3p %>%
-  dplyr::select(-grooves, -grooves_mid) %>%
-  dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
-  dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle", return_plot = T)) %>%
-  dplyr::mutate(grooves_quad = purrr::map(ccdata, cc_locate_grooves, method = "quadratic", return_plot = F))
+skipall <- T
+if (requireNamespace("here") & requireNamespace("purrr")) {
+  skipall <- F
+  load(here::here("tests/bullet1_only.Rdata"))
+  testb1 <- b1_l3_x3p %>%
+    dplyr::select(-grooves, -grooves_mid) %>%
+    dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
+    dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle", return_plot = T)) %>%
+    dplyr::mutate(grooves_quad = purrr::map(ccdata, cc_locate_grooves, method = "quadratic", return_plot = F))
+
+}
 
 test_that("grooves works as expected", {
   skip_if(skipall)

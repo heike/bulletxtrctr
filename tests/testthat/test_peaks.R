@@ -1,10 +1,15 @@
 context("peaks")
 
-load(here::here("tests/bullets_match.Rdata"))
+skipall <- T
+if (requireNamespace("here") & requireNamespace("purrr")) {
+  skipall <- F
 
-peakstest <- sig_get_peaks(match$alignment$bullets$sig1)
-peakstest2 <- sig_get_peaks(match$alignment$bullets$sig2)
-matchestest <- striation_identify_matches(peakstest$lines, peakstest2$lines)
+  load(here::here("tests/bullets_match.Rdata"))
+
+  peakstest <- sig_get_peaks(match$alignment$bullets$sig1)
+  peakstest2 <- sig_get_peaks(match$alignment$bullets$sig2)
+  matchestest <- striation_identify_matches(peakstest$lines, peakstest2$lines)
+}
 
 test_that("peaks works as expected", {
   skip_if(skipall)

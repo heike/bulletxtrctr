@@ -1,5 +1,10 @@
 context("pipeline")
 
+if (!requireNamespace("here", quietly = TRUE) |
+    !requireNamespace("purrr", quietly = TRUE)) {
+  skipall <- T
+}
+
 testthat::setup({
   # Download data if it is not present
   if (!dir.exists(here::here("tests/Bullet1")) |

@@ -1,5 +1,10 @@
 context("smooth")
 
+skipall <- T
+if (requireNamespace("here") & requireNamespace("purrr")) {
+  skipall <- F
+  load(here::here("tests/smooth.Rdata"))
+}
 
 set.seed(3240583)
 tmp <- dplyr::data_frame(
@@ -18,7 +23,6 @@ test_that("smooth functions works as expected", {
   expect_equivalent(sigsmoothrestest[smoothrestest >= 5], 5)
 
   skip_if(skipall)
-  load(here::here("tests/smooth.Rdata"))
   expect_equivalent(smoothres, smoothrestest)
   expect_equivalent(sigsmoothres, sigsmoothrestest)
 

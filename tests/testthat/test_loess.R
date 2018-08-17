@@ -1,14 +1,18 @@
 context("loess")
+skipall <- T
+if (requireNamespace("here") & requireNamespace("purrr")) {
+  skipall <- F
 
-load(here::here("tests/bullet1_only.Rdata"))
-testb1 <- b1_l3_x3p %>%
-  dplyr::select(ccdata) %>%
-  dplyr::mutate(loess = purrr::map(ccdata, cc_fit_loess, span = .75),
-                loess2 = purrr::map(ccdata, cc_fit_loess, span = .25),
-                gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600),
-                gauss2 = purrr::map(ccdata, cc_fit_gaussian, span = 300))
+  load(here::here("tests/bullet1_only.Rdata"))
+  testb1 <- b1_l3_x3p %>%
+    dplyr::select(ccdata) %>%
+    dplyr::mutate(loess = purrr::map(ccdata, cc_fit_loess, span = .75),
+                  loess2 = purrr::map(ccdata, cc_fit_loess, span = .25),
+                  gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600),
+                  gauss2 = purrr::map(ccdata, cc_fit_gaussian, span = 300))
 
-ex_names <- c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop")
+  ex_names <- c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop")
+}
 
 test_that("loess works as expected", {
   skip_if(skipall)
