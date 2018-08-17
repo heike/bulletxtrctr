@@ -11,7 +11,8 @@ get_ccf(x, y, min.overlap = round(0.1 * max(length(x), length(y))))
 
 \item{y}{vector}
 
-\item{min.overlap}{integer value: what is the minimal number of values between x and y that should be considered?}
+\item{min.overlap}{integer value: what is the minimal number of values
+between x and y that should be considered?}
 }
 \value{
 list with ccf values and lags
@@ -23,7 +24,7 @@ Cross correlation function between two vectors
 library(dplyr)
 x <- runif(20)
 get_ccf(x, lead(x, 5))
-get_ccf(x, lag(x, 5), min.overlap=3)
+get_ccf(x, lag(x, 5), min.overlap = 3)
 x <- runif(100)
-get_ccf(x[45:50], x, min.overlap=6)
+get_ccf(x[45:50], x, min.overlap = 6)
 }
