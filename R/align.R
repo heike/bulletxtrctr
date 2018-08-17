@@ -1,21 +1,25 @@
 
 #' Align two surface cross cuts according to maximal correlation
 #'
-#' The bullet with the first name serves as a reference, the second bullet is shifted.
+#' The bullet with the first name serves as a reference, the second bullet is
+#' shifted.
 #' Function copied from `bulletAlign`
 #' @param sig1 vector of first signature
 #' @param sig2 vector of second signature
-#' @return list consisting of a) the maximal cross correlation, b) the lag resulting in the highest cross correlation, and c) same data frame as input, but y vectors are aligned for maximal correlation
+#' @return list consisting of
+#'           a) the maximal cross correlation,
+#'           b) the lag resulting in the highest cross correlation, and
+#'           c) same data frame as input, but y vectors are aligned for
+#'              maximal correlation
 #' @export
+#' @import assertthat
 #' @importFrom zoo na.trim
 #' @importFrom stats cor
-sig_align <- function (sig1, sig2)  {
-  stopifnot(is.numeric(sig1), is.numeric(sig2))
+sig_align <- function(sig1, sig2)  {
+  assert_that(is.numeric(sig1), is.numeric(sig2))
 
   sig1 <- na.trim(sig1)
   sig2 <- na.trim(sig2)
-#  subLOFx1 <- data.frame(x = 1:length(sig1), val = sig1, bullet="land-1")
-#  subLOFx2 <- data.frame(x = 1:length(sig2), val = sig2, bullet="land-2")
 
   n1 <- length(sig1)
   n2 <- length(sig2)
@@ -31,8 +35,12 @@ sig_align <- function (sig1, sig2)  {
   # do some padding
   # at the front
   lag <- cors$lag[which.max(cors$ccf)]
-  if (lag < 0) x <- c(rep(NA, abs(lag)), x)
-  if (lag > 0) y <- c(rep(NA, lag), y)
+  if (lag < 0) {
+    x <- c(rep(NA, abs(lag)), x)
+  }
+  if (lag > 0) {
+    y <- c(rep(NA, lag), y)
+  }
 
   # at the back
   delta <- length(x) - length(y)
@@ -40,19 +48,17 @@ sig_align <- function (sig1, sig2)  {
   if (delta > 0) y <- c(y, rep(NA, delta))
 
   # switch back
-  if (n1 < n2)
-  dframe0 <- data.frame(x = 1:length(x), sig1=x, sig2=y)
-  else
-    dframe0 <- data.frame(x = 1:length(x), sig1=y, sig2=x)
+  if (n1 < n2) {
+    dframe0 <- data.frame(x = 1:length(x), sig1 = x, sig2 = y)
+  } else {
+    dframe0 <- data.frame(x = 1:length(x), sig1 = y, sig2 = x)
+  }
 
-  #  dframe %>%
-  #    ggplot(aes(x = x, y = sig1)) + geom_line(colour="blue") +
-  #    geom_line(aes(y = sig2), colour = "orange")
   maxcor <- max(cors$ccf, na.rm = TRUE)
 
-  dfcor <- cor(dframe0$sig1, dframe0$sig2, use="pairwise")
-  if (maxcor != dfcor) browser()
-  #
+  # dfcor <- cor(dframe0$sig1, dframe0$sig2, use = "pairwise")
+  # if (maxcor != dfcor) browser()
+
   list(ccf = maxcor, lag = lag, bullets = dframe0)
 }
 
@@ -62,7 +68,8 @@ sig_align <- function (sig1, sig2)  {
 #'
 #' @param x vector, assumption is that x is longer than y
 #' @param y vector
-#' @param min.overlap integer value: what is the minimal number of values between x and y that should be considered?
+#' @param min.overlap integer value: what is the minimal number of values
+#'          between x and y that should be considered?
 #' @return list with ccf values and lags
 #' @importFrom stats na.omit
 #' @export
@@ -70,45 +77,32 @@ sig_align <- function (sig1, sig2)  {
 #' library(dplyr)
 #' x <- runif(20)
 #' get_ccf(x, lead(x, 5))
-#' get_ccf(x, lag(x, 5), min.overlap=3)
+#' get_ccf(x, lag(x, 5), min.overlap = 3)
 #' x <- runif(100)
-#' get_ccf(x[45:50], x, min.overlap=6)
+#' get_ccf(x[45:50], x, min.overlap = 6)
 get_ccf <-  function(x, y, min.overlap = round(0.1*max(length(x),length(y)))) {
   x <- as.vector(unlist(x))
   y <- as.vector(unlist(y))
-  # assume x is the long vector, y is the short vector. If not, switch the vectors around
+  # assume x is the long vector, y is the short vector. If not, switch the
+  # vectors around
   nx <- length(x)
   ny <- length(y)
-#   switchxy <- FALSE
-# if (nx > ny) {
-# #  browser()
-#   z <- x
-#   x <- y
-#   y <- z
-#   nx <- length(x)
-#   ny <- length(y)
-#   switchxy <- TRUE
-# }
 
-  xx <- c(rep(NA, ny-min.overlap), x, rep(NA, ny-min.overlap))
-  yy <- c(y, rep(NA, length(xx)-ny))
+  xx <- c(rep(NA, ny - min.overlap), x, rep(NA, ny - min.overlap))
+  yy <- c(y, rep(NA, length(xx) - ny))
 
   lag.max <- length(yy) - length(y)
   lags <- 0:lag.max
 
   cors <- sapply(lags, function(lag) {
-    cor(xx, lag(yy,lag), use="pairwise.complete")
+    cor(xx, lag(yy,lag), use = "pairwise.complete")
   })
   ns <- sapply(lags, function(lag) {
     dim(na.omit(cbind(xx, lag(yy,lag))))[1]
   })
   cors[ns < min.overlap] <- NA
 
-  lag <- lags-(ny-min.overlap)
-  # if (switchxy) {
-  #   # switch things back
-  #   lag <- 1 - lag
-  # }
+  lag <- lags - (ny - min.overlap)
   return(list(lag = lag, ccf = cors))
 }
 
