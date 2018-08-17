@@ -12,16 +12,15 @@ testthat::setup({
     dir.create(here::here("tests/Bullet1"))
     dir.create(here::here("tests/Bullet2"))
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))) {
-    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/2ea4efe4-beeb-4291-993d-ae7726c624f4",
-                  destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"), quiet = T)
+  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))) {
+    download.file(hamby252demo[[1]][2],
+                  destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"), quiet = T)
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet2_Land5.x3p"))) {
-    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/d6dfaef6-f066-4b76-bf42-f0e8c06d6241",
-                  destfile = here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"), quiet = T)
+  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet2_Land4.x3p"))) {
+    download.file(hamby252demo[[2]][4],
+                  destfile = here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p"), quiet = T)
   }
 })
-
 # testthat::teardown({
 #   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
 #   unlink(here::here("tests/Bullet1"), recursive = T)
@@ -40,8 +39,8 @@ test_that("bullet_pipeline works as expected", {
   expect_equal(tmp$bullet, c("Bullet1", "Bullet2"))
 
   tmp <- bullet_pipeline(
-    list(Bullet1 = c(hamby252demo$bullet1[3]),
-         Bullet2 = c(hamby252demo$bullet2[5])),
+    list(Bullet1 = c(hamby252demo$bullet1[2]),
+         Bullet2 = c(hamby252demo$bullet2[4])),
     stop_at_step = "read")
   expect_equal(names(tmp), c("source", "bullet", "x3p"))
   expect_equal(tmp$bullet, c("Bullet1", "Bullet2"))

@@ -6,7 +6,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
   load(here::here("tests/bullet1_only.Rdata"))
 
   suppressWarnings({
-    testb1 <- b1_l3_x3p %>%
+    testb1 <- b1_l2_x3p %>%
       dplyr::select(-sigs) %>%
       dplyr::mutate(
         sigsLL = purrr::map2(
@@ -45,7 +45,7 @@ test_that("signatures works as expected", {
 
 test_that("signatures is numerically correct", {
   skip_if(skipall)
-  expect_equivalent(b1_l3_x3p$sigs, testb1$sigsLL)
+  expect_equivalent(b1_l2_x3p$sigs, testb1$sigsLL)
   expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsLS[[1]]$sig))
   expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsSL[[1]]$sig))
   expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsSS[[1]]$sig))

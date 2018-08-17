@@ -4,21 +4,19 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
   skipall <- F
   load(here::here("tests/bullet1_only.Rdata"))
 
-  setup({
+  testthat::setup({
     # Download data if it is not present
     if (!dir.exists(here::here("tests/Bullet1"))) {
       dir.create(here::here("tests/Bullet1"))
     }
-    if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))) {
-      download.file(
-        "https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/2ea4efe4-beeb-4291-993d-ae7726c624f4",
-        destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"),
-        quiet = T)
+    if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))) {
+      download.file(hamby252demo[[1]][2],
+                    destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"), quiet = T)
     }
   })
 
   # teardown({
-  #   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
+  #   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))
   #   unlink(here::here("tests/Bullet1"), recursive = T)
   # })
 
@@ -42,7 +40,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
       })
     )
 
-  b4 <- read_bullet(urllist = hamby252demo$bullet1[3]) %>%
+  b4 <- read_bullet(urllist = hamby252demo$bullet1[2]) %>%
     # turn the scans such that (0,0) is bottom left
     dplyr::mutate(
       x3p = x3p %>% purrr::map(.f = function(x) x %>%
@@ -66,12 +64,12 @@ test_that("read works as expected", {
   expect_s3_class(b2, "tbl_df")
   expect_s3_class(b2, "tbl")
   expect_s3_class(b2, "data.frame")
-  expect_equal(b1_l3_x3p$x3p, b3$x3p)
-  expect_equal(b1_l3_x3p$x3p, b4$x3p)
+  expect_equal(b1_l2_x3p$x3p, b3$x3p)
+  expect_equal(b1_l2_x3p$x3p, b4$x3p)
 
   # If conditions
   expect_message(read_bullet(folder = here::here("tests/Bullet1/"),
-                             urllist = hamby252demo$bullet1[3]),
+                             urllist = hamby252demo$bullet1[2]),
                  "folder and urllist both provided")
   expect_error(read_bullet())
 })

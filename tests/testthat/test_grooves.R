@@ -4,7 +4,7 @@ skipall <- T
 if (requireNamespace("here") & requireNamespace("purrr")) {
   skipall <- F
   load(here::here("tests/bullet1_only.Rdata"))
-  testb1 <- b1_l3_x3p %>%
+  testb1 <- b1_l2_x3p %>%
     dplyr::select(-grooves, -grooves_mid) %>%
     dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
     dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle", return_plot = T)) %>%
@@ -62,10 +62,10 @@ test_that("grooves works as expected", {
   ## Rollapply - mean left and mean right
   tmp3 <- cc_locate_grooves(testb1$ccdata[[1]], method = "rollapply",
                             mean_left = 200, mean_right = 2000, second_smooth = F)
-  expect_error(expect_equivalent(b1_l3_x3p$grooves[[1]]$groove, tmp3$groove))
+  expect_error(expect_equivalent(b1_l2_x3p$grooves[[1]]$groove, tmp3$groove))
 
   # Check numerically identical for groove locations, at least...
-  expect_identical(b1_l3_x3p$grooves[[1]]$groove, testb1$grooves[[1]]$groove)
-  expect_identical(b1_l3_x3p$grooves_mid[[1]]$groove, testb1$grooves_mid[[1]]$groove)
-  expect_identical(b1_l3_x3p$grooves_quad[[1]]$groove, testb1$grooves_quad[[1]]$groove)
+  expect_identical(b1_l2_x3p$grooves[[1]]$groove, testb1$grooves[[1]]$groove)
+  expect_identical(b1_l2_x3p$grooves_mid[[1]]$groove, testb1$grooves_mid[[1]]$groove)
+  expect_identical(b1_l2_x3p$grooves_quad[[1]]$groove, testb1$grooves_quad[[1]]$groove)
 })

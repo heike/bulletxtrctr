@@ -6,8 +6,8 @@ if (requireNamespace("here")) {
   load(here::here("tests/bullets_signatures.Rdata"))
   load(here::here("tests/bullets_match.Rdata"))
 
-  aligntest <- sig_align(b1_l3_x3p$sigs[[1]]$sig, b2_l5_x3p$sigs[[1]]$sig)
-  aligntest2 <- sig_align(b2_l5_x3p$sigs[[1]]$sig, b1_l3_x3p$sigs[[1]]$sig)
+  aligntest <- sig_align(b1_l2_x3p$sigs[[1]]$sig, b2_l4_x3p$sigs[[1]]$sig)
+  aligntest2 <- sig_align(b2_l4_x3p$sigs[[1]]$sig, b1_l2_x3p$sigs[[1]]$sig)
 }
 
 ccftest <- get_ccf(1:5, 6:2)

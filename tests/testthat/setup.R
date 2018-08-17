@@ -11,20 +11,20 @@ testthat::setup({
     dir.create(here::here("tests/Bullet1"))
     dir.create(here::here("tests/Bullet2"))
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))) {
-    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/2ea4efe4-beeb-4291-993d-ae7726c624f4",
-                  destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"), quiet = T)
+  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))) {
+    download.file(hamby252demo[[1]][2],
+                  destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"), quiet = T)
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet2_Land5.x3p"))) {
-    download.file("https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/d6dfaef6-f066-4b76-bf42-f0e8c06d6241",
-                  destfile = here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"), quiet = T)
+  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet2_Land4.x3p"))) {
+    download.file(hamby252demo[[2]][4],
+                  destfile = here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p"), quiet = T)
   }
 })
 
 # testthat::teardown({
-#   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land3.x3p"))
+#   file.remove(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))
 #   unlink(here::here("tests/Bullet1"), recursive = T)
-#   file.remove(here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land5.x3p"))
+#   file.remove(here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p"))
 #   unlink(here::here("tests/Bullet2"), recursive = T)
 # })
 
@@ -32,8 +32,8 @@ testthat::setup({
 # test_grooves.R
 # test_signatures.R
 if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
-  message("Generating data file for bullet 1 land 3 with crosscuts, grooves, and signatures")
-  b1_l3_x3p <- read_bullet(here::here("tests/Bullet1"), "x3p") %>%
+  message("Generating data file for bullet 1 land 2 with crosscuts, grooves, and signatures")
+  b1_l2_x3p <- read_bullet(here::here("tests/Bullet1"), "x3p") %>%
     # dplyr::filter(dplyr::row_number() == 3) %>%
     # turn the scans such that (0,0) is bottom left
     dplyr::mutate(
@@ -66,23 +66,23 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
           cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)})
     )
 
-  save(b1_l3_x3p, file = here::here("tests/bullet1_only.Rdata"))
+  save(b1_l2_x3p, file = here::here("tests/bullet1_only.Rdata"))
 }
 
 if (!file.exists(here::here("tests/bullet1_crosscut_extra.Rdata"))) {
   load(here::here("tests/bullet1_only.Rdata"))
 
-  b1_l3 <- b1_l3_x3p$x3p[[1]]
-  b1_l3_df <- x3ptools::x3p_to_df(b1_l3)
-  cc1 <- land_cc(50, b1_l3_df)
-  save(b1_l3, b1_l3_df, cc1, file = here::here("tests/bullet1_crosscut_extra.Rdata"))
+  b1_l2 <- b1_l2_x3p$x3p[[1]]
+  b1_l2_df <- x3ptools::x3p_to_df(b1_l2)
+  cc1 <- bulletxtrctr:::land_cc(50, b1_l2_df)
+  save(b1_l2, b1_l2_df, cc1, file = here::here("tests/bullet1_crosscut_extra.Rdata"))
 }
 
 if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
-  message("Generating data file for bullet 1 land 3 and bullet 2 land 5 with crosscut, ccdata, grooves, and sigs.")
+  message("Generating data file for bullet 1 land 2 and bullet 2 land 4 with crosscut, ccdata, grooves, and sigs.")
   load(here::here("tests/bullet1_only.Rdata"))
 
-  b2_l5_x3p <- read_bullet(here::here("tests/Bullet2"), "x3p") %>%
+  b2_l4_x3p <- read_bullet(here::here("tests/Bullet2"), "x3p") %>%
     # dplyr::filter(dplyr::row_number() == 5) %>%
     # turn the scans such that (0,0) is bottom left
     dplyr::mutate(
@@ -112,7 +112,7 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
           cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)})
     )
 
-  save(b1_l3_x3p, b2_l5_x3p, file = here::here("tests/bullets_signatures.Rdata"))
+  save(b1_l2_x3p, b2_l4_x3p, file = here::here("tests/bullets_signatures.Rdata"))
 }
 
 # test_align.R
@@ -121,11 +121,11 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
 if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
   message("Generating align.R data file for testing correctness.")
   load(here::here("tests/bullets_signatures.Rdata"))
-  alignment <- sig_align(b1_l3_x3p$sigs[[1]]$sig,
-                         b2_l5_x3p$sigs[[1]]$sig)
+  alignment <- sig_align(b1_l2_x3p$sigs[[1]]$sig,
+                         b2_l4_x3p$sigs[[1]]$sig)
   peaks <- list(sig1 = sig_get_peaks(alignment$bullets$sig1),
                 sig2 = sig_get_peaks(alignment$bullets$sig2))
-  matches <- striation_identify_matches(peaks$sig1$lines, peaks$sig2$lines)
+  matches <- bulletxtrctr:::striation_identify_matches(peaks$sig1$lines, peaks$sig2$lines)
   maxcms <- sig_cms_max(alignment)
   features <- extract_features_all(maxcms)
   match <- list(alignment = alignment, peaks = peaks, matches = matches,
