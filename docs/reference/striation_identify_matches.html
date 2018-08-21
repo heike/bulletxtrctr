@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Match striation marks across two cross sections based on previously identified peaks and valleys — striation_identify_matches • bulletxtrctr</title>
+<title>Match striation marks across two aligned signatures — striation_identify_matches • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Match striation marks across two cross sections based on previously identified peaks and valleys — striation_identify_matches" />
+<meta property="og:title" content="Match striation marks across two aligned signatures — striation_identify_matches" />
 
-<meta property="og:description" content="adapted from function `striation_identify` in the bulletr package, just used internally. Not intended for public consumption." />
+<meta property="og:description" content="`striae1` and `striae2` are data frames of previously identified peaks and
+valleys returned by `sig_get_peaks`" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -92,37 +93,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Match striation marks across two cross sections based on previously identified peaks and valleys</h1>
+    <h1>Match striation marks across two aligned signatures</h1>
     
     <div class="hidden name"><code>striation_identify_matches.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>adapted from function `striation_identify` in the bulletr package, just used internally. Not intended for public consumption.</p>
+    <p>`striae1` and `striae2` are data frames of previously identified peaks and
+valleys returned by `sig_get_peaks`</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>striation_identify_matches</span>(<span class='no'>lines1</span>, <span class='no'>lines2</span>)</pre>
+    <pre class="usage"><span class='fu'>striation_identify_matches</span>(<span class='no'>striae1</span>, <span class='no'>striae2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>lines1</th>
-      <td><p>data frame as returned from sig_get_peaks function. data frames are expected to have
-the following variables: xmin, xmax, group, type, bullet, heights</p></td>
+      <th>striae1</th>
+      <td><p>data frame as returned from sig_get_peaks function.
+data frames are expected to have the following variables:
+xmin, xmax, group, type, bullet, heights</p></td>
     </tr>
     <tr>
-      <th>lines2</th>
-      <td><p>data frame as returned from sig_get_peaks function. data frames are expected to have
-the following variables: xmin, xmax, group, type, bullet, heights</p></td>
+      <th>striae2</th>
+      <td><p>data frame as returned from sig_get_peaks function.
+data frames are expected to have the following variables:
+xmin, xmax, group, type, bullet, heights</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data frame of the same form as lines1 and lines2, but consisting of an additional variable of whether the striation marks are matches</p>
+    <p>data frame of the same form as lines1 and lines2, but with an
+  additional variable of whether the striation marks are matches</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>adapted from function `striation_identify` in the bulletr package, just used
+internally. Not intended for public consumption.</p>
     
 
   </div>
@@ -132,6 +142,8 @@ the following variables: xmin, xmax, group, type, bullet, heights</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

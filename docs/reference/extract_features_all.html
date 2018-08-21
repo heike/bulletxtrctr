@@ -103,14 +103,22 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_features_all</span>(<span class='no'>res</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_features_all</span>(<span class='no'>aligned</span>, <span class='no'>striae</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>res</th>
-      <td><p>list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
+      <th>aligned</th>
+      <td><p>aligned signatures, result from `sig_cms_max`</p></td>
+    </tr>
+    <tr>
+      <th>striae</th>
+      <td><p>data frame with evaluated matching striae</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>passed on to extractor functions
 XXX this needs some fixing</p></td>
     </tr>
     </table>

@@ -32,7 +32,8 @@
 
 <meta property="og:title" content="Align two surface cross cuts according to maximal correlation — sig_align" />
 
-<meta property="og:description" content="The bullet with the first name serves as a reference, the second bullet is shifted.
+<meta property="og:description" content="The bullet with the first name serves as a reference, the second bullet is
+shifted.
 Function copied from `bulletAlign`" />
 <meta name="twitter:card" content="summary" />
 
@@ -100,7 +101,8 @@ Function copied from `bulletAlign`" />
 
     <div class="ref-description">
     
-    <p>The bullet with the first name serves as a reference, the second bullet is shifted.
+    <p>The bullet with the first name serves as a reference, the second bullet is
+shifted.
 Function copied from `bulletAlign`</p>
     
     </div>
@@ -122,9 +124,30 @@ Function copied from `bulletAlign`</p>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list consisting of a) the maximal cross correlation, b) the lag resulting in the highest cross correlation, and c) same data frame as input, but y vectors are aligned for maximal correlation</p>
+    <p>list consisting of
+          a) the maximal cross correlation,
+          b) the lag resulting in the highest cross correlation, and
+          c) same data frame as input, but y vectors are aligned for
+             maximal correlation</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># Set the data up to be read in, cleaned, etc.</span>
+<span class='fu'>library</span>(<span class='no'>bulletxtrctr</span>)
+<span class='fu'>library</span>(<span class='no'>x3ptools</span>)
+
+<span class='no'>example_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bullet_pipeline.html'>bullet_pipeline</a></span>(
+  <span class='kw'>location</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>Bullet1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet1</span>[<span class='fl'>2</span>]),
+                  <span class='kw'>Bullet2</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet1</span>[<span class='fl'>4</span>])),
+  <span class='kw'>x3p_clean</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span> <span class='kw'>%&gt;%</span>
+    <span class='no'>x3pheader_to_microns</span> <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p'>rotate_x3p</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> -<span class='fl'>90</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p'>y_flip_x3p</a></span>()
+)
+
+<span class='fu'>sig_align</span>(<span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>sig</span>, <span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>2</span>]]$<span class='no'>sig</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -132,7 +155,9 @@ Function copied from `bulletAlign`</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

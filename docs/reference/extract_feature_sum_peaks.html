@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Smooth the raw signature — raw_sig_smooth • bulletxtrctr</title>
+<title>Extract the combined height of aligned striae between two aligned signatures — extract_feature_sum_peaks • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Smooth the raw signature — raw_sig_smooth" />
+<meta property="og:title" content="Extract the combined height of aligned striae between two aligned signatures — extract_feature_sum_peaks" />
 
-<meta property="og:description" content="Smooth the raw signature" />
+<meta property="og:description" content="Extract the combined height of aligned striae between two aligned signatures" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -92,57 +92,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Smooth the raw signature</h1>
+    <h1>Extract the combined height of aligned striae between two aligned signatures</h1>
     
-    <div class="hidden name"><code>raw_sig_smooth.Rd</code></div>
+    <div class="hidden name"><code>extract_feature_sum_peaks.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Smooth the raw signature</p>
+    <p>Extract the combined height of aligned striae between two aligned signatures</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>raw_sig_smooth</span>(<span class='no'>sig</span>, <span class='kw'>span</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>5</span>, <span class='fl'>5</span>))</pre>
+    <pre class="usage"><span class='fu'>extract_feature_sum_peaks</span>(<span class='no'>striae</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>sig</th>
-      <td><p>numeric vector of the raw signature</p></td>
-    </tr>
-    <tr>
-      <th>span</th>
-      <td><p>width of the smoother, defaults to 0.03. XXX Should be</p></td>
-    </tr>
-    <tr>
-      <th>limits</th>
-      <td><p>vector of the form c(min, max). Results will be limited to be
-between these values.</p></td>
+      <th>striae</th>
+      <td><p>data frame of striation marks based on two aligned signatures</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>numeric vector of the same length as the input with the smoothed
-          signature.</p>
+    <p>sum of heights of matching striae</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-  <span class='fu'>library</span>(<span class='no'>ggplot2</span>)
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>6</span>*<span class='no'>pi</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>.02</span>)
-<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fl'>5.5</span> * <span class='fu'>sin</span>(<span class='no'>x</span>) + <span class='fu'>rnorm</span>(<span class='fu'>length</span>(<span class='no'>x</span>))
-
-
-<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>() +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fu'>length</span>(<span class='no'>y</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>), <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>1</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fu'>length</span>(<span class='no'>y</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='smoothloess.html'>smoothloess</a></span>(<span class='no'>y</span>, <span class='fl'>.05</span>)),
-            <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fu'>length</span>(<span class='no'>y</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>raw_sig_smooth</span>(<span class='no'>y</span>, <span class='fl'>.05</span>)),
-            <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)
-<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -150,9 +126,7 @@ between these values.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

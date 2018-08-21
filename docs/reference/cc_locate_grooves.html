@@ -112,7 +112,9 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>ccdata</th>
-      <td><p>data frame of the crosscut. Data frame needs location x and measured values as `value`. If multiple crosscuts are to be considered, include a variable y and use as a key.</p></td>
+      <td><p>data frame of the crosscut. Data frame needs location x and
+measured values as `value`. If multiple crosscuts are to be
+considered, include a variable y and use as a key.</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -120,15 +122,21 @@
     </tr>
     <tr>
       <th>smoothfactor</th>
-      <td><p>The smoothing window to use - XXX the smoothing window seems to depend on the resolution at which the data has been collected.</p></td>
+      <td><p>The smoothing window to use - XXX the smoothing window
+seems to depend on the resolution at which the data has been
+collected.</p></td>
     </tr>
     <tr>
       <th>adjust</th>
-      <td><p>positive number to adjust the grooves - XXX should be expressed in microns rather than an index</p></td>
+      <td><p>positive number to adjust the grooves - XXX should be
+expressed in microns rather than an index
+(not used for method = "middle")</p></td>
     </tr>
     <tr>
       <th>groove_cutoff</th>
-      <td><p>The index at which a groove cannot exist past - XXX this parameter should be expressed in microns rather than as an index to be able to properly deal with different resolutions</p></td>
+      <td><p>The index at which a groove cannot exist past - XXX
+this parameter should be expressed in microns rather than as an
+index to be able to properly deal with different resolutions</p></td>
     </tr>
     <tr>
       <th>mean_left</th>
@@ -153,12 +161,36 @@
     </table>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># Set the data up to be read in, cleaned, etc.</span>
+<span class='fu'>library</span>(<span class='no'>bulletxtrctr</span>)
+<span class='fu'>library</span>(<span class='no'>x3ptools</span>)
+
+<span class='no'>example_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bullet_pipeline.html'>bullet_pipeline</a></span>(
+  <span class='kw'>location</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>Bullet1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet1</span>[<span class='fl'>3</span>])),
+  <span class='kw'>stop_at_step</span> <span class='kw'>=</span> <span class='st'>"crosscut"</span>,
+  <span class='kw'>x3p_clean</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span> <span class='kw'>%&gt;%</span>
+    <span class='no'>x3pheader_to_microns</span> <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p'>rotate_x3p</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> -<span class='fl'>90</span>) <span class='kw'>%&gt;%</span>
+    <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p'>y_flip_x3p</a></span>()
+)
+
+<span class='fu'>cc_locate_grooves</span>(<span class='no'>example_data</span>$<span class='no'>ccdata</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"rollapply"</span>,
+                  <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='kw'>return_plot</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='fu'>cc_locate_grooves</span>(<span class='no'>example_data</span>$<span class='no'>ccdata</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"middle"</span>,
+                  <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='kw'>return_plot</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='fu'>cc_locate_grooves</span>(<span class='no'>example_data</span>$<span class='no'>ccdata</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>,
+                  <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='kw'>return_plot</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+            
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

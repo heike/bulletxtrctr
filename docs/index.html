@@ -85,56 +85,60 @@
 <li>
 <code>bulletxtrctr</code> only works on x3p files. See package <code>x3ptools</code> at <a href="https://heike.github.io/x3ptools/" class="uri">https://heike.github.io/x3ptools/</a> for ways to convert different file formats into x3p standard files. The NIST Research Ballistics Toolmarks data base (NRBTD)[<a href="https://tsapps.nist.gov/NRBTD/Studies/Search" class="uri">https://tsapps.nist.gov/NRBTD/Studies/Search</a>] provides access to scans of bullets and cartridge cases from various case studies.</li>
 </ol>
-<p>Download some files from NRBTD, if not yet available:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(<span class="st">"tests/data"</span>)) {</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw">dir.create</span>(<span class="st">"tests/data"</span>, <span class="dt">recursive =</span> T)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">}</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(<span class="st">"tests/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p"</span>)) {</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/NRBTDsample_download">NRBTDsample_download</a></span>(<span class="st">"tests/data"</span>)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">}</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">  b1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="st">"tests/data/Bullet1"</span>, <span class="st">"x3p"</span>)</a></code></pre></div>
-<pre><code>## 6 files found. Reading ...</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">  b2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="st">"tests/data/Bullet2"</span>, <span class="st">"x3p"</span>)</a></code></pre></div>
-<pre><code>## 6 files found. Reading ...</code></pre>
+<p>In this tutorial, we’ll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 x3p files are provided in the <code>hamby252demo</code> object.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">b1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="dt">urllist =</span> hamby252demo[[<span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">b2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="dt">urllist =</span> hamby252demo[[<span class="dv">2</span>]])</a></code></pre></div>
+<p>If instead we wanted to download the files into a folder named “data” in our working directory, we would run this sequence of commands:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(<span class="st">"data"</span>)) {</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  <span class="kw">dir.create</span>(<span class="st">"data"</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">}</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(<span class="st">"data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p"</span>)) {</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/NRBTDsample_download">NRBTDsample_download</a></span>(<span class="st">"data"</span>)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">b1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="st">"data/Bullet1"</span>, <span class="st">"x3p"</span>)</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">b2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="st">"data/Bullet2"</span>, <span class="st">"x3p"</span>)</a></code></pre></div>
 <p>Combine the results into a single data frame:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">b1<span class="op">$</span>bullet &lt;-<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">b2<span class="op">$</span>bullet &lt;-<span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">bullets &lt;-<span class="st"> </span><span class="kw">rbind</span>(b1, b2)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">b1<span class="op">$</span>bullet &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">b1<span class="op">$</span>land &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"1-"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">b2<span class="op">$</span>bullet &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">b2<span class="op">$</span>land &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"2-"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">bullets &lt;-<span class="st"> </span><span class="kw">rbind</span>(b1, b2)</a></code></pre></div>
 <p>We expect data to be recorded at the micron level. The scans posted give measurements in meters:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementY</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementY</a></code></pre></div>
 <pre><code>## [1] 1.5625e-06</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementX</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementX</a></code></pre></div>
 <pre><code>## [1] 1.5625e-06</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">summary</span>(<span class="kw">as.vector</span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>surface.matrix))</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">summary</span>(<span class="kw">as.vector</span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>surface.matrix))</a></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 ##       0       0       0       0       0       0   24829</code></pre>
 <p>Change measurements to microns:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">    <span class="dt">x3p =</span> x3p <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> <span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">      <span class="co"># make sure all measurements are in microns</span></a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">      x<span class="op">$</span>surface.matrix &lt;-<span class="st"> </span>x<span class="op">$</span>surface.matrix<span class="op">*</span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span></a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">      x<span class="op">$</span>header.info<span class="op">$</span>incrementY &lt;-<span class="st"> </span>x<span class="op">$</span>header.info<span class="op">$</span>incrementY<span class="op">*</span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span></a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">      x<span class="op">$</span>header.info<span class="op">$</span>incrementX &lt;-<span class="st"> </span>x<span class="op">$</span>header.info<span class="op">$</span>incrementX<span class="op">*</span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span></a>
-<a class="sourceLine" id="cb13-7" data-line-number="7">      x</a>
-<a class="sourceLine" id="cb13-8" data-line-number="8">    })</a>
-<a class="sourceLine" id="cb13-9" data-line-number="9">  )</a></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementY</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">  <span class="dt">x3p =</span> x3p <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> <span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">    <span class="co"># make sure all measurements are in microns</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">    x<span class="op">$</span>surface.matrix &lt;-<span class="st"> </span>x<span class="op">$</span>surface.matrix<span class="op">*</span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">    x<span class="op">$</span>header.info<span class="op">$</span>incrementY &lt;-<span class="st"> </span>x<span class="op">$</span>header.info<span class="op">$</span>incrementY<span class="op">*</span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6">    x<span class="op">$</span>header.info<span class="op">$</span>incrementX &lt;-<span class="st"> </span>x<span class="op">$</span>header.info<span class="op">$</span>incrementX<span class="op">*</span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7">    x</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">  })</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9">)</a></code></pre></div>
+<!-- This could also be done with the `x3pheader_to_microns` function.  -->
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementY</a></code></pre></div>
 <pre><code>## [1] 1.5625</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementX</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>header.info<span class="op">$</span>incrementX</a></code></pre></div>
 <pre><code>## [1] 1.5625</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">summary</span>(<span class="kw">as.vector</span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>surface.matrix))</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">summary</span>(<span class="kw">as.vector</span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]]<span class="op">$</span>surface.matrix))</a></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 ##   1.513 117.626 166.723 155.933 199.429 216.341   24829</code></pre>
 <p>We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image. In scans where no adjustment was made for the barrel’s twist (not recommended) the twist will be visible in the image.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/image_x3p">image_x3p</a></span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]], <span class="dt">file =</span> <span class="st">"README_files/temp-before.png"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/image_x3p">image_x3p</a></span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]], <span class="dt">file =</span> <span class="st">"README_files/temp-before.png"</span>)</a></code></pre></div>
 <p>The raw scan needs to be flipped such that the heel is along the bottom of the image rather than along the left hand side. <img src="README_files/temp-before.png" alt="Raw scan - needs to be rotated."></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co"># turn the scans such that (0,0) is bottom left</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="dt">x3p =</span> x3p <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> <span class="cf">function</span>(x) x <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="st">                             </span><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p">rotate_x3p</a></span>(<span class="dt">angle =</span> <span class="dv">-90</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="st">                             </span><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p">y_flip_x3p</a></span>())</a>
-<a class="sourceLine" id="cb21-6" data-line-number="6">  ) </a></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/image_x3p">image_x3p</a></span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]], <span class="dt">file =</span> <span class="st">"README_files/temp-after.png"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># turn the scans such that (0,0) is bottom left</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">  <span class="dt">x3p =</span> x3p <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> <span class="cf">function</span>(x) x <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="st">                             </span><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p">rotate_x3p</a></span>(<span class="dt">angle =</span> <span class="dv">-90</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5"><span class="st">                             </span><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p">y_flip_x3p</a></span>())</a>
+<a class="sourceLine" id="cb19-6" data-line-number="6">) </a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/x3ptools/topics/image_x3p">image_x3p</a></span>(bullets<span class="op">$</span>x3p[[<span class="dv">1</span>]], <span class="dt">file =</span> <span class="st">"README_files/temp-after.png"</span>)</a></code></pre></div>
 <p>Scan after the transformation: a clear right twist is visible in the right slant of striae and grooves.</p>
 <div class="figure">
 <img src="README_files/temp-after.png" alt="Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders."><p class="caption">Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.</p>
@@ -142,67 +146,70 @@
 <ol start="3" style="list-style-type: decimal">
 <li>Get the ideal cross sections</li>
 </ol>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">  bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">    <span class="dt">crosscut =</span> x3p <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_dbl</a></span>(<span class="dt">.f =</span> x3p_crosscut_optimize)</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3">  )</a>
-<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="co"># now extract the crosscuts</span></a>
-<a class="sourceLine" id="cb23-5" data-line-number="5">  bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb23-6" data-line-number="6">    <span class="dt">ccdata =</span> purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">map2</a></span>(<span class="dt">.x =</span> x3p, <span class="dt">.y =</span> crosscut, </a>
-<a class="sourceLine" id="cb23-7" data-line-number="7">                         <span class="dt">.f =</span> x3p_crosscut)</a>
-<a class="sourceLine" id="cb23-8" data-line-number="8">  )</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">  <span class="dt">crosscut =</span> x3p <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_dbl</a></span>(<span class="dt">.f =</span> x3p_crosscut_optimize)</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">)</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="co"># now extract the crosscuts</span></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb21-6" data-line-number="6">  <span class="dt">ccdata =</span> purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">map2</a></span>(<span class="dt">.x =</span> x3p, <span class="dt">.y =</span> crosscut, </a>
+<a class="sourceLine" id="cb21-7" data-line-number="7">                       <span class="dt">.f =</span> x3p_crosscut)</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">)</a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Get the groove locations</li>
 </ol>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">  bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">    <span class="dt">grooves =</span> ccdata <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="st">      </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> cc_locate_grooves, <span class="dt">method =</span> <span class="st">"rollapply"</span>, </a>
-<a class="sourceLine" id="cb24-4" data-line-number="4">                 <span class="dt">adjust =</span> <span class="dv">30</span>)</a>
-<a class="sourceLine" id="cb24-5" data-line-number="5"> <span class="co">#         purrr::map(.f = cc_locate_grooves, method = "quadratic")</span></a>
-<a class="sourceLine" id="cb24-6" data-line-number="6">  <span class="co">#    purrr::map(.f = cc_locate_grooves, method = "middle", middle=80)</span></a>
-<a class="sourceLine" id="cb24-7" data-line-number="7">  )</a>
-<a class="sourceLine" id="cb24-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb24-9" data-line-number="9">bullets<span class="op">$</span>grooves[[<span class="dv">1</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">  <span class="dt">grooves =</span> ccdata <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">    </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> cc_locate_grooves, <span class="dt">method =</span> <span class="st">"rollapply"</span>, </a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">               <span class="dt">adjust =</span> <span class="dv">30</span>, <span class="dt">return_plot =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">)</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb22-7" data-line-number="7">bullets<span class="op">$</span>grooves[[<span class="dv">1</span>]]</a></code></pre></div>
 <pre><code>## $groove
-## [1]  246.875 2159.375</code></pre>
+## [1]  246.875 2159.375
+## 
+## $plot</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <ol start="5" style="list-style-type: decimal">
 <li>Extract signatures</li>
 </ol>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2">  <span class="dt">sigs =</span> purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">map2</a></span>(</a>
-<a class="sourceLine" id="cb26-3" data-line-number="3">    <span class="dt">.x =</span> ccdata, <span class="dt">.y =</span> grooves, </a>
-<a class="sourceLine" id="cb26-4" data-line-number="4">    <span class="dt">.f =</span> <span class="cf">function</span>(x, y) {</a>
-<a class="sourceLine" id="cb26-5" data-line-number="5">      <span class="kw"><a href="reference/cc_get_signature.html">cc_get_signature</a></span>(</a>
-<a class="sourceLine" id="cb26-6" data-line-number="6">        <span class="dt">ccdata=</span>x, <span class="dt">grooves =</span> y, <span class="dt">span1 =</span> <span class="fl">0.75</span>, <span class="dt">span2=</span><span class="fl">0.03</span>)</a>
-<a class="sourceLine" id="cb26-7" data-line-number="7">      })</a>
-<a class="sourceLine" id="cb26-8" data-line-number="8">)</a></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">signatures &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(source, sigs) <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>()</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2">signatures <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw">is.na</span>(sig),<span class="op">!</span><span class="kw">is.na</span>(raw_sig)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> x)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y =</span> raw_sig), <span class="dt">colour =</span> <span class="st">"grey70"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y =</span> sig), <span class="dt">colour=</span><span class="st">"grey30"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>source, <span class="dt">ncol=</span><span class="dv">6</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">ylim</a></span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>()</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">bullets &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">  <span class="dt">sigs =</span> purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">map2</a></span>(</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">    <span class="dt">.x =</span> ccdata, <span class="dt">.y =</span> grooves, </a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">    <span class="dt">.f =</span> <span class="cf">function</span>(x, y) {</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">      <span class="kw"><a href="reference/cc_get_signature.html">cc_get_signature</a></span>(</a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">        <span class="dt">ccdata =</span> x, <span class="dt">grooves =</span> y, <span class="dt">span1 =</span> <span class="fl">0.75</span>, <span class="dt">span2 =</span> <span class="fl">0.03</span>)</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">    })</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">signatures &lt;-<span class="st"> </span>bullets <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(source, sigs) <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>()</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2">signatures <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw">is.na</span>(sig),<span class="op">!</span><span class="kw">is.na</span>(raw_sig)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> x)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y =</span> raw_sig), <span class="dt">colour =</span> <span class="st">"grey70"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y =</span> sig), <span class="dt">colour =</span> <span class="st">"grey30"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span>source, <span class="dt">ncol =</span> <span class="dv">6</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/lims">ylim</a></span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>()</a></code></pre></div>
+<pre><code>## Warning: Removed 25 rows containing missing values (geom_path).</code></pre>
+<pre><code>## Warning: Removed 38 rows containing missing values (geom_path).</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 <ol start="8" style="list-style-type: decimal">
 <li>Detect peaks and valleys in the aligned signatures</li>
 </ol>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">  lands &lt;-<span class="st"> </span><span class="kw">unique</span>(bullets<span class="op">$</span>source)</a>
-<a class="sourceLine" id="cb28-2" data-line-number="2">  comparisons &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
-<a class="sourceLine" id="cb28-3" data-line-number="3">    <span class="kw">expand.grid</span>(<span class="dt">b1=</span>lands, <span class="dt">b2=</span>lands), <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">lands &lt;-<span class="st"> </span><span class="kw">unique</span>(bullets<span class="op">$</span>land)</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">comparisons &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">  <span class="kw">expand.grid</span>(<span class="dt">landA =</span> lands, <span class="dt">landB =</span> lands), <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb28-4" data-line-number="4"><span class="co">#  comparisons &lt;- comparisons %&gt;% filter(b1 != b2)</span></a>
-<a class="sourceLine" id="cb28-5" data-line-number="5">  </a>
-<a class="sourceLine" id="cb28-6" data-line-number="6">  comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb28-7" data-line-number="7">    <span class="dt">aligned =</span> purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">map2</a></span>(<span class="dt">.x =</span> b1, <span class="dt">.y =</span> b2, <span class="dt">.f =</span> <span class="cf">function</span>(xx, yy) {</a>
-<a class="sourceLine" id="cb28-8" data-line-number="8">      land1 &lt;-<span class="st"> </span>bullets<span class="op">$</span>sigs[bullets<span class="op">$</span>source<span class="op">==</span>xx][[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb28-9" data-line-number="9">      land2 &lt;-<span class="st"> </span>bullets<span class="op">$</span>sigs[bullets<span class="op">$</span>source<span class="op">==</span>yy][[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb28-10" data-line-number="10">   <span class="co">#  land1$bullet &lt;- "first-land"</span></a>
-<a class="sourceLine" id="cb28-11" data-line-number="11">   <span class="co">#  land2$bullet &lt;- "second-land"</span></a>
-<a class="sourceLine" id="cb28-12" data-line-number="12">      </a>
-<a class="sourceLine" id="cb28-13" data-line-number="13">      <span class="kw"><a href="reference/sig_align.html">sig_align</a></span>(land1<span class="op">$</span>sig, land2<span class="op">$</span>sig)</a>
-<a class="sourceLine" id="cb28-14" data-line-number="14">    })</a>
-<a class="sourceLine" id="cb28-15" data-line-number="15">  )</a></code></pre></div>
+<a class="sourceLine" id="cb28-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb28-6" data-line-number="6">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb28-7" data-line-number="7">  <span class="dt">aligned =</span> purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">map2</a></span>(<span class="dt">.x =</span> landA, <span class="dt">.y =</span> landB, <span class="dt">.f =</span> <span class="cf">function</span>(xx, yy) {</a>
+<a class="sourceLine" id="cb28-8" data-line-number="8">    land1 &lt;-<span class="st"> </span>bullets<span class="op">$</span>sigs[bullets<span class="op">$</span>land <span class="op">==</span><span class="st"> </span>xx][[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb28-9" data-line-number="9">    land2 &lt;-<span class="st"> </span>bullets<span class="op">$</span>sigs[bullets<span class="op">$</span>land <span class="op">==</span><span class="st"> </span>yy][[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb28-10" data-line-number="10">    <span class="co">#  land1$bullet &lt;- "first-land"</span></a>
+<a class="sourceLine" id="cb28-11" data-line-number="11">    <span class="co">#  land2$bullet &lt;- "second-land"</span></a>
+<a class="sourceLine" id="cb28-12" data-line-number="12">    </a>
+<a class="sourceLine" id="cb28-13" data-line-number="13">    <span class="kw"><a href="reference/sig_align.html">sig_align</a></span>(land1<span class="op">$</span>sig, land2<span class="op">$</span>sig)</a>
+<a class="sourceLine" id="cb28-14" data-line-number="14">  })</a>
+<a class="sourceLine" id="cb28-15" data-line-number="15">)</a></code></pre></div>
 <p>Some features are based on aligned signatures:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
 <a class="sourceLine" id="cb29-2" data-line-number="2">  <span class="dt">ccf0 =</span> aligned <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -216,69 +223,82 @@
 <a class="sourceLine" id="cb29-10" data-line-number="10">  <span class="dt">overlap0 =</span> aligned <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb29-11" data-line-number="11"><span class="st">    </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_dbl</a></span>(<span class="dt">.f =</span> <span class="cf">function</span>(x) <span class="kw"><a href="reference/extract_feature_overlap.html">extract_feature_overlap</a></span>(x<span class="op">$</span>bullet))</a>
 <a class="sourceLine" id="cb29-12" data-line-number="12">)</a></code></pre></div>
-<p>Other features also need an evaluation of peaks and valleys to match between signatures:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">  comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb30-2" data-line-number="2">    <span class="dt">results =</span> aligned <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> sig_cms_max, <span class="dt">span =</span> <span class="dv">75</span>) </a>
-<a class="sourceLine" id="cb30-3" data-line-number="3">  )</a></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">## ccf and lag are extracted below</a>
-<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="co"># comparisons &lt;- comparisons %&gt;% mutate(</span></a>
-<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="co">#   ccf = results %&gt;% purrr::map_dbl(.f = function(x) x$ccf),</span></a>
-<a class="sourceLine" id="cb31-4" data-line-number="4"><span class="co">#   lag = results %&gt;% purrr::map_dbl(.f = function(x) x$lag) #,</span></a>
-<a class="sourceLine" id="cb31-5" data-line-number="5"><span class="co"># #  cms = results %&gt;% purrr::map_dbl(.f = function(x) x$maxCMS)</span></a>
-<a class="sourceLine" id="cb31-6" data-line-number="6"><span class="co"># )</span></a>
-<a class="sourceLine" id="cb31-7" data-line-number="7">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb31-8" data-line-number="8">  <span class="dt">barrel1 =</span> <span class="kw">gsub</span>(<span class="st">".*Barrel([1-6])_.*"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,b1),</a>
-<a class="sourceLine" id="cb31-9" data-line-number="9">  <span class="dt">barrel2 =</span> <span class="kw">gsub</span>(<span class="st">".*Barrel([1-6])_.*"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,b2),</a>
-<a class="sourceLine" id="cb31-10" data-line-number="10">  <span class="dt">bullet1 =</span> <span class="kw">gsub</span>(<span class="st">".*Bullet([1-6])_.*"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,b1),</a>
-<a class="sourceLine" id="cb31-11" data-line-number="11">  <span class="dt">bullet2 =</span> <span class="kw">gsub</span>(<span class="st">".*Bullet([1-6])_.*"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,b2),</a>
-<a class="sourceLine" id="cb31-12" data-line-number="12">  <span class="dt">land1 =</span> <span class="kw">gsub</span>(<span class="st">".*Land([1-6]).x3p"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,b1),</a>
-<a class="sourceLine" id="cb31-13" data-line-number="13">  <span class="dt">land2 =</span> <span class="kw">gsub</span>(<span class="st">".*Land([1-6]).x3p"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,b2)</a>
-<a class="sourceLine" id="cb31-14" data-line-number="14">)</a></code></pre></div>
+<p>Other features need an evaluation of striation marks between two aligned signatures:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">  <span class="dt">striae =</span> aligned <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> sig_cms_max, <span class="dt">span =</span> <span class="dv">75</span>) </a>
+<a class="sourceLine" id="cb30-3" data-line-number="3">)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb31-2" data-line-number="2">  <span class="dt">matches0 =</span> striae <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_dbl</a></span>(<span class="dt">.f =</span> <span class="cf">function</span>(s) {</a>
+<a class="sourceLine" id="cb31-3" data-line-number="3">    bulletxtrctr<span class="op">:::</span><span class="kw"><a href="reference/extract_feature_n_striae.html">extract_feature_n_striae</a></span>(s<span class="op">$</span>lines, <span class="dt">type =</span> <span class="st">"peaks"</span>, <span class="dt">match =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb31-4" data-line-number="4">  }),</a>
+<a class="sourceLine" id="cb31-5" data-line-number="5">  <span class="dt">mismatches0 =</span> striae <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_dbl</a></span>(<span class="dt">.f =</span> <span class="cf">function</span>(s) {</a>
+<a class="sourceLine" id="cb31-6" data-line-number="6">    bulletxtrctr<span class="op">:::</span><span class="kw"><a href="reference/extract_feature_n_striae.html">extract_feature_n_striae</a></span>(s<span class="op">$</span>lines, <span class="dt">type =</span> <span class="st">"peaks"</span>, <span class="dt">match =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb31-7" data-line-number="7">  })</a>
+<a class="sourceLine" id="cb31-8" data-line-number="8">  </a>
+<a class="sourceLine" id="cb31-9" data-line-number="9">)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">## ccf and lag are extracted below</a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="co"># comparisons &lt;- comparisons %&gt;% mutate(</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="co">#   ccf = results %&gt;% purrr::map_dbl(.f = function(x) x$ccf),</span></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="co">#   lag = results %&gt;% purrr::map_dbl(.f = function(x) x$lag) #,</span></a>
+<a class="sourceLine" id="cb32-5" data-line-number="5"><span class="co"># #  cms = results %&gt;% purrr::map_dbl(.f = function(x) x$maxCMS)</span></a>
+<a class="sourceLine" id="cb32-6" data-line-number="6"><span class="co"># )</span></a>
+<a class="sourceLine" id="cb32-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb32-8" data-line-number="8">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb32-9" data-line-number="9">  <span class="dt">land1 =</span> landA, <span class="dt">land2 =</span> landB,</a>
+<a class="sourceLine" id="cb32-10" data-line-number="10">  <span class="dt">bulletA =</span> <span class="kw">gsub</span>(<span class="st">"([1-2])-([1-6])"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,land1),</a>
+<a class="sourceLine" id="cb32-11" data-line-number="11">  <span class="dt">bulletB =</span> <span class="kw">gsub</span>(<span class="st">"([1-2])-([1-6])"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>,land2),</a>
+<a class="sourceLine" id="cb32-12" data-line-number="12">  <span class="dt">landA =</span> <span class="kw">gsub</span>(<span class="st">"([1-2])-([1-6])"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">2"</span>,land1),</a>
+<a class="sourceLine" id="cb32-13" data-line-number="13">  <span class="dt">landB =</span> <span class="kw">gsub</span>(<span class="st">"([1-2])-([1-6])"</span>,<span class="st">"</span><span class="ch">\\</span><span class="st">2"</span>,land2)</a>
+<a class="sourceLine" id="cb32-14" data-line-number="14">)</a></code></pre></div>
 <ol start="9" style="list-style-type: decimal">
 <li>Extract Features</li>
 </ol>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb32-2" data-line-number="2">  <span class="dt">features =</span> results <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> extract_features_all)</a>
-<a class="sourceLine" id="cb32-3" data-line-number="3">)</a>
-<a class="sourceLine" id="cb32-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb32-5" data-line-number="5">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>(features)</a>
-<a class="sourceLine" id="cb32-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb32-7" data-line-number="7"><span class="co"># quick visualization:</span></a>
-<a class="sourceLine" id="cb32-8" data-line-number="8">comparisons <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb32-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> land1, <span class="dt">y =</span> land2, <span class="dt">fill=</span>ccf)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-11" data-line-number="11"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_gradient">scale_fill_gradient2</a></span>(<span class="dt">low =</span> <span class="st">"grey80"</span>, <span class="dt">high =</span> <span class="st">"darkorange"</span>, </a>
-<a class="sourceLine" id="cb32-12" data-line-number="12">                       <span class="dt">midpoint =</span> <span class="fl">0.5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-13" data-line-number="13"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_grid">facet_grid</a></span>(bullet1<span class="op">~</span>bullet2, <span class="dt">labeller =</span> <span class="st">"label_both"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Land 1"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Land 2"</span>)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">  <span class="dt">features =</span> striae <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="dt">.f =</span> extract_features_all_legacy)</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">)</a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb33-6" data-line-number="6">  <span class="dt">features_new =</span> purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">map2</a></span>(<span class="dt">.x =</span> aligned, <span class="dt">.y=</span> striae, <span class="dt">.f =</span> extract_features_all)</a>
+<a class="sourceLine" id="cb33-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb33-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb33-9" data-line-number="9">comparisons &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>(features)</a>
+<a class="sourceLine" id="cb33-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb33-11" data-line-number="11"><span class="co"># quick visualization:</span></a>
+<a class="sourceLine" id="cb33-12" data-line-number="12">comparisons <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb33-13" data-line-number="13"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> landA, <span class="dt">y =</span> landB, <span class="dt">fill =</span> ccf)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_gradient">scale_fill_gradient2</a></span>(<span class="dt">low =</span> <span class="st">"grey80"</span>, <span class="dt">high =</span> <span class="st">"darkorange"</span>, </a>
+<a class="sourceLine" id="cb33-16" data-line-number="16">                       <span class="dt">midpoint =</span> <span class="fl">0.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_grid">facet_grid</a></span>(bulletB<span class="op">~</span>bulletA, <span class="dt">labeller =</span> <span class="st">"label_both"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-18" data-line-number="18"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Land A"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-19" data-line-number="19"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Land B"</span>)</a></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <ol start="10" style="list-style-type: decimal">
 <li>Get Score predictions for each land to land comparison</li>
 </ol>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">  comparisons<span class="op">$</span>rfscore &lt;-<span class="st"> </span><span class="kw">predict</span>(bulletr<span class="op">::</span>rtrees, <span class="dt">newdata =</span> comparisons, <span class="dt">type =</span> <span class="st">"prob"</span>)[,<span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb33-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb33-3" data-line-number="3">comparisons <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> land1, <span class="dt">y =</span> land2, <span class="dt">fill=</span>rfscore)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_gradient">scale_fill_gradient2</a></span>(<span class="dt">low =</span> <span class="st">"grey80"</span>, <span class="dt">high =</span> <span class="st">"darkorange"</span>, </a>
-<a class="sourceLine" id="cb33-7" data-line-number="7">                       <span class="dt">midpoint =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_grid">facet_grid</a></span>(bullet1<span class="op">~</span>bullet2, <span class="dt">labeller =</span> <span class="st">"label_both"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Land 1"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Land 2"</span>)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">comparisons<span class="op">$</span>rfscore &lt;-<span class="st"> </span><span class="kw">predict</span>(bulletr<span class="op">::</span>rtrees, <span class="dt">newdata =</span> comparisons, <span class="dt">type =</span> <span class="st">"prob"</span>)[,<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">comparisons <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> landA, <span class="dt">y =</span> landB, <span class="dt">fill =</span> rfscore)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_gradient">scale_fill_gradient2</a></span>(<span class="dt">low =</span> <span class="st">"grey80"</span>, <span class="dt">high =</span> <span class="st">"darkorange"</span>, </a>
+<a class="sourceLine" id="cb34-7" data-line-number="7">                       <span class="dt">midpoint =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb34-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_grid">facet_grid</a></span>(bulletB<span class="op">~</span>bulletA, <span class="dt">labeller =</span> <span class="st">"label_both"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb34-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Land A"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb34-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Land B"</span>)</a></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <ol start="11" style="list-style-type: decimal">
 <li>Determine bullet-to-bullet scores</li>
 </ol>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">parse_number &lt;-<span class="st"> </span>readr<span class="op">::</span>parse_number</a>
-<a class="sourceLine" id="cb34-2" data-line-number="2">bullet_scores &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(bullet1, bullet2) <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/nest">nest</a></span>()</a>
-<a class="sourceLine" id="cb34-3" data-line-number="3">bullet_scores &lt;-<span class="st"> </span>bullet_scores <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb34-4" data-line-number="4">  <span class="dt">bullet_score =</span> data <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_dbl</a></span>(</a>
-<a class="sourceLine" id="cb34-5" data-line-number="5">    <span class="dt">.f =</span> <span class="cf">function</span>(d) <span class="kw">max</span>(<span class="kw"><a href="reference/compute_average_scores.html">compute_average_scores</a></span>(<span class="dt">land1 =</span> d<span class="op">$</span>land1, <span class="dt">land2 =</span> d<span class="op">$</span>land2, d<span class="op">$</span>rfscore)))</a>
-<a class="sourceLine" id="cb34-6" data-line-number="6">)</a>
-<a class="sourceLine" id="cb34-7" data-line-number="7">bullet_scores <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>data)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">parse_number &lt;-<span class="st"> </span>readr<span class="op">::</span>parse_number</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">bullet_scores &lt;-<span class="st"> </span>comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(bulletA, bulletB) <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/nest">nest</a></span>()</a>
+<a class="sourceLine" id="cb35-3" data-line-number="3">bullet_scores &lt;-<span class="st"> </span>bullet_scores <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb35-4" data-line-number="4">  <span class="dt">bullet_score =</span> data <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_dbl</a></span>(</a>
+<a class="sourceLine" id="cb35-5" data-line-number="5">    <span class="dt">.f =</span> <span class="cf">function</span>(d) <span class="kw">max</span>(<span class="kw"><a href="reference/compute_average_scores.html">compute_average_scores</a></span>(<span class="dt">land1 =</span> d<span class="op">$</span>landA, <span class="dt">land2 =</span> d<span class="op">$</span>landB, d<span class="op">$</span>rfscore)))</a>
+<a class="sourceLine" id="cb35-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb35-7" data-line-number="7">bullet_scores <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>data)</a></code></pre></div>
 <pre><code>## # A tibble: 4 x 3
-##   bullet1 bullet2 bullet_score
+##   bulletA bulletB bullet_score
 ##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
 ## 1 1       1              0.982
 ## 2 2       1              0.674
@@ -320,7 +340,7 @@
 <li><a href="http://www.r-pkg.org/pkg/bulletxtrctr"><img src="http://cranlogs.r-pkg.org/badges/bulletxtrctr" alt="CRAN RStudio mirror downloads"></a></li>
 <li><a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
 <li><a href="https://travis-ci.org/heike/bulletxtrctr"><img src="https://travis-ci.org/heike/bulletxtrctr.svg?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="/commits/master"><img src="https://img.shields.io/badge/last%20change-2018--08--14-yellowgreen.svg" alt="Last-changedate"></a></li>
+<li><a href="/commits/master"><img src="https://img.shields.io/badge/last%20change-2018--08--21-yellowgreen.svg" alt="Last-changedate"></a></li>
 <li><a href="https://codecov.io/github/heike/bulletxtrctr?branch=master"><img src="https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
 </ul>
 </div>
