@@ -1,10 +1,29 @@
+
+#' Extract number of matching striation marks from two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return number of matching striation marks
+#' @export
+extract_feature_matches <- function(striae) {
+  extract_feature_n_striae(striae, type="all", match=TRUE)
+}
+
+#' Extract number of mismatched striation marks from two aligned signatures
+#'
+#' @param striae data frames of striation marks based on two aligned signatures
+#' @return number of mismatched striation marks
+#' @export
+extract_feature_mismatches <- function(striae) {
+  extract_feature_n_striae(striae, type="all", match=FALSE)
+}
+
 #' Extract information for striation marks from two aligned signatures
 #'
+#' internal function, called by multiple extract_feature functions
 #' @param striae data frames of striation marks based on two aligned signatures
 #' @param type one of "peak", "valley" or "all"
 #' @param match binary setting: TRUE for matching striae, FALSE for non-matching striae
 #' @return number of striae
-#' @export
 extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
   striae$type__ <- TRUE
 
@@ -60,6 +79,8 @@ extract_feature_D <- function(aligned, ...) {
   dists <- dist(t(aligned[,-1]), ...)
   ns <- t(!is.na(aligned[,-1])) %*% !is.na(aligned[,-1])
 
+  if (attr(dists, "Size") == 2) return(as.numeric(dists/as.dist(ns)))
+
   dists/as.dist(ns)
 }
 
@@ -89,12 +110,54 @@ extract_feature_overlap <- function(aligned) {
   sum(!is.na(aligned[,2]) & !is.na(aligned[,3]))/extract_feature_length(aligned)
 }
 
+
+#' Extract the combined height of aligned striae between two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return sum of heights of matching striae
+#' @export
+extract_feature_sum_peaks <- function(striae) {
+  striae %>% filter(match == TRUE) %>%
+    summarize(
+      sum_peaks = sum(abs(heights), na.rm = TRUE)
+    ) %>% as.numeric()
+}
+
 #' Extract features from aligned signatures
+#'
+#' @param aligned aligned signatures, result from `sig_cms_max`
+#' @param striae data frame with evaluated matching striae
+#' @param ... passed on to extractor functions
+#' XXX this needs some fixing
+#' @importFrom utils apropos
+#' @importFrom tidyr spread
+#' @export
+extract_features_all <- function(aligned, striae, ...) {
+  # figure out all the different functions, then figure out the format
+
+  features <- apropos("extract_feature_")
+  values <- features %>% purrr::map_dbl(.f = function(f) {
+    fun <- getFromNamespace(f, asNamespace("bulletxtrctr"))
+    if ("aligned" %in% names(formals(fun)))
+      res <- fun(aligned$bullets, ...)
+    if ("striae" %in% names(formals(fun)))
+      res <- fun(striae$lines, ...)
+    res
+  })
+
+  data.frame(
+    feature = gsub("extract_feature_", "", features),
+    value=values
+    ) %>% spread(feature, value)
+}
+
+#' Extract features from aligned signatures (legacy)
 #'
 #' @param res list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
 #' XXX this needs some fixing
+#' @return data frame with variables ccf, rough_cor, D, sd_D, matches, mismatches, cms, non_cms, and sum_peaks
 #' @export
-extract_features_all <- function(res) {
+extract_features_all_legacy <- function(res) {
   #browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 

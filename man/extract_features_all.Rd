@@ -4,10 +4,14 @@
 \alias{extract_features_all}
 \title{Extract features from aligned signatures}
 \usage{
-extract_features_all(res)
+extract_features_all(aligned, striae, ...)
 }
 \arguments{
-\item{res}{list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
+\item{aligned}{aligned signatures, result from `sig_cms_max`}
+
+\item{striae}{data frame with evaluated matching striae}
+
+\item{...}{passed on to extractor functions
 XXX this needs some fixing}
 }
 \description{

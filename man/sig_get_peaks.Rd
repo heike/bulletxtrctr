@@ -7,9 +7,11 @@
 sig_get_peaks(sig, smoothfactor = 35, striae = TRUE, window = TRUE)
 }
 \arguments{
-\item{sig}{numeric vector of smoothed signature, padded with NAs at front and/or back.}
+\item{sig}{numeric vector of smoothed signature, padded with NAs at front
+and/or back.}
 
-\item{smoothfactor}{set to default of 35. Smaller values will pick up on smaller changes in the crosscut.}
+\item{smoothfactor}{set to default of 35. Smaller values will pick up on
+smaller changes in the crosscut.}
 
 \item{striae}{If TRUE, show the detected striae on the plot}
 

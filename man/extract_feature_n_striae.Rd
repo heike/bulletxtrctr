@@ -17,5 +17,5 @@ extract_feature_n_striae(striae, type = "peak", match = TRUE)
 number of striae
 }
 \description{
-Extract information for striation marks from two aligned signatures
+internal function, called by multiple extract_feature functions
 }

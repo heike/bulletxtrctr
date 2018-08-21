@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 17, 2018"
+date: "August 21, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--17-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--21-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
@@ -297,10 +297,10 @@ comparisons <- comparisons %>% mutate(
 ```r
 comparisons <- comparisons %>% mutate(
   matches0 = striae %>% purrr::map_dbl(.f = function(s) {
-    extract_feature_n_striae(s$lines, type = "peaks", match = TRUE)
+    bulletxtrctr:::extract_feature_n_striae(s$lines, type = "peaks", match = TRUE)
   }),
   mismatches0 = striae %>% purrr::map_dbl(.f = function(s) {
-    extract_feature_n_striae(s$lines, type = "peaks", match = FALSE)
+    bulletxtrctr:::extract_feature_n_striae(s$lines, type = "peaks", match = FALSE)
   })
   
 )
@@ -329,7 +329,11 @@ comparisons <- comparisons %>% mutate(
 
 ```r
 comparisons <- comparisons %>% mutate(
-  features = striae %>% purrr::map(.f = extract_features_all)
+  features = striae %>% purrr::map(.f = extract_features_all_legacy)
+)
+
+comparisons <- comparisons %>% mutate(
+  features_new = purrr::map2(.x = aligned, .y= striae, .f = extract_features_all)
 )
 
 comparisons <- comparisons %>% tidyr::unnest(features)

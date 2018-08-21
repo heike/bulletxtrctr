@@ -7,18 +7,23 @@
 striation_identify_matches(striae1, striae2)
 }
 \arguments{
-\item{striae1}{data frame as returned from sig_get_peaks function. data frames are expected to have
-the following variables: xmin, xmax, group, type, bullet, heights}
+\item{striae1}{data frame as returned from sig_get_peaks function.
+data frames are expected to have the following variables:
+xmin, xmax, group, type, bullet, heights}
 
-\item{striae2}{data frame as returned from sig_get_peaks function. data frames are expected to have
-the following variables: xmin, xmax, group, type, bullet, heights}
+\item{striae2}{data frame as returned from sig_get_peaks function.
+data frames are expected to have the following variables:
+xmin, xmax, group, type, bullet, heights}
 }
 \value{
-data frame of the same form as lines1 and lines2, but consisting of an additional variable of whether the striation marks are matches
+data frame of the same form as lines1 and lines2, but with an
+  additional variable of whether the striation marks are matches
 }
 \description{
-`striae1` and `striae2` are data frames of previously identified peaks and valleys returned by `sig_get_peaks`
+`striae1` and `striae2` are data frames of previously identified peaks and
+valleys returned by `sig_get_peaks`
 }
 \details{
-adapted from function `striation_identify` in the bulletr package, just used internally. Not intended for public consumption.
+adapted from function `striation_identify` in the bulletr package, just used
+internally. Not intended for public consumption.
 }

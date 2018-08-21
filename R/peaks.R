@@ -105,14 +105,14 @@ striation_identify_matches <- function(striae1, striae2) {
   assert_that(# striae1
     is.data.frame(striae1),
     has_name(striae1, "xmin"), has_name(striae1, "xmax"),
-    has_name(striae1, "group"), has_name(striae1, "type"),
+    has_name(striae1, "type"), has_name(striae1, "extrema"),
     has_name(striae1, "bullet"), has_name(striae1, "heights"),
     is.numeric(striae1$xmin), is.numeric(striae1$xmax)
   )
   assert_that(# striae2
     is.data.frame(striae2),
     has_name(striae2, "xmin"), has_name(striae2, "xmax"),
-    has_name(striae2, "group"), has_name(striae2, "type"),
+    has_name(striae2, "type"), has_name(striae2, "extrema"),
     has_name(striae2, "bullet"), has_name(striae2, "heights"),
     is.numeric(striae2$xmin), is.numeric(striae2$xmax)
   )
