@@ -1,3 +1,42 @@
+#' Extract number of consecutively matching elevated striation marks from the right of two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return number of consecutively matching striation marks (from right)
+#' @export
+extract_feature_right_cms <- function(striae) {
+  striae <- striae %>% arrange(xmin)
+  striae$rightcms <- FALSE
+  idx <- which(striae$match == FALSE)
+  lastidx <- length(idx)
+  if (lastidx > 0)
+    return(nrow(striae) - idx[lastidx])
+  return(nrow(striae))
+}
+
+#' Extract number of consecutively matching elevated striation marks from the left of two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return number of consecutively matching striation marks (from left)
+#' @export
+extract_feature_left_cms <- function(striae) {
+  striae <- striae %>% arrange(xmin)
+  striae$leftcms <- FALSE
+  idx <- which(striae$match == FALSE)
+  if (length(idx) > 0)
+    return(idx[1]-1)
+
+  return(nrow(striae))
+}
+
+#' Extract number of consecutively matching elevated striation marks from two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return number of consecutively matching elevated striation marks
+#' @export
+extract_feature_cms2 <- function(striae) {
+  peaks <- filter(striae, type==1)
+  get_longest_run(peaks$match == TRUE)
+}
 
 #' Extract number of consecutively matching striation marks from two aligned signatures
 #'
