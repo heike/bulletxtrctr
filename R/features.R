@@ -1,4 +1,23 @@
 
+#' Extract number of consecutively matching striation marks from two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return number of consecutively matching striation marks
+#' @export
+extract_feature_cms <- function(striae) {
+  get_longest_run(striae$match == TRUE)
+}
+
+
+#' Extract number of consecutively non-matching striation marks from two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return number of consecutively non-matching striation marks
+#' @export
+extract_feature_non_cms <- function(striae) {
+  get_longest_run(striae$match == FALSE)
+}
+
 #' Extract number of matching striation marks from two aligned signatures
 #'
 #' @param striae data frame of striation marks based on two aligned signatures
