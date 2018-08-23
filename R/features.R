@@ -1,4 +1,5 @@
-#' Extract number of consecutively matching elevated striation marks from the right of two aligned signatures
+#' Extract number of consecutively matching elevated striation marks from the
+#' right of two aligned signatures
 #'
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching striation marks (from right)
@@ -13,7 +14,8 @@ extract_feature_right_cms <- function(striae) {
   return(nrow(striae))
 }
 
-#' Extract number of consecutively matching elevated striation marks from the left of two aligned signatures
+#' Extract number of consecutively matching elevated striation marks from the
+#' left of two aligned signatures
 #'
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching striation marks (from left)
@@ -23,22 +25,24 @@ extract_feature_left_cms <- function(striae) {
   striae$leftcms <- FALSE
   idx <- which(striae$match == FALSE)
   if (length(idx) > 0)
-    return(idx[1]-1)
+    return(idx[1] - 1)
 
   return(nrow(striae))
 }
 
-#' Extract number of consecutively matching elevated striation marks from two aligned signatures
+#' Extract number of consecutively matching elevated striation marks from two
+#' aligned signatures
 #'
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching elevated striation marks
 #' @export
 extract_feature_cms2 <- function(striae) {
-  peaks <- filter(striae, type==1)
+  peaks <- filter(striae, type == 1)
   get_longest_run(peaks$match == TRUE)
 }
 
-#' Extract number of consecutively matching striation marks from two aligned signatures
+#' Extract number of consecutively matching striation marks from two aligned
+#' signatures
 #'
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching striation marks
@@ -48,7 +52,8 @@ extract_feature_cms <- function(striae) {
 }
 
 
-#' Extract number of consecutively non-matching striation marks from two aligned signatures
+#' Extract number of consecutively non-matching striation marks from two
+#' aligned signatures
 #'
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively non-matching striation marks
@@ -63,7 +68,7 @@ extract_feature_non_cms <- function(striae) {
 #' @return number of matching striation marks
 #' @export
 extract_feature_matches <- function(striae) {
-  extract_feature_n_striae(striae, type="all", match=TRUE)
+  extract_feature_n_striae(striae, type = "all", match = TRUE)
 }
 
 #' Extract number of mismatched striation marks from two aligned signatures
@@ -72,7 +77,7 @@ extract_feature_matches <- function(striae) {
 #' @return number of mismatched striation marks
 #' @export
 extract_feature_mismatches <- function(striae) {
-  extract_feature_n_striae(striae, type="all", match=FALSE)
+  extract_feature_n_striae(striae, type = "all", match = FALSE)
 }
 
 #' Extract information for striation marks from two aligned signatures
@@ -80,7 +85,8 @@ extract_feature_mismatches <- function(striae) {
 #' internal function, called by multiple extract_feature functions
 #' @param striae data frames of striation marks based on two aligned signatures
 #' @param type one of "peak", "valley" or "all"
-#' @param match binary setting: TRUE for matching striae, FALSE for non-matching striae
+#' @param match binary setting: TRUE for matching striae, FALSE for non-matching
+#'          striae
 #' @return number of striae
 extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
   striae$type__ <- TRUE
@@ -98,28 +104,37 @@ extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
 
 #' Extract ccf from two (or more) aligned signatures
 #'
-#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @param aligned data frame with variable x (for location) and two or
+#'          more measurements
 #' @return (matrix) of correlations
 #' @importFrom stats cor
 #' @export
 extract_feature_ccf <- function(aligned) {
   if (dim(aligned)[2] == 3) # only two signatures to compare
-    return(cor(aligned[,2], aligned[,3], use="pairwise"))
+    return(cor(aligned[,2], aligned[,3], use =  "pairwise"))
   cor(aligned[,-1])
 }
 
 #' Extract lag from two (or more) aligned signatures
 #'
-#' In the case of two signatures the result is an integer definining the number of indices by which the second signature is shifted compared to the first signature in the alignment. Note that this lag can be negative.
-#' In the case of multiple signatures the result is a vector of non-negative integers of the same length as signatures. Each element gives the number of indices by which the corresponding signature is shifted compared to the *first* signature. By definition, one of the numbers has to be 0 indicating the *first* signature.
-#' @param aligned data frame with variable x (for location) and two or more measurements
+#' In the case of two signatures the result is an integer definining the number
+#' of indices by which the second signature is shifted compared to the first
+#' signature in the alignment. Note that this lag can be negative.
+#' In the case of multiple signatures the result is a vector of non-negative
+#' integers of the same length as signatures. Each element gives the number of
+#' indices by which the corresponding signature is shifted compared to the
+#' *first* signature. By definition, one of the numbers has to be 0 indicating
+#' the *first* signature.
+#'
+#' @param aligned data frame with variable x (for location) and two or
+#'          more measurements
 #' @return (vector) of lags
 #' @export
 extract_feature_lag <- function(aligned) {
   lags <- sapply(aligned[,-1], function(x) {
     if (!is.na(x[1])) return(0)
     diffs <- diff(is.na(x))
-    which(diffs==-1)
+    which(diffs == -1)
   })
 
   if (length(lags) == 2) return(diff(lags))
@@ -128,7 +143,8 @@ extract_feature_lag <- function(aligned) {
 
 #' Extract average distance between two (or more) aligned signatures
 #'
-#' @param aligned data frame with variable x (for location) and two or more measurements
+#' @param aligned data frame with variable x (for location) and two or more
+#'          measurements
 #' @param ... arguments for function `dist`
 #' @return object of class distance
 #' @importFrom stats dist as.dist
@@ -144,8 +160,10 @@ extract_feature_D <- function(aligned, ...) {
 
 #' Extract length of two (aligned) signatures
 #'
-#' Signatures will usually be of different lengths. In a comparison, the length of the shorter signature represents the potential length for a match.
-#' @param aligned data frame with variable x (for location) and two or more measurements
+#' Signatures will usually be of different lengths. In a comparison, the length
+#' of the shorter signature represents the potential length for a match.
+#' @param aligned data frame with variable x (for location) and two or more
+#'          measurements
 #' @return integer value of the length of the shorter signature.
 #' @export
 extract_feature_length <- function(aligned) {
@@ -158,10 +176,14 @@ extract_feature_length <- function(aligned) {
 
 #' Extract overlap between two aligned signatures
 #'
-#' The overlap of two aligned signatures is defined as the ratio of the number of non-missing overlapping values of the two aligned signatures and
-#' the length of the shorter signature. A larger overlap indicates a higher level of agreement between the signatures.
-#' @param aligned data frame with variable x (for location) and two or more measurements
-#' @return value between 0 and 1, ratio of length of overlap compared to smaller length of the signature
+#' The overlap of two aligned signatures is defined as the ratio of the number
+#' of non-missing overlapping values of the two aligned signatures and
+#' the length of the shorter signature. A larger overlap indicates a higher
+#' level of agreement between the signatures.
+#' @param aligned data frame with variable x (for location) and two or more
+#'          measurements
+#' @return value between 0 and 1, ratio of length of overlap compared to
+#'           smaller length of the signature
 #' @export
 extract_feature_overlap <- function(aligned) {
   # compute non-missing overlap of the first two signatures
@@ -205,15 +227,17 @@ extract_features_all <- function(aligned, striae, ...) {
 
   data.frame(
     feature = gsub("extract_feature_", "", features),
-    value=values
+    value = values
     ) %>% spread(feature, value)
 }
 
 #' Extract features from aligned signatures (legacy)
 #'
-#' @param res list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
+#' @param res list consisting of data frames of lines and aligned signatures,
+#'          result from `sig_cms_max`
 #' XXX this needs some fixing
-#' @return data frame with variables ccf, rough_cor, D, sd_D, matches, mismatches, cms, non_cms, and sum_peaks
+#' @return data frame with variables ccf, rough_cor, D, sd_D, matches,
+#'           mismatches, cms, non_cms, and sum_peaks
 #' @export
 extract_features_all_legacy <- function(res) {
   #browser()
@@ -232,20 +256,25 @@ extract_features_all_legacy <- function(res) {
   #   subLOFx1 <- subset(lofX, bullet==b12[1])
   #  subLOFx2 <- subset(lofX, bullet==b12[2])
 
-  ys <- dplyr::intersect(round(subLOFx1$y, digits = 3), round(subLOFx2$y, digits = 3))
+  ys <- dplyr::intersect(round(subLOFx1$y, digits = 3),
+                         round(subLOFx2$y, digits = 3))
 
   idx1 <- which(round(subLOFx1$y, digits = 3) %in% ys)
   idx2 <- which(round(subLOFx2$y, digits = 3) %in% ys)
 
   g1_inc_x <- 1.5625
 
-  distr.dist <- sqrt(mean(((subLOFx1$val[idx1] - subLOFx2$val[idx2]) * g1_inc_x / 1000)^2, na.rm=TRUE))
-  distr.sd <- sd(subLOFx1$val * g1_inc_x / 1000, na.rm=TRUE) + sd(subLOFx2$val * g1_inc_x / 1000, na.rm=TRUE)
+  sq <- function(x) x^2
+
+  distr.dist <- ((subLOFx1$val[idx1] - subLOFx2$val[idx2]) * g1_inc_x / 1000) %>%
+    sq() %>% mean(na.rm = TRUE) %>% sqrt()
+  distr.sd <- sd(subLOFx1$val * g1_inc_x / 1000, na.rm = TRUE) +
+    sd(subLOFx2$val * g1_inc_x / 1000, na.rm = TRUE)
 
   km <- which(res$lines$match)
   knm <- which(!res$lines$match)
-  if (length(km) == 0) km <- c(length(knm)+1,0)
-  if (length(knm) == 0) knm <- c(length(km)+1,0)
+  if (length(km) == 0) km <- c(length(knm) + 1,0)
+  if (length(knm) == 0) knm <- c(length(km) + 1,0)
 
   signature.length <- min(nrow(subLOFx1), nrow(subLOFx2))
 
@@ -260,15 +289,16 @@ extract_features_all_legacy <- function(res) {
   final_doublesmoothed <- doublesmoothed %>%
     filter(round(x, digits = 3) %in% ys)
 
-  rough_cor <- cor(final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[1]],
-                   final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[2]],
-                   use = "pairwise.complete.obs")
+  rough_cor <- cor(
+    final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[1]],
+    final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[2]],
+    use = "pairwise.complete.obs")
 
   data.frame(
-    ccf=res$ccf,
+    ccf = res$ccf,
     rough_cor = rough_cor,
-    lag=res$lag / 1000,
-    D=distr.dist,
+    lag = res$lag / 1000,
+    D = distr.dist,
     sd_D = distr.sd,
     #     b1=b12[1], b2=b12[2],
     signature_length = signature.length * g1_inc_x / 1000,
@@ -276,12 +306,18 @@ extract_features_all_legacy <- function(res) {
     matches = sum(res$lines$match) * (1000 / g1_inc_x) / length(ys),
     mismatches = sum(!res$lines$match) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
     cms = res$maxCMS * (1000 / g1_inc_x) / length(ys),
-    cms2 = get_longest_run(subset(res$lines, type==1 | is.na(type))$match) * (1000 / g1_inc_x) / length(ys),
-    non_cms = get_longest_run(!res$lines$match) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
+    cms2 = get_longest_run(
+      subset(res$lines, type == 1 | is.na(type))$match
+      ) * (1000 / g1_inc_x) / length(ys),
+    non_cms = get_longest_run(!res$lines$match) * 1000 /
+      abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
     left_cms = max(knm[1] - km[1], 0) * (1000 / g1_inc_x) / length(ys),
-    right_cms = max(km[length(km)] - knm[length(knm)],0) * (1000 / g1_inc_x) / length(ys),
+    right_cms = max(km[length(km)] - knm[length(knm)],0) *
+      (1000 / g1_inc_x) / length(ys),
     left_noncms = max(km[1] - knm[1], 0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
-    right_noncms = max(knm[length(knm)]-km[length(km)],0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
-    sum_peaks = sum(abs(res$lines$heights[res$lines$match]), na.rm=TRUE) * (1000 / g1_inc_x) / length(ys)
+    right_noncms = max(knm[length(knm)] - km[length(km)],0) *
+      1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
+    sum_peaks = sum(abs(res$lines$heights[res$lines$match]), na.rm = TRUE) *
+      (1000 / g1_inc_x) / length(ys)
   )
 }
