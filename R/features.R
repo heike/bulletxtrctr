@@ -115,13 +115,13 @@ extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
   striae$type__ <- TRUE
 
   if (type == "peak") striae$type__ <- striae$type == 1
-  if (type == "valley") striae$type__ <- striae$type == -1 # This used to be 1, but that seems wrong...
+  if (type == "valley") striae$type__ <- striae$type == -1
 
   # XXXX What to do if type is NA?
   if (match) {
     n <- sum(striae$match & striae$type__)
   } else {
-    n <- sum(!striae$match & striae$type__)
+    n <- sum(!striae$match)
   }
 
   return(n)

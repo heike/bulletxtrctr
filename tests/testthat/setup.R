@@ -164,7 +164,8 @@ if (!file.exists(here::here("tests/single_features.Rdata"))) {
     cms = extract_feature_cms(striae = match$maxcms$lines),
     noncms = extract_feature_non_cms(striae = match$maxcms$lines),
     matches = extract_feature_matches(striae = match$maxcms$lines),
-    mismatches = extract_feature_mismatches(striae = match$maxcms$lines)
+    mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
+    ccf = extract_feature_ccf(match$alignment$bullets)
   )
   save(features_single, file = here::here("tests/single_features.Rdata"))
 }
