@@ -7,12 +7,16 @@
 extract_feature_overlap(aligned)
 }
 \arguments{
-\item{aligned}{data frame with variable x (for location) and two or more measurements}
+\item{aligned}{data frame with variable x (for location) and two or more
+measurements}
 }
 \value{
-value between 0 and 1, ratio of length of overlap compared to smaller length of the signature
+value between 0 and 1, ratio of length of overlap compared to
+          smaller length of the signature
 }
 \description{
-The overlap of two aligned signatures is defined as the ratio of the number of non-missing overlapping values of the two aligned signatures and
-the length of the shorter signature. A larger overlap indicates a higher level of agreement between the signatures.
+The overlap of two aligned signatures is defined as the ratio of the number
+of non-missing overlapping values of the two aligned signatures and
+the length of the shorter signature. A larger overlap indicates a higher
+level of agreement between the signatures.
 }

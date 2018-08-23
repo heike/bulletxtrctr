@@ -7,7 +7,8 @@
 extract_feature_D(aligned, ...)
 }
 \arguments{
-\item{aligned}{data frame with variable x (for location) and two or more measurements}
+\item{aligned}{data frame with variable x (for location) and two or more
+measurements}
 
 \item{...}{arguments for function `dist`}
 }

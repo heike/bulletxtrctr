@@ -2,7 +2,8 @@
 % Please edit documentation in R/features.R
 \name{extract_feature_left_cms}
 \alias{extract_feature_left_cms}
-\title{Extract number of consecutively matching elevated striation marks from the left of two aligned signatures}
+\title{Extract number of consecutively matching elevated striation marks from the
+left of two aligned signatures}
 \usage{
 extract_feature_left_cms(striae)
 }
@@ -13,5 +14,6 @@ extract_feature_left_cms(striae)
 number of consecutively matching striation marks (from left)
 }
 \description{
-Extract number of consecutively matching elevated striation marks from the left of two aligned signatures
+Extract number of consecutively matching elevated striation marks from the
+left of two aligned signatures
 }

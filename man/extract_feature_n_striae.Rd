@@ -11,7 +11,8 @@ extract_feature_n_striae(striae, type = "peak", match = TRUE)
 
 \item{type}{one of "peak", "valley" or "all"}
 
-\item{match}{binary setting: TRUE for matching striae, FALSE for non-matching striae}
+\item{match}{binary setting: TRUE for matching striae, FALSE for non-matching
+striae}
 }
 \value{
 number of striae

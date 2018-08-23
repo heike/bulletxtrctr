@@ -2,7 +2,8 @@
 % Please edit documentation in R/features.R
 \name{extract_feature_non_cms}
 \alias{extract_feature_non_cms}
-\title{Extract number of consecutively non-matching striation marks from two aligned signatures}
+\title{Extract number of consecutively non-matching striation marks from two
+aligned signatures}
 \usage{
 extract_feature_non_cms(striae)
 }
@@ -13,5 +14,6 @@ extract_feature_non_cms(striae)
 number of consecutively non-matching striation marks
 }
 \description{
-Extract number of consecutively non-matching striation marks from two aligned signatures
+Extract number of consecutively non-matching striation marks from two
+aligned signatures
 }

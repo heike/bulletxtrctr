@@ -7,11 +7,13 @@
 extract_feature_length(aligned)
 }
 \arguments{
-\item{aligned}{data frame with variable x (for location) and two or more measurements}
+\item{aligned}{data frame with variable x (for location) and two or more
+measurements}
 }
 \value{
 integer value of the length of the shorter signature.
 }
 \description{
-Signatures will usually be of different lengths. In a comparison, the length of the shorter signature represents the potential length for a match.
+Signatures will usually be of different lengths. In a comparison, the length
+of the shorter signature represents the potential length for a match.
 }

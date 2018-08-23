@@ -7,11 +7,13 @@
 extract_features_all_legacy(res)
 }
 \arguments{
-\item{res}{list consisting of data frames of lines and aligned signatures, result from `sig_cms_max`
+\item{res}{list consisting of data frames of lines and aligned signatures,
+         result from `sig_cms_max`
 XXX this needs some fixing}
 }
 \value{
-data frame with variables ccf, rough_cor, D, sd_D, matches, mismatches, cms, non_cms, and sum_peaks
+data frame with variables ccf, rough_cor, D, sd_D, matches,
+          mismatches, cms, non_cms, and sum_peaks
 }
 \description{
 Extract features from aligned signatures (legacy)
