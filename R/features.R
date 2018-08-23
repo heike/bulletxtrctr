@@ -4,13 +4,22 @@
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching striation marks (from right)
 #' @export
+#' @importFrom assertthat assert_that has_name
+#' @importFrom dplyr '%>%' arrange
 extract_feature_right_cms <- function(striae) {
+  assert_that(
+    has_name(striae, "xmin"),
+    has_name(striae, "match")
+  )
+  xmin <- NULL
+
   striae <- striae %>% arrange(xmin)
   striae$rightcms <- FALSE
   idx <- which(striae$match == FALSE)
   lastidx <- length(idx)
-  if (lastidx > 0)
+  if (lastidx > 0) {
     return(nrow(striae) - idx[lastidx])
+  }
   return(nrow(striae))
 }
 
@@ -20,12 +29,21 @@ extract_feature_right_cms <- function(striae) {
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching striation marks (from left)
 #' @export
+#' @importFrom assertthat assert_that has_name
+#' @importFrom dplyr '%>%' arrange
 extract_feature_left_cms <- function(striae) {
+  assert_that(
+    has_name(striae, "xmin"),
+    has_name(striae, "match")
+  )
+  xmin <- NULL
+
   striae <- striae %>% arrange(xmin)
   striae$leftcms <- FALSE
   idx <- which(striae$match == FALSE)
-  if (length(idx) > 0)
+  if (length(idx) > 0) {
     return(idx[1] - 1)
+  }
 
   return(nrow(striae))
 }
@@ -36,7 +54,17 @@ extract_feature_left_cms <- function(striae) {
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching elevated striation marks
 #' @export
+#' @importFrom assertthat assert_that has_name
+#' @importFrom dplyr filter arrange '%>%'
 extract_feature_cms2 <- function(striae) {
+  assert_that(
+    has_name(striae, "xmin"),
+    has_name(striae, "type"),
+    has_name(striae, "match")
+  )
+  xmin <- type <- NULL
+
+  striae <- striae %>% arrange(xmin)
   peaks <- filter(striae, type == 1)
   get_longest_run(peaks$match == TRUE)
 }
@@ -47,7 +75,9 @@ extract_feature_cms2 <- function(striae) {
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching striation marks
 #' @export
+#' @importFrom assertthat assert_that has_name
 extract_feature_cms <- function(striae) {
+  assert_that(has_name(striae, "match"))
   get_longest_run(striae$match == TRUE)
 }
 
@@ -58,8 +88,43 @@ extract_feature_cms <- function(striae) {
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively non-matching striation marks
 #' @export
+#' @importFrom assertthat assert_that has_name
 extract_feature_non_cms <- function(striae) {
+  assert_that(has_name(striae, "match"))
   get_longest_run(striae$match == FALSE)
+}
+
+#' Extract information for striation marks from two aligned signatures
+#'
+#' internal function, called by multiple extract_feature functions
+#' @param striae data frames of striation marks based on two aligned signatures
+#' @param type one of "peak", "valley" or "all"
+#' @param match binary setting: TRUE for matching striae, FALSE for non-matching
+#'          striae
+#' @return number of striae
+#' @importFrom assertthat assert_that has_name
+extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
+  assert_that(
+    has_name(striae, "type"),
+    has_name(striae, "match")
+  )
+  assert_that(type %in% c("peak", "valley", "all"),
+    msg = "type must be peak, valley, or all"
+  )
+
+  striae$type__ <- TRUE
+
+  if (type == "peak") striae$type__ <- striae$type == 1
+  if (type == "valley") striae$type__ <- striae$type == -1 # This used to be 1, but that seems wrong...
+
+  # XXXX What to do if type is NA?
+  if (match) {
+    n <- sum(striae$match & striae$type__)
+  } else {
+    n <- sum(!striae$match & striae$type__)
+  }
+
+  return(n)
 }
 
 #' Extract number of matching striation marks from two aligned signatures
@@ -80,28 +145,6 @@ extract_feature_mismatches <- function(striae) {
   extract_feature_n_striae(striae, type = "all", match = FALSE)
 }
 
-#' Extract information for striation marks from two aligned signatures
-#'
-#' internal function, called by multiple extract_feature functions
-#' @param striae data frames of striation marks based on two aligned signatures
-#' @param type one of "peak", "valley" or "all"
-#' @param match binary setting: TRUE for matching striae, FALSE for non-matching
-#'          striae
-#' @return number of striae
-extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
-  striae$type__ <- TRUE
-
-  if (type == "peak") striae$type__ <- striae$type == 1
-  if (type == "valley") striae$type__ <- striae$type == 1
-
-  if (match)
-    n <- sum(striae$match & striae$type__)
-  else
-    n <- sum(!striae$match & striae$type__)
-
-  return(n)
-}
-
 #' Extract ccf from two (or more) aligned signatures
 #'
 #' @param aligned data frame with variable x (for location) and two or
@@ -110,9 +153,10 @@ extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
 #' @importFrom stats cor
 #' @export
 extract_feature_ccf <- function(aligned) {
-  if (dim(aligned)[2] == 3) # only two signatures to compare
-    return(cor(aligned[,2], aligned[,3], use =  "pairwise"))
-  cor(aligned[,-1])
+  if (dim(aligned)[2] == 3) { # only two signatures to compare
+    return(cor(aligned[, 2], aligned[, 3], use = "pairwise"))
+  }
+  cor(aligned[, -1])
 }
 
 #' Extract lag from two (or more) aligned signatures
@@ -131,7 +175,7 @@ extract_feature_ccf <- function(aligned) {
 #' @return (vector) of lags
 #' @export
 extract_feature_lag <- function(aligned) {
-  lags <- sapply(aligned[,-1], function(x) {
+  lags <- sapply(aligned[, -1], function(x) {
     if (!is.na(x[1])) return(0)
     diffs <- diff(is.na(x))
     which(diffs == -1)
@@ -150,12 +194,12 @@ extract_feature_lag <- function(aligned) {
 #' @importFrom stats dist as.dist
 #' @export
 extract_feature_D <- function(aligned, ...) {
-  dists <- dist(t(aligned[,-1]), ...)
-  ns <- t(!is.na(aligned[,-1])) %*% !is.na(aligned[,-1])
+  dists <- dist(t(aligned[, -1]), ...)
+  ns <- t(!is.na(aligned[, -1])) %*% !is.na(aligned[, -1])
 
-  if (attr(dists, "Size") == 2) return(as.numeric(dists/as.dist(ns)))
+  if (attr(dists, "Size") == 2) return(as.numeric(dists / as.dist(ns)))
 
-  dists/as.dist(ns)
+  dists / as.dist(ns)
 }
 
 #' Extract length of two (aligned) signatures
@@ -168,8 +212,8 @@ extract_feature_D <- function(aligned, ...) {
 #' @export
 extract_feature_length <- function(aligned) {
   # only smaller of the length of the first two signatures
-  n1 <- sum(!is.na(aligned[,2]))
-  n2 <- sum(!is.na(aligned[,3]))
+  n1 <- sum(!is.na(aligned[, 2]))
+  n2 <- sum(!is.na(aligned[, 3]))
 
   min(n1, n2)
 }
@@ -187,7 +231,7 @@ extract_feature_length <- function(aligned) {
 #' @export
 extract_feature_overlap <- function(aligned) {
   # compute non-missing overlap of the first two signatures
-  sum(!is.na(aligned[,2]) & !is.na(aligned[,3]))/extract_feature_length(aligned)
+  sum(!is.na(aligned[, 2]) & !is.na(aligned[, 3])) / extract_feature_length(aligned)
 }
 
 
@@ -197,10 +241,12 @@ extract_feature_overlap <- function(aligned) {
 #' @return sum of heights of matching striae
 #' @export
 extract_feature_sum_peaks <- function(striae) {
-  striae %>% filter(match == TRUE) %>%
+  striae %>%
+    filter(match == TRUE) %>%
     summarize(
       sum_peaks = sum(abs(heights), na.rm = TRUE)
-    ) %>% as.numeric()
+    ) %>%
+    as.numeric()
 }
 
 #' Extract features from aligned signatures
@@ -218,17 +264,19 @@ extract_features_all <- function(aligned, striae, ...) {
   features <- apropos("extract_feature_")
   values <- features %>% purrr::map_dbl(.f = function(f) {
     fun <- getFromNamespace(f, asNamespace("bulletxtrctr"))
-    if ("aligned" %in% names(formals(fun)))
+    if ("aligned" %in% names(formals(fun))) {
       res <- fun(aligned$bullets, ...)
-    if ("striae" %in% names(formals(fun)))
+    }
+    if ("striae" %in% names(formals(fun))) {
       res <- fun(striae$lines, ...)
+    }
     res
   })
 
   data.frame(
     feature = gsub("extract_feature_", "", features),
     value = values
-    ) %>% spread(feature, value)
+  ) %>% spread(feature, value)
 }
 
 #' Extract features from aligned signatures (legacy)
@@ -240,24 +288,26 @@ extract_features_all <- function(aligned, striae, ...) {
 #'           mismatches, cms, non_cms, and sum_peaks
 #' @export
 extract_features_all_legacy <- function(res) {
-  #browser()
+  # browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 
   lofX <- res$bullets
   #    lofX$l30 <- lofX$sig
   #    b12 <- unique(lofX$bullet)
   b12 <- c("sig1", "sig2")
-  subLOFx1 <- lofX[,c("x", "sig1")]
+  subLOFx1 <- lofX[, c("x", "sig1")]
   names(subLOFx1) <- c("y", "val")
-  subLOFx2 <- lofX[,c("x", "sig2")]
+  subLOFx2 <- lofX[, c("x", "sig2")]
   names(subLOFx2) <- c("y", "val")
   #    browser()
 
   #   subLOFx1 <- subset(lofX, bullet==b12[1])
   #  subLOFx2 <- subset(lofX, bullet==b12[2])
 
-  ys <- dplyr::intersect(round(subLOFx1$y, digits = 3),
-                         round(subLOFx2$y, digits = 3))
+  ys <- dplyr::intersect(
+    round(subLOFx1$y, digits = 3),
+    round(subLOFx2$y, digits = 3)
+  )
 
   idx1 <- which(round(subLOFx1$y, digits = 3) %in% ys)
   idx2 <- which(round(subLOFx2$y, digits = 3) %in% ys)
@@ -267,14 +317,16 @@ extract_features_all_legacy <- function(res) {
   sq <- function(x) x^2
 
   distr.dist <- ((subLOFx1$val[idx1] - subLOFx2$val[idx2]) * g1_inc_x / 1000) %>%
-    sq() %>% mean(na.rm = TRUE) %>% sqrt()
+    sq() %>%
+    mean(na.rm = TRUE) %>%
+    sqrt()
   distr.sd <- sd(subLOFx1$val * g1_inc_x / 1000, na.rm = TRUE) +
     sd(subLOFx2$val * g1_inc_x / 1000, na.rm = TRUE)
 
   km <- which(res$lines$match)
   knm <- which(!res$lines$match)
-  if (length(km) == 0) km <- c(length(knm) + 1,0)
-  if (length(knm) == 0) knm <- c(length(km) + 1,0)
+  if (length(km) == 0) km <- c(length(knm) + 1, 0)
+  if (length(knm) == 0) knm <- c(length(km) + 1, 0)
 
   signature.length <- min(nrow(subLOFx1), nrow(subLOFx2))
 
@@ -283,8 +335,10 @@ extract_features_all_legacy <- function(res) {
     #   group_by(y) %>%
     mutate(avgl30 = mean(l30, na.rm = TRUE)) %>%
     ungroup() %>%
-    mutate(smoothavgl30 = smoothloess(y = avgl30, span = 0.3),
-           l50 = l30 - smoothavgl30)
+    mutate(
+      smoothavgl30 = smoothloess(y = avgl30, span = 0.3),
+      l50 = l30 - smoothavgl30
+    )
 
   final_doublesmoothed <- doublesmoothed %>%
     filter(round(x, digits = 3) %in% ys)
@@ -292,7 +346,8 @@ extract_features_all_legacy <- function(res) {
   rough_cor <- cor(
     final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[1]],
     final_doublesmoothed$l50[final_doublesmoothed$bullet == b12[2]],
-    use = "pairwise.complete.obs")
+    use = "pairwise.complete.obs"
+  )
 
   data.frame(
     ccf = res$ccf,
@@ -308,14 +363,14 @@ extract_features_all_legacy <- function(res) {
     cms = res$maxCMS * (1000 / g1_inc_x) / length(ys),
     cms2 = get_longest_run(
       subset(res$lines, type == 1 | is.na(type))$match
-      ) * (1000 / g1_inc_x) / length(ys),
+    ) * (1000 / g1_inc_x) / length(ys),
     non_cms = get_longest_run(!res$lines$match) * 1000 /
       abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
     left_cms = max(knm[1] - km[1], 0) * (1000 / g1_inc_x) / length(ys),
-    right_cms = max(km[length(km)] - knm[length(knm)],0) *
+    right_cms = max(km[length(km)] - knm[length(knm)], 0) *
       (1000 / g1_inc_x) / length(ys),
     left_noncms = max(km[1] - knm[1], 0) * 1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
-    right_noncms = max(knm[length(knm)] - km[length(km)],0) *
+    right_noncms = max(knm[length(knm)] - km[length(km)], 0) *
       1000 / abs(diff(range(c(subLOFx1$y, subLOFx2$y)))),
     sum_peaks = sum(abs(res$lines$heights[res$lines$match]), na.rm = TRUE) *
       (1000 / g1_inc_x) / length(ys)
