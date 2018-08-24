@@ -21,5 +21,5 @@ In the case of multiple signatures the result is a vector of non-negative
 integers of the same length as signatures. Each element gives the number of
 indices by which the corresponding signature is shifted compared to the
 *first* signature. By definition, one of the numbers has to be 0 indicating
-the *first* signature.
+the *first* signature. XXX Need to indicate that "first" isn't the col index
 }

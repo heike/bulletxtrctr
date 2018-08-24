@@ -148,7 +148,7 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
   matches <- bulletxtrctr:::striation_identify_matches(peaks$sig1$lines, peaks$sig2$lines)
   maxcms <- sig_cms_max(alignment)
   features_legacy <- extract_features_all_legacy(maxcms)
-  features <- extract_features_all(maxcms)
+  features <- extract_features_all(aligned = match$alignment, striae = maxcms)
   match <- list(
     alignment = alignment, peaks = peaks, matches = matches,
     maxcms = maxcms, features_legacy = features_legacy,
@@ -167,9 +167,16 @@ if (!file.exists(here::here("tests/single_features.Rdata"))) {
     noncms = extract_feature_non_cms(striae = match$maxcms$lines),
     matches = extract_feature_matches(striae = match$maxcms$lines),
     mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
-    ccf = extract_feature_ccf(match$alignment$bullets)
+    sum_peaks = extract_feature_sum_peaks(striae = match$maxcms$lines),
+    ccf = extract_feature_ccf(match$alignment$bullets),
+    dist = extract_feature_D(match$alignment$bullets),
+    length = extract_feature_length(match$alignment$bullets),
+    overlap = extract_feature_overlap(match$alignment$bullets)
   )
-  save(features_single, file = here::here("tests/single_features.Rdata"))
+  features_full <- extract_features_all(aligned = match$alignment,
+                                        striae = match$maxcms)
+  save(features_full, features_single,
+       file = here::here("tests/single_features.Rdata"))
 }
 
 

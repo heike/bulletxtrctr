@@ -145,6 +145,26 @@ extract_feature_mismatches <- function(striae) {
   extract_feature_n_striae(striae, type = "all", match = FALSE)
 }
 
+#' Extract the combined height of aligned striae between two aligned signatures
+#'
+#' @param striae data frame of striation marks based on two aligned signatures
+#' @return sum of heights of matching striae
+#' @export
+#' @importFrom assertthat assert_that has_name
+#' @importFrom dplyr filter summarize '%>%'
+extract_feature_sum_peaks <- function(striae) {
+  assert_that(
+    has_name(striae, "heights"),
+    has_name(striae, "match")
+  )
+  striae %>%
+    filter(match == TRUE) %>%
+    summarize(
+      sum_peaks = sum(abs(heights), na.rm = TRUE)
+    ) %>%
+    as.numeric()
+}
+
 #' Extract ccf from two (or more) aligned signatures
 #'
 #' @param aligned data frame with variable x (for location) and two or
@@ -234,21 +254,6 @@ extract_feature_overlap <- function(aligned) {
   sum(!is.na(aligned[, 2]) & !is.na(aligned[, 3])) / extract_feature_length(aligned)
 }
 
-
-#' Extract the combined height of aligned striae between two aligned signatures
-#'
-#' @param striae data frame of striation marks based on two aligned signatures
-#' @return sum of heights of matching striae
-#' @export
-extract_feature_sum_peaks <- function(striae) {
-  striae %>%
-    filter(match == TRUE) %>%
-    summarize(
-      sum_peaks = sum(abs(heights), na.rm = TRUE)
-    ) %>%
-    as.numeric()
-}
-
 #' Extract features from aligned signatures
 #'
 #' @param aligned aligned signatures, result from `sig_cms_max`
@@ -260,7 +265,7 @@ extract_feature_sum_peaks <- function(striae) {
 #' @export
 extract_features_all <- function(aligned, striae, ...) {
   # figure out all the different functions, then figure out the format
-
+  # What happens when ... contains arguments which are not needed for w/e fcn?
   features <- apropos("extract_feature_")
   values <- features %>% purrr::map_dbl(.f = function(f) {
     fun <- getFromNamespace(f, asNamespace("bulletxtrctr"))

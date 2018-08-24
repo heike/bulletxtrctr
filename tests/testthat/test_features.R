@@ -6,6 +6,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
   load(here::here("tests/single_features.Rdata"))
 
   featurestest_legacy <- extract_features_all_legacy(match$maxcms)
+  classes <- lapply(featurestest_legacy, mode) %>% unlist() %>% unique()
   featurestest_single <- features_single <- data.frame(
     rightcms = extract_feature_right_cms(striae = match$maxcms$lines),
     leftcms = extract_feature_left_cms(striae = match$maxcms$lines),
@@ -14,17 +15,22 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     noncms = extract_feature_non_cms(striae = match$maxcms$lines),
     matches = extract_feature_matches(striae = match$maxcms$lines),
     mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
-    ccf = extract_feature_ccf(match$alignment$bullets)
+    sum_peaks = extract_feature_sum_peaks(striae = match$maxcms$lines),
+    ccf = extract_feature_ccf(match$alignment$bullets),
+    dist = extract_feature_D(match$alignment$bullets),
+    length = extract_feature_length(match$alignment$bullets),
+    overlap = extract_feature_overlap(match$alignment$bullets)
   )
-  classes <- lapply(featurestest_legacy, mode) %>% unlist() %>% unique()
+  featurestest_full <- extract_features_all(aligned = match$alignment,
+                                            striae = match$maxcms)
 }
-#
-# test_that("features works as expected", {
-#   skip_if(skipall)
-#   expect_s3_class(featurestest_legacy, "data.frame")
-#   expect_equal(classes, "numeric")
-#   expect_equal(featurestest_legacy, match$features_legacy)
-# })
+
+test_that("features works as expected", {
+  skip_if(skipall)
+  expect_s3_class(featurestest_legacy, "data.frame")
+  expect_equal(classes, "numeric")
+  expect_equal(featurestest_legacy, match$features_legacy)
+ })
 
 test_that("extract_feature_right_cms works as expected", {
   expect_equal(
@@ -212,6 +218,16 @@ test_that("extract_feature_mismatches works as expected", {
   expect_equal(featurestest_single$mismatches, features_single$mismatches)
 })
 
+test_that("extract_feature_sum_peaks works as expected", {
+  expect_equal(
+    data.frame(match = c(T, F, T, T, F, T),
+               heights = c(1, -1, 1, -1, 1, -1)) %>%
+      extract_feature_sum_peaks(),
+    4
+  )
+  expect_equal(featurestest_single$sum_peaks, features_single$sum_peaks)
+})
+
 test_that("extract_feature_ccf works as expected", {
   expect_equal(extract_feature_ccf(
     data.frame(x = 1:10, sig1 = seq(0, .9, .1), sig2 = seq(.1, 1, .1))
@@ -250,3 +266,61 @@ test_that("extract_feature_lag works as expected", {
                  sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1)))),
     c(2, 0, 1))
 })
+
+test_that("extract_feature_lag works as expected", {
+  expect_equivalent(
+    extract_feature_D(
+      data.frame(
+        x = 1:10, sig1 = seq(0, .9, .1),
+        sig2 = c(NA, NA, seq(.2, .9, .1))
+      )
+    ),
+    0
+  )
+  expect_gte(
+    extract_feature_D(
+      data.frame(
+        x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
+        sig2 = seq(0, .9, .1)
+      )
+    ),
+    0.0395
+  )
+  expect_gte(
+    extract_feature_D(
+      data.frame(x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
+                 sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1))))[3],
+    0.0351)
+  expect_equal(featurestest_single$dist, features_single$dist)
+})
+
+test_that("extract_feature_length works as expected", {
+  expect_equivalent(
+    extract_feature_length(
+      data.frame(
+        x = 1:10, sig1 = seq(0, .9, .1),
+        sig2 = c(NA, NA, seq(.2, .9, .1))
+      )
+    ),
+    8
+  )
+  expect_equal(featurestest_single$length, features_single$length)
+})
+
+test_that("extract_feature_overlap works as expected", {
+  expect_equivalent(
+    extract_feature_overlap(
+      data.frame(
+        x = 1:10, sig1 = seq(0, .9, .1),
+        sig2 = c(NA, NA, seq(.2, .9, .1))
+      )
+    ),
+    1
+  )
+  expect_equal(featurestest_single$overlap, features_single$overlap)
+})
+
+# This doesn't work with covr but works with CRAN check???
+# test_that("extract_features_all works as expected", {
+#   expect_equivalent(features_full, featurestest_full)
+# })
