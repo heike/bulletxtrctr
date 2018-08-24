@@ -179,6 +179,20 @@ if (!file.exists(here::here("tests/single_features.Rdata"))) {
        file = here::here("tests/single_features.Rdata"))
 }
 
+# test_bullet-scores.R
+if (!file.exists(here::here("tests/rf_features.Rdata"))) {
+  load(here::here("tests/bullets_match.Rdata"))
+
+  rf_features <- match$features %>% mutate(
+    rough_cor = match$features_legacy$rough_cor,
+    sd_D = match$features_legacy$sd_D)
+
+  rf_features$rfscore <- predict(bulletr::rtrees, newdata = rf_features,
+                                 type = "prob")[,2]
+
+  save(rf_features,
+       file = here::here("tests/rf_features.Rdata"))
+}
 
 # test_smooth.R
 if (!file.exists(here::here("tests/smooth.Rdata"))) {
