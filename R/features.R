@@ -103,7 +103,7 @@ extract_feature_non_cms <- function(striae) {
 #'          striae
 #' @return number of striae
 #' @importFrom assertthat assert_that has_name
-extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
+extract_helper_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
   assert_that(
     has_name(striae, "type"),
     has_name(striae, "match")
@@ -117,7 +117,6 @@ extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
   if (type == "peak") striae$type__ <- striae$type == 1
   if (type == "valley") striae$type__ <- striae$type == -1
 
-  # XXXX What to do if type is NA?
   if (match) {
     n <- sum(striae$match & striae$type__)
   } else {
@@ -133,7 +132,7 @@ extract_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
 #' @return number of matching striation marks
 #' @export
 extract_feature_matches <- function(striae) {
-  extract_feature_n_striae(striae, type = "all", match = TRUE)
+  extract_helper_feature_n_striae(striae, type = "all", match = TRUE)
 }
 
 #' Extract number of mismatched striation marks from two aligned signatures
@@ -142,7 +141,7 @@ extract_feature_matches <- function(striae) {
 #' @return number of mismatched striation marks
 #' @export
 extract_feature_mismatches <- function(striae) {
-  extract_feature_n_striae(striae, type = "all", match = FALSE)
+  extract_helper_feature_n_striae(striae, type = "all", match = FALSE)
 }
 
 #' Extract the combined height of aligned striae between two aligned signatures
@@ -153,6 +152,7 @@ extract_feature_mismatches <- function(striae) {
 #' @importFrom assertthat assert_that has_name
 #' @importFrom dplyr filter summarize '%>%'
 extract_feature_sum_peaks <- function(striae) {
+  heights <- match <- NULL
   assert_that(
     has_name(striae, "heights"),
     has_name(striae, "match")
@@ -169,14 +169,20 @@ extract_feature_sum_peaks <- function(striae) {
 #'
 #' @param aligned data frame with variable x (for location) and two or
 #'          more measurements
+#' @param ... additional arguments to the cor() function
 #' @return (matrix) of correlations
 #' @importFrom stats cor
 #' @export
-extract_feature_ccf <- function(aligned) {
+extract_feature_ccf <- function(aligned, ...) {
   if (dim(aligned)[2] == 3) { # only two signatures to compare
-    return(cor(aligned[, 2], aligned[, 3], use = "pairwise"))
+    extras <- list(...)
+    if ("use" %in% names(extras)) {
+      return(cor(aligned[, 2], aligned[, 3], ...))
+    } else {
+      return(cor(aligned[, 2], aligned[, 3], use = "pairwise", ...))
+    }
   }
-  cor(aligned[, -1])
+  cor(aligned[, -1], ...) # XXXX Should maybe use complete.obs or take ... arg
 }
 
 #' Extract lag from two (or more) aligned signatures

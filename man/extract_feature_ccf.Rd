@@ -4,11 +4,13 @@
 \alias{extract_feature_ccf}
 \title{Extract ccf from two (or more) aligned signatures}
 \usage{
-extract_feature_ccf(aligned)
+extract_feature_ccf(aligned, ...)
 }
 \arguments{
 \item{aligned}{data frame with variable x (for location) and two or
 more measurements}
+
+\item{...}{additional arguments to the cor() function}
 }
 \value{
 (matrix) of correlations

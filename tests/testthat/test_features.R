@@ -21,6 +21,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     length = extract_feature_length(match$alignment$bullets),
     overlap = extract_feature_overlap(match$alignment$bullets)
   )
+
   featurestest_full <- extract_features_all(aligned = match$alignment,
                                             striae = match$maxcms)
 }
@@ -30,7 +31,7 @@ test_that("features works as expected", {
   expect_s3_class(featurestest_legacy, "data.frame")
   expect_equal(classes, "numeric")
   expect_equal(featurestest_legacy, match$features_legacy)
- })
+})
 
 test_that("extract_feature_right_cms works as expected", {
   expect_equal(
@@ -48,6 +49,7 @@ test_that("extract_feature_right_cms works as expected", {
       extract_feature_right_cms(),
     10
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$rightcms, features_single$rightcms)
 })
 
@@ -67,6 +69,7 @@ test_that("extract_feature_left_cms works as expected", {
       extract_feature_left_cms(),
     0
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$leftcms, features_single$leftcms)
 })
 
@@ -93,6 +96,7 @@ test_that("extract_feature_cms2 works as expected", {
       extract_feature_cms2(),
     0
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$cms2, features_single$cms2)
 })
 
@@ -118,6 +122,7 @@ test_that("extract_feature_cms works as expected", {
       extract_feature_cms(),
     0
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$cms, features_single$cms)
 })
 
@@ -143,33 +148,34 @@ test_that("extract_feature_non_cms works as expected", {
       extract_feature_non_cms(),
     10
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$noncms, features_single$noncms)
 })
 
-test_that("extract_feature_n_striae works as expected", {
+test_that("extract_helper_feature_n_striae works as expected", {
   expect_equal(
     data.frame(match = TRUE, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_n_striae(type = "peak", match = T),
+      extract_helper_feature_n_striae(type = "peak", match = T),
     5
   )
   expect_equal(
     data.frame(match = (1:10) <= 7, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_n_striae(type = "peak", match = T),
+      extract_helper_feature_n_striae(type = "peak", match = T),
     3
   )
   expect_equal(
     data.frame(match = (1:10) <= 7, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_n_striae(type = "valley", match = T),
+      extract_helper_feature_n_striae(type = "valley", match = T),
     4
   )
   expect_equal(
     data.frame(match = (1:10) <= 7, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_n_striae(type = "peak", match = F),
+      extract_helper_feature_n_striae(type = "peak", match = F),
     3
   )
   expect_equal(
     data.frame(match = (1:10) <= 7, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_n_striae(type = "valley", match = F),
+      extract_helper_feature_n_striae(type = "valley", match = F),
     3
   )
 })
@@ -193,6 +199,7 @@ test_that("extract_feature_matches works as expected", {
       extract_feature_matches(),
     0
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$matches, features_single$matches)
 })
 
@@ -215,6 +222,7 @@ test_that("extract_feature_mismatches works as expected", {
       extract_feature_mismatches(),
     10
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$mismatches, features_single$mismatches)
 })
 
@@ -225,6 +233,7 @@ test_that("extract_feature_sum_peaks works as expected", {
       extract_feature_sum_peaks(),
     4
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$sum_peaks, features_single$sum_peaks)
 })
 
@@ -232,12 +241,28 @@ test_that("extract_feature_ccf works as expected", {
   expect_equal(extract_feature_ccf(
     data.frame(x = 1:10, sig1 = seq(0, .9, .1), sig2 = seq(.1, 1, .1))
   ), 1)
-  expect_gte(extract_feature_ccf(
-    data.frame(
-      x = 1:10, sig1 = seq(0, sqrt(.9), length.out = 10)^2,
-      sig2 = seq(.1, 1, .1)
-    )
-  ), .96269)
+  expect_gte(
+    extract_feature_ccf(
+      data.frame(
+        x = 1:10, sig1 = seq(0, sqrt(.9), length.out = 10)^2,
+        sig2 = seq(.1, 1, .1)
+      )
+    ), .96269)
+  expect_gte(
+    extract_feature_ccf(
+      data.frame(
+        x = 1:10, sig1 = seq(0, sqrt(.9), length.out = 10)^2,
+        sig2 = seq(.1, 1, .1)
+      ),
+      use = "complete.obs"
+    ), .96269)
+  expect_equivalent(
+    extract_feature_ccf(
+      data.frame(x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
+                 sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1)))) %>%
+      sum(na.rm = T),
+    3)
+  skip_if(skipall)
   expect_equal(featurestest_single$ccf, features_single$ccf)
 })
 
@@ -291,6 +316,7 @@ test_that("extract_feature_lag works as expected", {
       data.frame(x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
                  sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1))))[3],
     0.0351)
+  skip_if(skipall)
   expect_equal(featurestest_single$dist, features_single$dist)
 })
 
@@ -304,6 +330,7 @@ test_that("extract_feature_length works as expected", {
     ),
     8
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$length, features_single$length)
 })
 
@@ -317,10 +344,12 @@ test_that("extract_feature_overlap works as expected", {
     ),
     1
   )
+  skip_if(skipall)
   expect_equal(featurestest_single$overlap, features_single$overlap)
 })
 
 # This doesn't work with covr but works with CRAN check???
-# test_that("extract_features_all works as expected", {
-#   expect_equivalent(features_full, featurestest_full)
-# })
+test_that("extract_features_all works as expected", {
+  skip_if(skipall)
+  expect_equivalent(features_full, featurestest_full)
+})
