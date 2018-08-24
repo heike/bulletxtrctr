@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 21, 2018"
+date: "August 24, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--21-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--24-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
@@ -252,11 +252,11 @@ signatures %>%
 ```r
 lands <- unique(bullets$land)
 comparisons <- data.frame(
-  expand.grid(landA = lands, landB = lands), stringsAsFactors = FALSE)
+  expand.grid(land1 = lands, land2 = lands), stringsAsFactors = FALSE)
 #  comparisons <- comparisons %>% filter(b1 != b2)
 
 comparisons <- comparisons %>% mutate(
-  aligned = purrr::map2(.x = landA, .y = landB, .f = function(xx, yy) {
+  aligned = purrr::map2(.x = land1, .y = land2, .f = function(xx, yy) {
     land1 <- bullets$sigs[bullets$land == xx][[1]]
     land2 <- bullets$sigs[bullets$land == yy][[1]]
     #  land1$bullet <- "first-land"
@@ -297,10 +297,10 @@ comparisons <- comparisons %>% mutate(
 ```r
 comparisons <- comparisons %>% mutate(
   matches0 = striae %>% purrr::map_dbl(.f = function(s) {
-    bulletxtrctr:::extract_feature_n_striae(s$lines, type = "peaks", match = TRUE)
+    bulletxtrctr:::extract_helper_feature_n_striae(s$lines, type = "peak", match = TRUE)
   }),
   mismatches0 = striae %>% purrr::map_dbl(.f = function(s) {
-    bulletxtrctr:::extract_feature_n_striae(s$lines, type = "peaks", match = FALSE)
+    bulletxtrctr:::extract_helper_feature_n_striae(s$lines, type = "peak", match = FALSE)
   })
   
 )
@@ -316,7 +316,6 @@ comparisons <- comparisons %>% mutate(
 # )
 
 comparisons <- comparisons %>% mutate(
-  land1 = landA, land2 = landB,
   bulletA = gsub("([1-2])-([1-6])","\\1",land1),
   bulletB = gsub("([1-2])-([1-6])","\\1",land2),
   landA = gsub("([1-2])-([1-6])","\\2",land1),
@@ -329,11 +328,15 @@ comparisons <- comparisons %>% mutate(
 
 ```r
 comparisons <- comparisons %>% mutate(
-  features = striae %>% purrr::map(.f = extract_features_all_legacy)
-)
-
-comparisons <- comparisons %>% mutate(
-  features_new = purrr::map2(.x = aligned, .y= striae, .f = extract_features_all)
+  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all),
+  res = purrr::pmap(
+    list(aligned, striae, features),
+    function(a, b, c, d) list(bullets = a$bullets, lines = b$lines, 
+                              maxCMS = c$cms,
+                              ccf = c$ccf, lag = c$lag)),
+  features_legacy = purrr::map(res, ~extract_features_all_legacy(.x)),
+  rough_cor = purrr::map_dbl(features_legacy, ~.$rough_cor),
+  sd_D = purrr::map_dbl(features_legacy, ~.$sd_D)
 )
 
 comparisons <- comparisons %>% tidyr::unnest(features)
@@ -387,10 +390,10 @@ bullet_scores %>% select(-data)
 ## # A tibble: 4 x 3
 ##   bulletA bulletB bullet_score
 ##   <chr>   <chr>          <dbl>
-## 1 1       1              0.982
-## 2 2       1              0.674
-## 3 1       2              0.674
-## 4 2       2              0.988
+## 1 1       1              0.996
+## 2 2       1              0.697
+## 3 1       2              0.697
+## 4 2       2              1.00
 ```
 
 
