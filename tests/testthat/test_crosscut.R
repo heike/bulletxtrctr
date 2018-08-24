@@ -14,7 +14,6 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
   testb1 <- testb1 %>%
     dplyr::mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
     dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut))
-
 }
 
 test_that("switch_xy works as expected", {
@@ -24,7 +23,7 @@ test_that("switch_xy works as expected", {
 test_that("land_cc works as expected", {
   skip_if(skipall)
   expect_s3_class(testcc1, "data.frame")
-  expect_equal(names(testcc1), c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop",  "resid"))
+  expect_equal(names(testcc1), c("x", "y", "value", "fitted", "raw_sig", "se", "abs_resid", "chop", "resid"))
   expect_equivalent(testcc1, cc1)
 })
 
@@ -47,4 +46,3 @@ test_that("x3p_crosscut works as expected", {
   expect_equal(sort(names(attr(testb1$ccdata[[1]], "header.info"))), sort(c("sizeY", "sizeX", "incrementY", "incrementX")))
   expect_equivalent(testb1$ccdata[[1]], b1_l2_x3p$ccdata[[1]])
 })
-

@@ -16,7 +16,7 @@
 #' @import assertthat
 #' @importFrom dplyr "%>%"
 bullet_pipeline <- function(
-  location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
+                            location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
 
   # Define variables to make CRAN happy
   bullet <- x3p <- cclist <- crosscut <- ccdata <- glist <- grooves <- slist <- NULL
@@ -41,15 +41,19 @@ bullet_pipeline <- function(
     assert_that(length(dirfiles) > 0)
     land_list <- read_bullet(dirs) %>%
       # I don't know if this will work on Windows...
-      dplyr::mutate(bullet = sub(pattern = "(.*)/(.*?)$", replacement = "\\2",
-                                 dirname(as.character(source)))) %>%
+      dplyr::mutate(bullet = sub(
+        pattern = "(.*)/(.*?)$", replacement = "\\2",
+        dirname(as.character(source))
+      )) %>%
       dplyr::select(source, bullet, x3p)
   }
 
 
-  assert_that(has_name(land_list, "source"),
-              has_name(land_list, "bullet"),
-              has_name(land_list, "x3p"))
+  assert_that(
+    has_name(land_list, "source"),
+    has_name(land_list, "bullet"),
+    has_name(land_list, "x3p")
+  )
   lapply(land_list$x3p, function(x) assert_that("x3p" %in% class(x)))
 
   if (stop_at_step == "read") return(land_list)
@@ -74,14 +78,20 @@ bullet_pipeline <- function(
       ) %>% as.numeric()
     ) %>%
     dplyr::mutate(
-      ccdata = lapply(1:length(x3p),
-                      function(i) x3p_crosscut(x3p[i][[1]],
-                                               crosscut[i][[1]]))
+      ccdata = lapply(
+        1:length(x3p),
+        function(i) x3p_crosscut(
+            x3p[i][[1]],
+            crosscut[i][[1]]
+          )
+      )
     ) %>%
     dplyr::select(-cclist)
 
-  assert_that(has_name(land_list, "crosscut"),
-              has_name(land_list, "ccdata"))
+  assert_that(
+    has_name(land_list, "crosscut"),
+    has_name(land_list, "ccdata")
+  )
 
   if (stop_at_step == "crosscut") return(land_list)
 
@@ -119,7 +129,6 @@ bullet_pipeline <- function(
   assert_that(has_name(land_list, "sigs"))
 
   return(land_list)
-
 }
 
 #' Convert x3p header information to microns from meters
@@ -132,8 +141,8 @@ x3pheader_to_microns <- function(x3p) {
   assert_that("x3p" %in% class(x3p))
 
   # make sure all measurements are in microns
-  x3p$surface.matrix <- x3p$surface.matrix*10^6
-  x3p$header.info$incrementY <- x3p$header.info$incrementY*10^6
-  x3p$header.info$incrementX <- x3p$header.info$incrementX*10^6
+  x3p$surface.matrix <- x3p$surface.matrix * 10^6
+  x3p$header.info$incrementY <- x3p$header.info$incrementY * 10^6
+  x3p$header.info$incrementX <- x3p$header.info$incrementX * 10^6
   x3p
 }

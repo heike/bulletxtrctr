@@ -18,12 +18,13 @@ test_that("smooth functions works as expected", {
   expect_is(smoothrestest, "numeric")
   expect_is(sigsmoothrestest, "numeric")
 
-  expect_equivalent(smoothrestest[smoothrestest < 5],
-                    sigsmoothrestest[smoothrestest < 5])
+  expect_equivalent(
+    smoothrestest[smoothrestest < 5],
+    sigsmoothrestest[smoothrestest < 5]
+  )
   expect_equivalent(sigsmoothrestest[smoothrestest >= 5], 5)
 
   skip_if(skipall)
   expect_equivalent(smoothres, smoothrestest)
   expect_equivalent(sigsmoothres, sigsmoothrestest)
-
 })

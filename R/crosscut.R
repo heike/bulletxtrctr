@@ -9,24 +9,24 @@ land_cc <- function(y, land) {
   # get cross cut, and smooth it
   ys <- unique(land$y)
   picky <- ys[which.min(abs(y - ys))]
-  br111 <- land[land$y == picky,]
-  #inc <- bullet$header.info$incrementY
+  br111 <- land[land$y == picky, ]
+  # inc <- bullet$header.info$incrementY
   ## XXX    br111.groove <- bulletr::get_grooves(br111, groove_cutoff = 400, smoothfactor = 15, adjust = 10)
   br111.groove <- quantile(br111$x, probs = c(0.15, 0.85))
   #    br111.groove$plot
-#      browser()
+  #      browser()
 
- groove <- br111.groove
+  groove <- br111.groove
   br111_filter <- subset(br111, !is.na(value) & x > groove[1] & x < groove[2])
   dframe <- cc_fit_loess(br111_filter, span = 0.75)
   if (is.null(dframe$raw_sig)) browser()
-   dframe$resid <- dframe$raw_sig  # where are we still using resid?
+  dframe$resid <- dframe$raw_sig # where are we still using resid?
 
-#   br111 <- switch_xy(br111)
-#   groove <- list(groove = br111.groove, plot = NULL)
-#   dframe <- bulletr::fit_loess(br111, groove)$resid$data
-#   dframe <- switch_xy(dframe)
-   dframe
+  #   br111 <- switch_xy(br111)
+  #   groove <- list(groove = br111.groove, plot = NULL)
+  #   dframe <- bulletr::fit_loess(br111, groove)$resid$data
+  #   dframe <- switch_xy(dframe)
+  dframe
 }
 
 #' Identify a reliable cross section
@@ -53,7 +53,6 @@ land_cc <- function(y, land) {
 #' @importFrom x3ptools x3p_to_df
 #' @export
 x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), minccf = 0.9, span = 0.03, percent_missing = 50) {
-
   bullet <- NULL
   if (is.character(x3p)) bullet <- read_x3p(x3p)
   if ("x3p" %in% class(x3p)) bullet <- x3p
@@ -65,16 +64,16 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), mincc
   y <- min(ylimits)
   first_cc <- land_cc(y, land = dbr111)
 
-  while((dim(first_cc)[1] < bullet$header.info$sizeX*percent_missing/100) & (y < bullet$header.info$sizeY)) {
+  while ((dim(first_cc)[1] < bullet$header.info$sizeX * percent_missing / 100) & (y < bullet$header.info$sizeY)) {
     y <- y + distance
     first_cc <- land_cc(y, land = dbr111)
   }
 
-  while(!done) {
+  while (!done) {
     y <- y + distance
     second_cc <- land_cc(y, land = dbr111) # need to check that we have enough data
-#    res <- ccf(first_cc$resid, second_cc$resid, lag.max = .5*min(nrow(first_cc), nrow(second_cc)), plot=FALSE)
-#    ccf <- max(res$acf)
+    #    res <- ccf(first_cc$resid, second_cc$resid, lag.max = .5*min(nrow(first_cc), nrow(second_cc)), plot=FALSE)
+    #    ccf <- max(res$acf)
 
     first_cc$bullet <- "first-bullet"
     second_cc$bullet <- "second-bullet"
@@ -86,12 +85,12 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA), mincc
 
     if (ccf > minccf) {
       done <- TRUE
-      return (y - distance)
+      return(y - distance)
     }
     first_cc <- second_cc
     if (y + distance > max(ylimits)) done <- TRUE
   }
-  return (NA)
+  return(NA)
 }
 
 switch_xy <- function(dataframe) {
@@ -113,7 +112,6 @@ switch_xy <- function(dataframe) {
 #' @importFrom zoo na.trim
 #' @export
 x3p_crosscut <- function(x3p, y = NULL) {
-
   bullet <- NULL
   if (is.character(x3p)) bullet <- read_x3p(x3p)
   if ("x3p" %in% class(x3p)) bullet <- x3p
@@ -125,7 +123,7 @@ x3p_crosscut <- function(x3p, y = NULL) {
   if (is.null(y)) y <- median(ys)
 
   picky <- ys[which.min(abs(y - ys))]
-  dbr111.fixx <- dbr111[dbr111$y == picky,]
+  dbr111.fixx <- dbr111[dbr111$y == picky, ]
 
   return(na.omit(dbr111.fixx))
 }

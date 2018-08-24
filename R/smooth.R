@@ -6,17 +6,19 @@
 #' @import assertthat
 #' @examples
 #' \dontrun{
-#'   library(ggplot2)
-#' x <- seq(0, 6*pi, by = .02)
+#' library(ggplot2)
+#' x <- seq(0, 6 * pi, by = .02)
 #' y <- 5.5 * sin(x) + rnorm(length(x))
-#'
-#'
+#' 
+#' 
 #' ggplot() +
 #'   geom_point(aes(x = 1:length(y), y = y), shape = 1) +
 #'   geom_line(aes(x = 1:length(y), y = smoothloess(y, .05)),
-#'             color = "red") +
+#'     color = "red"
+#'   ) +
 #'   geom_line(aes(x = 1:length(y), y = raw_sig_smooth(y, .05)),
-#'             color = "blue")
+#'     color = "blue"
+#'   )
 #' }
 smoothloess <- function(y, span) {
   assert_that(is.numeric(y), is.numeric(span), length(y) > 10)
@@ -37,20 +39,22 @@ smoothloess <- function(y, span) {
 #' @import assertthat
 #' @examples
 #' \dontrun{
-#'   library(ggplot2)
-#' x <- seq(0, 6*pi, by = .02)
+#' library(ggplot2)
+#' x <- seq(0, 6 * pi, by = .02)
 #' y <- 5.5 * sin(x) + rnorm(length(x))
-#'
-#'
+#' 
+#' 
 #' ggplot() +
 #'   geom_point(aes(x = 1:length(y), y = y), shape = 1) +
 #'   geom_line(aes(x = 1:length(y), y = smoothloess(y, .05)),
-#'             color = "red") +
+#'     color = "red"
+#'   ) +
 #'   geom_line(aes(x = 1:length(y), y = raw_sig_smooth(y, .05)),
-#'             color = "blue")
+#'     color = "blue"
+#'   )
 #' }
-raw_sig_smooth <- function(sig, span = 0.03, limits = c(-5,5)) {
-#bulletSmooth <- function(data, span = 0.03, limits = c(-5,5), id="bullet") {
+raw_sig_smooth <- function(sig, span = 0.03, limits = c(-5, 5)) {
+  # bulletSmooth <- function(data, span = 0.03, limits = c(-5,5), id="bullet") {
   assert_that(is.numeric(limits))
   myspan <- ifelse(span > 1, span / length(sig), span)
   l30 <- smoothloess(sig, span = myspan[1])

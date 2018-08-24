@@ -19,8 +19,10 @@ test_that("get_runs works as expected", {
 test_that("sig_cms_max works", {
   skip_if(skipall)
   expect_equal(names(maxcmstest), c("maxCMS", "ccf", "lag", "lines", "bullets"))
-  expect_equal(names(maxcmstest$lines), c("xmin", "xmax", "match", "type",
-                                          "meany", "heights", "sdheights"))
+  expect_equal(names(maxcmstest$lines), c(
+    "xmin", "xmax", "match", "type",
+    "meany", "heights", "sdheights"
+  ))
   expect_equal(names(maxcmstest$bullets), c("x", "sig1", "sig2"))
   expect_is(maxcmstest$maxCMS, "numeric")
   expect_is(maxcmstest$ccf, "numeric")
@@ -39,6 +41,3 @@ test_that("sig_cms_max works", {
   expect_is(maxcmstest$bullets$sig2, "numeric")
   expect_equal(maxcmstest, match$maxcms)
 })
-
-
-

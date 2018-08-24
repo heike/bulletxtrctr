@@ -9,7 +9,7 @@ if (identical(Sys.getenv("NOT_CRAN"), "true") & !identical(Sys.getenv("TRAVIS"),
 }
 
 if (dir.exists(here::here("tests/Bullet1")) |
-    dir.exists(here::here("tests/Bullet2"))) {
+  dir.exists(here::here("tests/Bullet2"))) {
   unlink(here::here("tests/Bullet1"), recursive = T)
   unlink(here::here("tests/Bullet2"), recursive = T)
 }

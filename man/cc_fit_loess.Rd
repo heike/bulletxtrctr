@@ -26,7 +26,9 @@ Adapted from `fit_loess` in `bulletr`
 }
 \examples{
 library(dplyr)
-ccdata <- data_frame(x = seq(0, 6, .001),
-                     value = 10 - (3 - x)^2 + rnorm(length(x), sd = .25))
+ccdata <- data_frame(
+  x = seq(0, 6, .001),
+  value = 10 - (3 - x)^2 + rnorm(length(x), sd = .25)
+)
 cc_fit_loess(ccdata = ccdata)
 }

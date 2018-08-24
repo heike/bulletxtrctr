@@ -29,15 +29,17 @@ compute_average_scores <- function(land1, land2, score) {
   )
   # get averages, just in case
   matrix <- xtabs(score ~ land1 + land2,
-                  data = fullframe)/xtabs(~land1 + land2, data = fullframe)
+    data = fullframe
+  ) / xtabs(~land1 + land2, data = fullframe)
 
   matrix <- cbind(matrix, matrix)
 
   scores <- 1:maxland %>% sapply(FUN = function(i) {
-    if (i == 1) mean(diag(matrix), na.rm = TRUE)
-    else {
+    if (i == 1) {
+      mean(diag(matrix), na.rm = TRUE)
+    } else {
       i <- i - 1
-      mean(diag(matrix[,-(1:i)]), na.rm = TRUE)
+      mean(diag(matrix[, -(1:i)]), na.rm = TRUE)
     }
   })
   scores

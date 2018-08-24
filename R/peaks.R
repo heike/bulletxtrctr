@@ -18,18 +18,24 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
   xmin <- NULL
   xmax <- NULL
 
-  assert_that(is.numeric(sig), is.numeric(smoothfactor),
-              is.logical(striae), is.logical(window))
+  assert_that(
+    is.numeric(sig), is.numeric(smoothfactor),
+    is.logical(striae), is.logical(window)
+  )
 
   smoothed <- rollapply(sig, smoothfactor, function(x) mean(x),
-                        fill = list(NA,NA,NA))
+    fill = list(NA, NA, NA)
+  )
   smoothed_truefalse <- rollapply(smoothed, smoothfactor, function(x) mean(x),
-                                  fill = list(NA, NA, NA))
+    fill = list(NA, NA, NA)
+  )
 
   find_maxs <- rollapply(smoothed_truefalse, 3, function(x) max(x) == x[2],
-                         fill = list(NA,NA,NA))
+    fill = list(NA, NA, NA)
+  )
   find_mins <- rollapply(smoothed_truefalse, 3, function(x) min(x) == x[2],
-                         fill  = list(NA,NA,NA))
+    fill = list(NA, NA, NA)
+  )
 
 
   peaks <- which(find_maxs)
@@ -53,23 +59,32 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
   lastval <- diffs[length(diffs)]
   if (length(lastval) == 0) lastval <- 0
 
-  lines <- data.frame(xmin = extrema - c(firstval, diffs)/3,
-                      xmax = extrema + c(diffs, lastval)/3,
-                      type = type, extrema = extrema, heights = heights)
-  dframe <- data.frame(x = 1:length(smoothed_truefalse),
-                       smoothed = smoothed_truefalse)
+  lines <- data.frame(
+    xmin = extrema - c(firstval, diffs) / 3,
+    xmax = extrema + c(diffs, lastval) / 3,
+    type = type, extrema = extrema, heights = heights
+  )
+  dframe <- data.frame(
+    x = 1:length(smoothed_truefalse),
+    smoothed = smoothed_truefalse
+  )
 
   p <- qplot(data = dframe, x = x, y = smoothed, geom = "line") + theme_bw()
-  if (window) p <- p + geom_rect(aes(xmin = xmin, xmax = xmax),
-                                 ymin = -6, ymax = 6,
-                                 data = lines, colour = "grey60", alpha = 0.2,
-                                 inherit.aes = FALSE)
+  if (window) {
+    p <- p + geom_rect(aes(xmin = xmin, xmax = xmax),
+      ymin = -6, ymax = 6,
+      data = lines, colour = "grey60", alpha = 0.2,
+      inherit.aes = FALSE
+    )
+  }
   if (striae) p <- p + geom_vline(xintercept = peaks, colour = "red")
   if (striae) p <- p + geom_vline(xintercept = valleys, colour = "blue")
 
-  return(list(peaks = peaks, valleys = valleys, extrema = extrema,
-              peaks.heights = peaks.heights, valleys.heights = valleys.heights,
-              lines = lines, plot = p, dframe = dframe))
+  return(list(
+    peaks = peaks, valleys = valleys, extrema = extrema,
+    peaks.heights = peaks.heights, valleys.heights = valleys.heights,
+    lines = lines, plot = p, dframe = dframe
+  ))
 }
 
 
@@ -102,18 +117,18 @@ striation_identify_matches <- function(striae1, striae2) {
   variable <- NULL
   value <- NULL
 
-  assert_that(# striae1
+  assert_that( # striae1
     is.data.frame(striae1),
     has_name(striae1, "xmin"), has_name(striae1, "xmax"),
     has_name(striae1, "type"), has_name(striae1, "extrema"),
-    has_name(striae1, "bullet"), has_name(striae1, "heights"),
+    has_name(striae1, "heights"),
     is.numeric(striae1$xmin), is.numeric(striae1$xmax)
   )
-  assert_that(# striae2
+  assert_that( # striae2
     is.data.frame(striae2),
     has_name(striae2, "xmin"), has_name(striae2, "xmax"),
     has_name(striae2, "type"), has_name(striae2, "extrema"),
-    has_name(striae2, "bullet"), has_name(striae2, "heights"),
+    has_name(striae2, "heights"),
     is.numeric(striae2$xmin), is.numeric(striae2$xmax)
   )
 
@@ -121,16 +136,19 @@ striation_identify_matches <- function(striae1, striae2) {
   lines2 <- striae2
 
   lines <- rbind(lines1, lines2)
-  lines <- lines[order(lines$xmin),]
+  lines <- lines[order(lines$xmin), ]
   ml <- tidyr::gather(lines, variable, value, c("xmin", "xmax"),
-                      factor_key = TRUE)
-  ml <- ml[order(ml$value),]
-  ml$overlap <- c(1,-1)[as.numeric(ml$variable)]
+    factor_key = TRUE
+  )
+  ml <- ml[order(ml$value), ]
+  ml$overlap <- c(1, -1)[as.numeric(ml$variable)]
   ml$gap <- cumsum(ml$overlap)
 
   idx <- which(ml$gap == 0)
-  lines <- data.frame(xmin = ml$value[c(1,idx[-length(idx)] + 1)],
-                      xmax = ml$value[idx])
+  lines <- data.frame(
+    xmin = ml$value[c(1, idx[-length(idx)] + 1)],
+    xmax = ml$value[idx]
+  )
   ml$group <- 0
   ml$group[c(1, idx[-length(idx)] + 1)] <- 1
   ml$group <- cumsum(ml$group)
@@ -143,11 +161,12 @@ striation_identify_matches <- function(striae1, striae2) {
     size = n(),
     type = type[1],
     sdheights = sd(heights),
-    heights = mean(heights))
+    heights = mean(heights)
+  )
   lines$match <- as.vector(groups$match)
   lines$type <- as.vector(groups$type)
   lines$type[!lines$match] <- NA
-  lines$meany <- with(lines, (xmin + xmax)/2)
+  lines$meany <- with(lines, (xmin + xmax) / 2)
   lines$heights <- as.vector(groups$heights)
   lines$sdheights <- as.vector(groups$sdheights)
   lines

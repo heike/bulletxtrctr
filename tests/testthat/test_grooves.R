@@ -9,7 +9,6 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
     dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle", return_plot = T)) %>%
     dplyr::mutate(grooves_quad = purrr::map(ccdata, cc_locate_grooves, method = "quadratic", return_plot = F))
-
 }
 
 test_that("grooves works as expected", {
@@ -53,15 +52,21 @@ test_that("grooves works as expected", {
 
   # Test other conditions
   ## Middle - middle argument trims things
-  expect_equal(names(cc_locate_grooves(testb1$ccdata[[1]], "middle", middle = 50)$groove),
-               c("25%", "75%"))
+  expect_equal(
+    names(cc_locate_grooves(testb1$ccdata[[1]], "middle", middle = 50)$groove),
+    c("25%", "75%")
+  )
   ## Rollapply - multiple y values
-  expect_message(cc_locate_grooves(rbind(testb1$ccdata[[1]], testb1$ccdata[[1]] %>% dplyr::mutate(y = 103))),
-                 "summarizing \\d{1,} profiles by averaging across values")
+  expect_message(
+    cc_locate_grooves(rbind(testb1$ccdata[[1]], testb1$ccdata[[1]] %>% dplyr::mutate(y = 103))),
+    "summarizing \\d{1,} profiles by averaging across values"
+  )
 
   ## Rollapply - mean left and mean right
-  tmp3 <- cc_locate_grooves(testb1$ccdata[[1]], method = "rollapply",
-                            mean_left = 200, mean_right = 2000, second_smooth = F)
+  tmp3 <- cc_locate_grooves(testb1$ccdata[[1]],
+    method = "rollapply",
+    mean_left = 200, mean_right = 2000, second_smooth = F
+  )
   expect_error(expect_equivalent(b1_l2_x3p$grooves[[1]]$groove, tmp3$groove))
 
   # Check numerically identical for groove locations, at least...

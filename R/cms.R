@@ -8,7 +8,6 @@
 #' @return list of matching parameters, data set of the identified striae, and the aligned data sets.
 #' @export
 sig_cms_max <- function(aligned, span = 35) {
-
   assert_that(has_name(aligned, "bullets"), has_name(aligned, "ccf"))
   sigX <- aligned$bullets
 
@@ -34,14 +33,16 @@ sig_cms_max <- function(aligned, span = 35) {
 #' @return an integer value of the length of the longest run of TRUE values
 #' @export
 #' @examples
-#' x <- rbinom(100, size = 1, prob = 1/3)
+#' x <- rbinom(100, size = 1, prob = 1 / 3)
 #' get_runs(x == 1) # expected value for longest match is 3
-#' get_longest_run(x==1)
+#' get_longest_run(x == 1)
 get_longest_run <- function(x) {
   runTable <- get_runs(x)
 
-  assert_that(is.numeric(runTable),
-              !is.null(dimnames(runTable)))
+  assert_that(
+    is.numeric(runTable),
+    !is.null(dimnames(runTable))
+  )
 
   as.numeric(rev(names(runTable)))[1]
 }
@@ -53,7 +54,7 @@ get_longest_run <- function(x) {
 #' @return a table of the number of runs of TRUEs
 #' @export
 #' @examples
-#' x <- rbinom(100, size = 1, prob = 1/3)
+#' x <- rbinom(100, size = 1, prob = 1 / 3)
 #' get_runs(x == 1) # expected value for longest run is 3
 #' get_runs(x == 0) # expected value for longest run is 6
 get_runs <- function(x) {
@@ -72,8 +73,7 @@ get_runs <- function(x) {
   w <- c(0, y)[x][-1]
 
   z <- which(w == 1)
-  z <- c(0,z,length(x[x]))
+  z <- c(0, z, length(x[x]))
 
   return(table(diff(z)))
 }
-

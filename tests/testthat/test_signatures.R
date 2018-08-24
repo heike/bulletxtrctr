@@ -12,19 +12,27 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
         sigsLL = purrr::map2(
           .x = ccdata, .y = grooves,
           .f = function(x, y) {
-            cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)}),
+            cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.03)
+          }
+        ),
         sigsLS = purrr::map2(
           .x = ccdata, .y = grooves,
           .f = function(x, y) {
-            cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.01)}),
+            cc_get_signature(ccdata = x, grooves = y, span1 = 0.75, span2 = 0.01)
+          }
+        ),
         sigsSL = purrr::map2(
           .x = ccdata, .y = grooves,
           .f = function(x, y) {
-            cc_get_signature(ccdata = x, grooves = y, span1 = 0.25, span2 = 0.03)}),
+            cc_get_signature(ccdata = x, grooves = y, span1 = 0.25, span2 = 0.03)
+          }
+        ),
         sigsSS = purrr::map2(
           .x = ccdata, .y = grooves,
           .f = function(x, y) {
-            cc_get_signature(ccdata = x, grooves = y, span1 = 0.25, span2 = 0.01)})
+            cc_get_signature(ccdata = x, grooves = y, span1 = 0.25, span2 = 0.01)
+          }
+        )
       )
   })
 }
@@ -50,4 +58,3 @@ test_that("signatures is numerically correct", {
   expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsSL[[1]]$sig))
   expect_error(expect_equivalent(testb1$sigsLL[[1]]$sig, testb1$sigsSS[[1]]$sig))
 })
-

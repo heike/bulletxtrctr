@@ -16,8 +16,10 @@
 #' @export
 #' @examples
 #' library(dplyr)
-#' ccdata <- data_frame(x = seq(0, 6, .001),
-#'                      value = 10 - (3 - x)^2 + rnorm(length(x), sd = .25))
+#' ccdata <- data_frame(
+#'   x = seq(0, 6, .001),
+#'   value = 10 - (3 - x)^2 + rnorm(length(x), sd = .25)
+#' )
 #' cc_fit_loess(ccdata = ccdata)
 cc_fit_loess <- function(ccdata, span = 0.75) {
   value <- NULL
@@ -34,13 +36,15 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
   ccdata$se <- predict(my.loess, se = TRUE)$se.fit
 
   # filter out most extreme residuals
-  ccdata$abs_resid <-  abs(ccdata$raw_sig)
+  ccdata$abs_resid <- abs(ccdata$raw_sig)
   cutoff <- quantile(ccdata$abs_resid, probs = c(0.9975))
   ccdata$chop <- ccdata$abs_resid > cutoff
 
-  assert_that(has_name(ccdata, "fitted"), has_name(ccdata, "raw_sig"),
-              has_name(ccdata, "se"), has_name(ccdata, "abs_resid"),
-              has_name(ccdata, "chop"))
+  assert_that(
+    has_name(ccdata, "fitted"), has_name(ccdata, "raw_sig"),
+    has_name(ccdata, "se"), has_name(ccdata, "abs_resid"),
+    has_name(ccdata, "chop")
+  )
 
   return(ccdata)
 }
@@ -66,8 +70,10 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
 #' @export
 #' @examples
 #' library(dplyr)
-#' ccdata <- data_frame(x = seq(0, 6000, 1),
-#'                      value = 10 - (3 - x/1000)^2 + rnorm(length(x), sd = .25))
+#' ccdata <- data_frame(
+#'   x = seq(0, 6000, 1),
+#'   value = 10 - (3 - x / 1000)^2 + rnorm(length(x), sd = .25)
+#' )
 #' cc_fit_gaussian(ccdata = ccdata)
 cc_fit_gaussian <- function(ccdata, span = 600) {
   value <- NULL
@@ -77,24 +83,28 @@ cc_fit_gaussian <- function(ccdata, span = 600) {
   assert_that(is.numeric(span))
 
   dx <- median(diff(ccdata$x), na.rm = T)
-  window <- span/dx
+  window <- span / dx
 
   # Alternative to loess fit
 
-  gsmooth <- smoother::smth(x = ccdata$value, method = 'gaussian',
-                            window = window, tails = T, na.rm = T)
+  gsmooth <- smoother::smth(
+    x = ccdata$value, method = "gaussian",
+    window = window, tails = T, na.rm = T
+  )
   ccdata$fitted <- gsmooth
   ccdata$raw_sig <- ccdata$value - ccdata$fitted
   ccdata$se <- NA
 
   # filter out most extreme residuals
-  ccdata$abs_resid <-  abs(ccdata$raw_sig)
+  ccdata$abs_resid <- abs(ccdata$raw_sig)
   cutoff <- quantile(ccdata$abs_resid, probs = c(0.9975))
   ccdata$chop <- ccdata$abs_resid > cutoff
 
-  assert_that(has_name(ccdata, "fitted"), has_name(ccdata, "raw_sig"),
-              has_name(ccdata, "se"), has_name(ccdata, "abs_resid"),
-              has_name(ccdata, "chop"))
+  assert_that(
+    has_name(ccdata, "fitted"), has_name(ccdata, "raw_sig"),
+    has_name(ccdata, "se"), has_name(ccdata, "abs_resid"),
+    has_name(ccdata, "chop")
+  )
 
   return(ccdata)
 }

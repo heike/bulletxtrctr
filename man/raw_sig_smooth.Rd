@@ -23,16 +23,18 @@ Smooth the raw signature
 }
 \examples{
 \dontrun{
-  library(ggplot2)
-x <- seq(0, 6*pi, by = .02)
+library(ggplot2)
+x <- seq(0, 6 * pi, by = .02)
 y <- 5.5 * sin(x) + rnorm(length(x))
 
 
 ggplot() +
   geom_point(aes(x = 1:length(y), y = y), shape = 1) +
   geom_line(aes(x = 1:length(y), y = smoothloess(y, .05)),
-            color = "red") +
+    color = "red"
+  ) +
   geom_line(aes(x = 1:length(y), y = raw_sig_smooth(y, .05)),
-            color = "blue")
+    color = "blue"
+  )
 }
 }

@@ -156,7 +156,9 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
   )
   save(match, file = here::here("tests/bullets_match.Rdata"))
 }
+
 if (!file.exists(here::here("tests/single_features.Rdata"))) {
+  load(here::here("tests/bullets_match.Rdata"))
   features_single <- data.frame(
     rightcms = extract_feature_right_cms(striae = match$maxcms$lines),
     leftcms = extract_feature_left_cms(striae = match$maxcms$lines),

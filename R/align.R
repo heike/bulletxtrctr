@@ -20,19 +20,21 @@
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#'
+#' 
 #' example_data <- bullet_pipeline(
-#'   location = list(Bullet1 = c(hamby252demo$bullet1[2]),
-#'                   Bullet2 = c(hamby252demo$bullet1[4])),
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet1[4])
+#'   ),
 #'   x3p_clean = function(x) x %>%
-#'     x3pheader_to_microns %>%
-#'     rotate_x3p(angle = -90) %>%
-#'     y_flip_x3p()
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
 #' )
-#'
+#' 
 #' sig_align(example_data$sigs[[1]]$sig, example_data$sigs[[2]]$sig)
 #' }
-sig_align <- function(sig1, sig2)  {
+sig_align <- function(sig1, sig2) {
   assert_that(is.numeric(sig1), is.numeric(sig2))
 
   sig1 <- na.trim(sig1)
@@ -48,7 +50,7 @@ sig_align <- function(sig1, sig2)  {
     y <- sig1
   }
 
-  cors <- get_ccf(x, y, round(0.75*min(length(sig1),length(sig2))))
+  cors <- get_ccf(x, y, round(0.75 * min(length(sig1), length(sig2))))
   # do some padding
   # at the front
   lag <- cors$lag[which.max(cors$ccf)]
@@ -97,7 +99,7 @@ sig_align <- function(sig1, sig2)  {
 #' get_ccf(x, lag(x, 5), min.overlap = 3)
 #' x <- runif(100)
 #' get_ccf(x[45:50], x, min.overlap = 6)
-get_ccf <-  function(x, y, min.overlap = round(0.1*max(length(x),length(y)))) {
+get_ccf <- function(x, y, min.overlap = round(0.1 * max(length(x), length(y)))) {
   x <- as.vector(unlist(x))
   y <- as.vector(unlist(y))
   # assume x is the long vector, y is the short vector. If not, switch the
@@ -112,10 +114,10 @@ get_ccf <-  function(x, y, min.overlap = round(0.1*max(length(x),length(y)))) {
   lags <- 0:lag.max
 
   cors <- sapply(lags, function(lag) {
-    cor(xx, lag(yy,lag), use = "pairwise.complete")
+    cor(xx, lag(yy, lag), use = "pairwise.complete")
   })
   ns <- sapply(lags, function(lag) {
-    dim(na.omit(cbind(xx, lag(yy,lag))))[1]
+    dim(na.omit(cbind(xx, lag(yy, lag))))[1]
   })
   cors[ns < min.overlap] <- NA
 

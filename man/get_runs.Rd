@@ -16,7 +16,7 @@ a table of the number of runs of TRUEs
 Identify the length of runs (of values TRUE) and their frequencies.
 }
 \examples{
-x <- rbinom(100, size = 1, prob = 1/3)
+x <- rbinom(100, size = 1, prob = 1 / 3)
 get_runs(x == 1) # expected value for longest run is 3
 get_runs(x == 0) # expected value for longest run is 6
 }

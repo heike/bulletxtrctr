@@ -45,22 +45,28 @@ grooves_plot <- function(land, grooves) {
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#'
+#' 
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'     x3pheader_to_microns %>%
-#'     rotate_x3p(angle = -90) %>%
-#'     y_flip_x3p()
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
 #' )
-#'
-#' cc_locate_grooves(example_data$ccdata[[1]], method = "rollapply",
-#'                   adjust = 30, return_plot = T)
-#' cc_locate_grooves(example_data$ccdata[[1]], method = "middle",
-#'                   adjust = 30, return_plot = T)
-#' cc_locate_grooves(example_data$ccdata[[1]], method = "quadratic",
-#'                   adjust = 30, return_plot = T)
+#' 
+#' cc_locate_grooves(example_data$ccdata[[1]],
+#'   method = "rollapply",
+#'   adjust = 30, return_plot = T
+#' )
+#' cc_locate_grooves(example_data$ccdata[[1]],
+#'   method = "middle",
+#'   adjust = 30, return_plot = T
+#' )
+#' cc_locate_grooves(example_data$ccdata[[1]],
+#'   method = "quadratic",
+#'   adjust = 30, return_plot = T
+#' )
 #' }
 cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
                               adjust = 10, groove_cutoff = 400,
@@ -73,19 +79,25 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   assert_that(has_name(land, "x"), has_name(land, "y"), has_name(land, "value"))
   assert_that(method %in% c("quadratic", "rollapply", "middle"))
-  assert_that(is.numeric(smoothfactor), is.numeric(adjust), is.numeric(groove_cutoff),
-              is.logical(return_plot))
+  assert_that(
+    is.numeric(smoothfactor), is.numeric(adjust), is.numeric(groove_cutoff),
+    is.logical(return_plot)
+  )
 
   if (method == "quadratic") {
     # grooves <- get_grooves_quadratic(bullet = bullet, adjust = adjust)
-    grooves <- get_grooves_quadratic(x = land$x, value = land$value,
-                                     adjust = adjust, return_plot = return_plot)
+    grooves <- get_grooves_quadratic(
+      x = land$x, value = land$value,
+      adjust = adjust, return_plot = return_plot
+    )
   }
   if (method == "rollapply") {
     # make sure there is only one x
     if (length(unique(land$y)) > 1) {
-      message(sprintf("summarizing %d profiles by averaging across values\n",
-                      length(unique(land$x))))
+      message(sprintf(
+        "summarizing %d profiles by averaging across values\n",
+        length(unique(land$x))
+      ))
       land <- land %>% group_by(x) %>% summarize(
         y = mean(y, na.rm = TRUE),
         value = mean(value, na.rm = TRUE)
@@ -109,9 +121,11 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
     if ("middle" %in% names(list(...))) {
       middle <- list(...)$middle
     }
-    grooves <- get_grooves_middle(x = land$x, value = land$value,
-                                  middle = middle,
-                                  return_plot = return_plot)
+    grooves <- get_grooves_middle(
+      x = land$x, value = land$value,
+      middle = middle,
+      return_plot = return_plot
+    )
   }
 
   return(grooves)
@@ -132,34 +146,42 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#'
+#' 
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'     x3pheader_to_microns %>%
-#'     rotate_x3p(angle = -90) %>%
-#'     y_flip_x3p()
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
 #' )
-#'
+#' 
 #' get_grooves_middle(example_data$ccdata[[1]]$x,
-#'                    example_data$ccdata[[1]]$value,
-#'                    return_plot = T)
-#' cc_locate_grooves(example_data$ccdata[[1]], method = "middle",
-#'                   return_plot = T)
+#'   example_data$ccdata[[1]]$value,
+#'   return_plot = T
+#' )
+#' cc_locate_grooves(example_data$ccdata[[1]],
+#'   method = "middle",
+#'   return_plot = T
+#' )
 #' }
 get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
-  assert_that(is.numeric(x), is.numeric(value), is.numeric(middle),
-              is.logical(return_plot))
+  assert_that(
+    is.numeric(x), is.numeric(value), is.numeric(middle),
+    is.logical(return_plot)
+  )
   assert_that(middle >= 0, middle <= 100)
 
   land <- data.frame(x = x, value = value)
   groove <- quantile(land$x,
-                     probs = c((100 - middle)/200, (100 + middle)/200))
+    probs = c((100 - middle) / 200, (100 + middle) / 200)
+  )
 
   if (return_plot) {
-    return(list(groove = groove,
-                plot = grooves_plot(land = land, grooves = groove)))
+    return(list(
+      groove = groove,
+      plot = grooves_plot(land = land, grooves = groove)
+    ))
   } else {
     return(list(groove = groove))
   }
@@ -180,42 +202,49 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#'
+#' 
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'     x3pheader_to_microns %>%
-#'     rotate_x3p(angle = -90) %>%
-#'     y_flip_x3p()
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
 #' )
-#'
+#' 
 #' get_grooves_quadratic(example_data$ccdata[[1]]$x,
-#'                       example_data$ccdata[[1]]$value,
-#'                       adjust = 30, return_plot = T)
-#' cc_locate_grooves(example_data$ccdata[[1]], method = "quadratic",
-#'                   adjust = 30, return_plot = T)
+#'   example_data$ccdata[[1]]$value,
+#'   adjust = 30, return_plot = T
+#' )
+#' cc_locate_grooves(example_data$ccdata[[1]],
+#'   method = "quadratic",
+#'   adjust = 30, return_plot = T
+#' )
 #' }
 get_grooves_quadratic <- function(x, value, adjust, return_plot = F) {
-
-  assert_that(is.numeric(x), is.numeric(value), is.numeric(adjust),
-              is.logical(return_plot))
+  assert_that(
+    is.numeric(x), is.numeric(value), is.numeric(adjust),
+    is.logical(return_plot)
+  )
 
   land <- data.frame(x = x, value = value)
 
-  lm0 <- rlm(value~poly(x,2), data = land, maxit = 100)
+  lm0 <- rlm(value ~ poly(x, 2), data = land, maxit = 100)
   land$pred <- predict(lm0, newdata = land)
 
   land$absresid <- with(land, abs(value - pred))
   absresid90 <- NULL
   land$absresid90 <- with(
-    land, absresid > 4*median(land$absresid, na.rm = TRUE))
+    land, absresid > 4 * median(land$absresid, na.rm = TRUE)
+  )
 
   groove <- range(filter(land, !absresid90)$x) + c(adjust, -adjust)
 
   if (return_plot) {
-    return(list(groove = groove,
-                plot = grooves_plot(land = land, grooves = groove)))
+    return(list(
+      groove = groove,
+      plot = grooves_plot(land = land, grooves = groove)
+    ))
   } else {
     return(list(groove = groove))
   }
@@ -244,32 +273,36 @@ get_grooves_quadratic <- function(x, value, adjust, return_plot = F) {
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#'
+#' 
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'     x3pheader_to_microns %>%
-#'     rotate_x3p(angle = -90) %>%
-#'     y_flip_x3p()
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
 #' )
-#'
+#' 
 #' get_grooves_rollapply(example_data$ccdata[[1]]$x,
-#'                       example_data$ccdata[[1]]$value,
-#'                       adjust = 30, return_plot = T)
-#' cc_locate_grooves(example_data$ccdata[[1]], method = "rollapply",
-#'                   adjust = 30, return_plot = T)
+#'   example_data$ccdata[[1]]$value,
+#'   adjust = 30, return_plot = T
+#' )
+#' cc_locate_grooves(example_data$ccdata[[1]],
+#'   method = "rollapply",
+#'   adjust = 30, return_plot = T
+#' )
 #' }
 get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
                                   groove_cutoff = 400, mean_left = NULL,
                                   mean_right = NULL, mean_window = 100,
                                   second_smooth = T, which_fun = mean,
                                   return_plot = F) {
-
-  assert_that(is.numeric(x), is.numeric(value), is.numeric(adjust),
-              is.numeric(smoothfactor), is.numeric(groove_cutoff),
-              is.logical(second_smooth), is.logical(return_plot),
-              "function" %in% class(which_fun))
+  assert_that(
+    is.numeric(x), is.numeric(value), is.numeric(adjust),
+    is.numeric(smoothfactor), is.numeric(groove_cutoff),
+    is.logical(second_smooth), is.logical(return_plot),
+    "function" %in% class(which_fun)
+  )
 
   land <- data.frame(x = x, value = value)
   original_land <- land
@@ -284,8 +317,10 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
     window.right.left <- mean.right.ind - mean_window
     window.right.right <- min(length(land$x), mean.right.ind + mean_window)
 
-    land <- land[c(window.left.left:window.left.right,
-                       window.right.left:window.right.right), ]
+    land <- land[c(
+      window.left.left:window.left.right,
+      window.right.left:window.right.right
+    ), ]
 
     groove_cutoff <- Inf
   }
@@ -296,7 +331,9 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
   if (second_smooth == T) {
     smoothed_truefalse <- rollapply(smoothed, smoothfactor, function(x) which_fun(x), partial = TRUE)
   }
-  else {smoothed_truefalse <- smoothed}
+  else {
+    smoothed_truefalse <- smoothed
+  }
 
   lengthdiff <- length(land$value) - length(smoothed_truefalse)
 
@@ -345,12 +382,16 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
 
   # smoothed_diff <- floor(lengthdiff/2)
 
-  groove <- c(original_land$x[plot_groove_ind + adjust],
-              original_land$x[plot_groove_ind2 - adjust])
+  groove <- c(
+    original_land$x[plot_groove_ind + adjust],
+    original_land$x[plot_groove_ind2 - adjust]
+  )
 
   if (return_plot) {
-    return(list(groove = groove,
-                plot = grooves_plot(land = original_land, grooves = groove)))
+    return(list(
+      groove = groove,
+      plot = grooves_plot(land = original_land, grooves = groove)
+    ))
   } else {
     return(list(groove = groove))
   }
