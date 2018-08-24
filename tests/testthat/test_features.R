@@ -248,20 +248,12 @@ test_that("extract_feature_ccf works as expected", {
         sig2 = seq(.1, 1, .1)
       )
     ), .96269)
-  expect_gte(
-    extract_feature_ccf(
-      data.frame(
-        x = 1:10, sig1 = seq(0, sqrt(.9), length.out = 10)^2,
-        sig2 = seq(.1, 1, .1)
-      ),
-      use = "complete.obs"
-    ), .96269)
   expect_equivalent(
     extract_feature_ccf(
       data.frame(x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
                  sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1)))) %>%
       sum(na.rm = T),
-    3)
+    9)
   skip_if(skipall)
   expect_equal(featurestest_single$ccf, features_single$ccf)
 })

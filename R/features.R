@@ -169,20 +169,22 @@ extract_feature_sum_peaks <- function(striae) {
 #'
 #' @param aligned data frame with variable x (for location) and two or
 #'          more measurements
-#' @param ... additional arguments to the cor() function
 #' @return (matrix) of correlations
 #' @importFrom stats cor
+#' @importFrom assertthat assert_that
 #' @export
-extract_feature_ccf <- function(aligned, ...) {
-  if (dim(aligned)[2] == 3) { # only two signatures to compare
-    extras <- list(...)
-    if ("use" %in% names(extras)) {
-      return(cor(aligned[, 2], aligned[, 3], ...))
-    } else {
-      return(cor(aligned[, 2], aligned[, 3], use = "pairwise", ...))
-    }
+extract_feature_ccf <- function(aligned) {
+  assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
+  for (i in 2:dim(aligned)[2]) {
+    assert_that(
+      is.numeric(aligned[, i]),
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
   }
-  cor(aligned[, -1], ...) # XXXX Should maybe use complete.obs or take ... arg
+
+  if (dim(aligned)[2] == 3) { # only two signatures to compare
+    return(cor(aligned[, 2], aligned[, 3], use = "pairwise"))
+  }
+  return(cor(aligned[, -1], use = "pairwise"))
 }
 
 #' Extract lag from two (or more) aligned signatures
@@ -199,8 +201,16 @@ extract_feature_ccf <- function(aligned, ...) {
 #' @param aligned data frame with variable x (for location) and two or
 #'          more measurements
 #' @return (vector) of lags
+#' @importFrom assertthat assert_that
 #' @export
 extract_feature_lag <- function(aligned) {
+  assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
+  for (i in 2:dim(aligned)[2]) {
+    assert_that(
+      is.numeric(aligned[, i]),
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+  }
+
   lags <- sapply(aligned[, -1], function(x) {
     if (!is.na(x[1])) return(0)
     diffs <- diff(is.na(x))
@@ -218,8 +228,16 @@ extract_feature_lag <- function(aligned) {
 #' @param ... arguments for function `dist`
 #' @return object of class distance
 #' @importFrom stats dist as.dist
+#' @importFrom assertthat assert_that
 #' @export
 extract_feature_D <- function(aligned, ...) {
+  assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
+  for (i in 2:dim(aligned)[2]) {
+    assert_that(
+      is.numeric(aligned[, i]),
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+  }
+
   dists <- dist(t(aligned[, -1]), ...)
   ns <- t(!is.na(aligned[, -1])) %*% !is.na(aligned[, -1])
 
@@ -235,8 +253,16 @@ extract_feature_D <- function(aligned, ...) {
 #' @param aligned data frame with variable x (for location) and two or more
 #'          measurements
 #' @return integer value of the length of the shorter signature.
+#' @importFrom assertthat assert_that
 #' @export
 extract_feature_length <- function(aligned) {
+  assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
+  for (i in 2:dim(aligned)[2]) {
+    assert_that(
+      is.numeric(aligned[, i]),
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+  }
+
   # only smaller of the length of the first two signatures
   n1 <- sum(!is.na(aligned[, 2]))
   n2 <- sum(!is.na(aligned[, 3]))
@@ -254,8 +280,16 @@ extract_feature_length <- function(aligned) {
 #'          measurements
 #' @return value between 0 and 1, ratio of length of overlap compared to
 #'           smaller length of the signature
+#' @importFrom assertthat assert_that
 #' @export
 extract_feature_overlap <- function(aligned) {
+  assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
+  for (i in 2:dim(aligned)[2]) {
+    assert_that(
+      is.numeric(aligned[, i]),
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+  }
+
   # compute non-missing overlap of the first two signatures
   sum(!is.na(aligned[, 2]) & !is.na(aligned[, 3])) / extract_feature_length(aligned)
 }
@@ -266,12 +300,17 @@ extract_feature_overlap <- function(aligned) {
 #' @param striae data frame with evaluated matching striae
 #' @param ... passed on to extractor functions
 #' XXX this needs some fixing
-#' @importFrom utils apropos
+#' @importFrom utils apropos getFromNamespace
 #' @importFrom tidyr spread
+#' @importFrom assertthat assert_that
 #' @export
 extract_features_all <- function(aligned, striae, ...) {
   # figure out all the different functions, then figure out the format
   # What happens when ... contains arguments which are not needed for w/e fcn?
+  feature <- value <- NULL
+  assert_that(!is.null(aligned), !is.null(striae),
+              msg = "aligned and striae must not be NULL")
+
   features <- apropos("extract_feature_")
   values <- features %>% purrr::map_dbl(.f = function(f) {
     fun <- getFromNamespace(f, asNamespace("bulletxtrctr"))
