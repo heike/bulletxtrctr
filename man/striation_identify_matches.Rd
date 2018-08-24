@@ -13,7 +13,7 @@ xmin, xmax, group, type, bullet, heights}
 
 \item{striae2}{data frame as returned from sig_get_peaks function.
 data frames are expected to have the following variables:
-xmin, xmax, group, type, bullet, heights}
+xmin, xmax, group, type, bullet, heights#' Check a striae object is valid}
 }
 \value{
 data frame of the same form as lines1 and lines2, but with an

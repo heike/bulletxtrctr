@@ -8,32 +8,38 @@ x3p_crosscut_optimize(x3p, distance = 25, ylimits = c(50, NA),
   minccf = 0.9, span = 0.03, percent_missing = 50)
 }
 \arguments{
-\item{x3p}{if character, path to an x3p file. Otherwise a scan in x3p format is expected.
-The assumption is that the scan is taken across the bullet land, with an upright bullet, i.e.  heel along x with y = 0. (0,0) defines the bottom left corner of the scan.}
+\item{x3p}{if character, path to an x3p file. Otherwise a scan in x3p
+format is expected. The assumption is that the scan is taken across
+the bullet land, with an upright bullet, i.e.  heel along x with
+y = 0. (0,0) defines the bottom left corner of the scan.}
 
-\item{distance}{positive numeric value indicating the distance between cross sections to use for a comparison}
+\item{distance}{positive numeric value indicating the distance between cross
+sections to use for a comparison}
 
-\item{ylimits}{vector of values between which to check for cross sections in a stable region. In case the upper limit is not specified explicitly, it is determined by the scan itself.}
+\item{ylimits}{vector of values between which to check for cross sections in
+a stable region. In case the upper limit is not specified
+explicitly, it is determined by the scan itself.}
 
 \item{minccf}{minimal value of cross correlation to indicate a stable region}
 
 \item{span}{The span for the loess smooth function}
 
-\item{percent_missing}{maximum percent missing values allowed on the crosscut to be picked}
+\item{percent_missing}{maximum percent missing values allowed on the crosscut
+to be picked}
 }
 \value{
 dataframe of crosscut
 }
 \description{
 Identifies a "representative" cross section for a bullet land engraved area.
-Striation marks on a bullet land are the
-best expressed at the heel (bottom) of a bullet where break-off is still problematic.
+Striation marks on a bullet land are best expressed at the heel (bottom) of
+a bullet where break-off is still problematic.
 Using cross-correlation we identify a cross section that is
 the closest to the bottom of the bullet but does not suffer from break-off.
-If the resulting cross section is equal to the maximum of the search area (defined in xlimits),
-there should be some investigation, whether this cross section is usable.
-There is the risk of tank rash.
+If the resulting cross section is equal to the maximum of the search area
+(defined in xlimits), there should be some investigation to determine
+whether this cross section is usable, due to the risk of tank rash.
 }
 \details{
-XXX still to do: are missing values only on the right hand side (leading shoulder)?
+# TODO: are missing values only on the right hand side (leading shoulder)?
 }

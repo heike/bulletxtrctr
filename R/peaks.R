@@ -11,7 +11,7 @@
 #' @return list of several objects:
 #' @importFrom zoo rollapply
 #' @import ggplot2
-#' @import assertthat
+#' @importFrom assertthat assert_that
 #' @export
 sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) {
   x <- NULL
@@ -89,6 +89,20 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
 
 
 
+#' Check a striae object is valid
+#'
+#' @param striae data frame with a striae object
+#' @return TRUE if all conditions are met, error otherwise
+#' @importFrom assertthat assert_that has_name
+check_striae <- function(striae) {
+  assert_that(
+    is.data.frame(striae),
+    has_name(striae, "xmin"), has_name(striae, "xmax"),
+    has_name(striae, "type"), has_name(striae, "extrema"),
+    has_name(striae, "heights"),
+    is.numeric(striae$xmin), is.numeric(striae$xmax)
+  )
+}
 
 #' Match striation marks across two aligned signatures
 #'
@@ -102,7 +116,7 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
 #'          xmin, xmax, group, type, bullet, heights
 #' @param striae2 data frame as returned from sig_get_peaks function.
 #'          data frames are expected to have the following variables:
-#'          xmin, xmax, group, type, bullet, heights
+#'          xmin, xmax, group, type, bullet, heights#' Check a striae object is valid
 #' @return data frame of the same form as lines1 and lines2, but with an
 #'   additional variable of whether the striation marks are matches
 #' @importFrom dplyr group_by %>% summarise
@@ -117,20 +131,8 @@ striation_identify_matches <- function(striae1, striae2) {
   variable <- NULL
   value <- NULL
 
-  assert_that( # striae1
-    is.data.frame(striae1),
-    has_name(striae1, "xmin"), has_name(striae1, "xmax"),
-    has_name(striae1, "type"), has_name(striae1, "extrema"),
-    has_name(striae1, "heights"),
-    is.numeric(striae1$xmin), is.numeric(striae1$xmax)
-  )
-  assert_that( # striae2
-    is.data.frame(striae2),
-    has_name(striae2, "xmin"), has_name(striae2, "xmax"),
-    has_name(striae2, "type"), has_name(striae2, "extrema"),
-    has_name(striae2, "heights"),
-    is.numeric(striae2$xmin), is.numeric(striae2$xmax)
-  )
+  check_striae(striae1)
+  check_striae(striae2)
 
   lines1 <- striae1
   lines2 <- striae2
