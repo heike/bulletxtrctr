@@ -76,6 +76,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   x <- y <- value <- NULL
   land <- ccdata
+  if (is.null(ccdata) || nrow(ccdata) == 0) return(NULL)
 
   assert_that(has_name(land, "x"), has_name(land, "y"), has_name(land, "value"))
   assert_that(method %in% c("quadratic", "rollapply", "middle"))
