@@ -20,6 +20,7 @@
 #' signature <- cc_get_signature(ccdata, grooves)
 cc_get_signature <- function(ccdata, grooves, span1 = 0.75, span2 = 0.03) {
   x <- y <- value <- raw_sig <- se <- NULL
+  if (is.null(ccdata) | is.null(groove) | nrow(ccdata) == 0) return(NULL)
 
   br111 <- na.trim(ccdata) %>%
     filter(between(x, grooves$groove[1], grooves$groove[2])) %>%
