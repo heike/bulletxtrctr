@@ -12,10 +12,33 @@ sig_cms_max(aligned, span = 35)
 \item{span}{positive number  for the smoothfactor to use for assessing peaks.}
 }
 \value{
-list of matching parameters, data set of the identified striae, and the aligned data sets.
+list of matching parameters, data set of the identified striae,
+   and the aligned data sets.
 }
 \description{
 adapted from `bulletGetMaxCMS`
 aligns two signatures, identifies peaks and valleys, matches striae, and
 counts longest run.
+}
+\examples{
+\dontrun{
+# Set the data up to be read in, cleaned, etc.
+library(bulletxtrctr)
+library(x3ptools)
+
+example_data <- bullet_pipeline(
+  location = list(
+    Bullet1 = c(hamby252demo$bullet1[2]),
+    Bullet2 = c(hamby252demo$bullet1[4])
+  ),
+  x3p_clean = function(x) x \%>\%
+      x3pheader_to_microns() \%>\%
+      rotate_x3p(angle = -90) \%>\%
+      y_flip_x3p()
+)
+
+alignment <- sig_align(example_data$sigs[[1]]$sig,
+                       example_data$sigs[[2]]$sig)
+striae <- sig_cms_max(alignment)
+}
 }
