@@ -13,21 +13,14 @@ land_cc <- function(y, land) {
   # get cross cut, and smooth it
   ys <- unique(land$y)
   picky <- ys[which.min(abs(y - ys))]
-  br111 <- land[land$y == picky, ]
-  # inc <- bullet$header.info$incrementY
-  ## XXX    br111.groove <- bulletr::get_grooves(br111, groove_cutoff = 400, smoothfactor = 15, adjust = 10)
-  br111.groove <- quantile(br111$x, probs = c(0.15, 0.85))
-  groove <- br111.groove
-  br111_filter <- subset(br111, !is.na(value) & x > groove[1] & x < groove[2])
-  dframe <- cc_fit_loess(br111_filter, span = 0.75)
-  if (is.null(dframe$raw_sig)) browser()
-  dframe$resid <- dframe$raw_sig # where are we still using resid?
-
-  #   br111 <- switch_xy(br111)
-  #   groove <- list(groove = br111.groove, plot = NULL)
-  #   dframe <- bulletr::fit_loess(br111, groove)$resid$data
-  #   dframe <- switch_xy(dframe)
-  dframe
+  this_land <- land[land$y == picky, ]
+  this_groove <- quantile(this_land$x, probs = c(0.15, 0.85))
+  this_land_filtered <- subset(this_land, !is.na(value) &
+                                 x > this_groove[1] & x < this_groove[2])
+  this_cc_df <- cc_fit_loess(this_land_filtered, span = 0.75)
+  # if (is.null(this_cc_df$raw_sig)) browser()
+  this_cc_df$resid <- this_cc_df$raw_sig # where are we still using resid?
+  this_cc_df
 }
 
 #' Check whether an x3p argument is character or filename, return an x3p object
@@ -37,12 +30,12 @@ land_cc <- function(y, land) {
 #' @importFrom x3ptools read_x3p
 #' @importFrom assertthat assert_that
 check_x3p <- function(x3p) {
-  bullet <- NULL
-  if (is.character(x3p)) bullet <- read_x3p(x3p)
-  if ("x3p" %in% class(x3p)) bullet <- x3p
-  stopifnot(!is.null(bullet))
+  x3pdata <- NULL
+  if (is.character(x3p)) x3pdata <- read_x3p(x3p)
+  if ("x3p" %in% class(x3p)) x3pdata <- x3p
+  stopifnot(!is.null(x3pdata))
 
-  return(bullet)
+  return(x3pdata)
 }
 
 #' Identify a reliable cross section
@@ -96,38 +89,39 @@ check_x3p <- function(x3p) {
 x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
                                   minccf = 0.9, span = 0.03,
                                   percent_missing = 50) {
-  bullet <- check_x3p(x3p)
+  x3pdat <- check_x3p(x3p)
 
-  dbr111 <- x3ptools::x3p_to_df(bullet)
+  x3p_df <- x3ptools::x3p_to_df(x3pdat)
   if (is.na(ylimits[2])) {
-    ylimits[2] <- max(dbr111$y)
+    ylimits[2] <- max(x3p_df$y)
   }
 
   done <- FALSE
   y <- min(ylimits)
-  first_cc <- land_cc(y, land = dbr111)
+  first_cc <- land_cc(y, land = x3p_df)
 
   # This loop only entered when there is too much missingness - too hard to test
-  while ((dim(first_cc)[1] < bullet$header.info$sizeX * percent_missing / 100) &
-         (y < bullet$header.info$sizeY)) {
+  while ((dim(first_cc)[1] < x3pdat$header.info$sizeX * percent_missing / 100) &
+         (y < x3pdat$header.info$sizeY)) {
     y <- y + distance
-    first_cc <- land_cc(y, land = dbr111)
+    first_cc <- land_cc(y, land = x3p_df)
   }
 
   while (!done) {
     y <- y + distance
     # TODO: need to check that we have enough data
-    second_cc <- land_cc(y, land = dbr111)
+    second_cc <- land_cc(y, land = x3p_df)
     #    res <- ccf(first_cc$resid, second_cc$resid, lag.max = .5*min(nrow(first_cc), nrow(second_cc)), plot=FALSE)
     #    ccf <- max(res$acf)
 
-    first_cc$bullet <- "first-bullet"
-    second_cc$bullet <- "second-bullet"
+    # TODO: Change from bullet - these are crosscuts
+    # first_cc$bullet <- "first-bullet"
+    # second_cc$bullet <- "second-bullet"
 
     # smooth raw signatures, then align and compare:
-    first_cc$l30 <- raw_sig_smooth(first_cc$raw_sig, span = span)
-    second_cc$l30 <- raw_sig_smooth(second_cc$raw_sig, span = span)
-    ccf <- sig_align(first_cc$l30, second_cc$l30)$ccf
+    first_cc$rssmooth <- raw_sig_smooth(first_cc$raw_sig, span = span)
+    second_cc$rssmooth <- raw_sig_smooth(second_cc$raw_sig, span = span)
+    ccf <- sig_align(first_cc$rssmooth, second_cc$rssmooth)$ccf
 
     if (ccf > minccf) {
       done <- TRUE
@@ -189,17 +183,17 @@ switch_xy <- function(dataframe) {
 #'   ggplot(aes(x = x, y = value)) + geom_line()
 #' }
 x3p_crosscut <- function(x3p, y = NULL) {
-  bullet <- check_x3p(x3p)
+  x3pdat <- check_x3p(x3p)
 
   # TODO: check into how na.trim is used here
-  dbr111 <- na.trim(x3p_to_df(bullet))
-  ys <- unique(dbr111$y)
+  x3p_df <- na.trim(x3p_to_df(x3pdat))
+  ys <- unique(x3p_df$y)
   if (is.null(y)) y <- median(ys)
 
   picky <- ys[which.min(abs(y - ys))]
-  dbr111.fixx <- dbr111[dbr111$y == picky, ]
+  x3p_df_fix <- x3p_df[x3p_df$y == picky, ]
 
-  return(na.omit(dbr111.fixx))
+  return(na.omit(x3p_df_fix))
 }
 
 #' Check object returned by x3p_crosscut_optimize
