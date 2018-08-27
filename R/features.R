@@ -403,7 +403,7 @@ extract_feature_sum_peaks <- function(striae) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #'
-#' extract_feature_ccf(alignment$bullets)
+#' extract_feature_ccf(alignment$lands)
 #' }
 extract_feature_ccf <- function(aligned) {
   assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
@@ -454,7 +454,7 @@ extract_feature_ccf <- function(aligned) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #'
-#' extract_feature_lag(alignment$bullets)
+#' extract_feature_lag(alignment$lands)
 #' }
 extract_feature_lag <- function(aligned) {
   assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
@@ -502,7 +502,7 @@ extract_feature_lag <- function(aligned) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #'
-#' extract_feature_D(alignment$bullets)
+#' extract_feature_D(alignment$lands)
 #' }
 extract_feature_D <- function(aligned, ...) {
   assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
@@ -548,7 +548,7 @@ extract_feature_D <- function(aligned, ...) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #'
-#' extract_feature_length(alignment$bullets)
+#' extract_feature_length(alignment$lands)
 #' }
 extract_feature_length <- function(aligned) {
   assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
@@ -596,7 +596,7 @@ extract_feature_length <- function(aligned) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #'
-#' extract_feature_overlap(alignment$bullets)
+#' extract_feature_overlap(alignment$lands)
 #' }
 extract_feature_overlap <- function(aligned) {
   assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
@@ -654,7 +654,7 @@ extract_features_all <- function(aligned, striae, ...) {
   values <- features %>% purrr::map_dbl(.f = function(f) {
     fun <- getFromNamespace(f, asNamespace("bulletxtrctr"))
     if ("aligned" %in% names(formals(fun))) {
-      res <- fun(aligned$bullets, ...)
+      res <- fun(aligned$lands, ...)
     }
     if ("striae" %in% names(formals(fun))) {
       res <- fun(striae$lines, ...)
@@ -680,7 +680,7 @@ extract_features_all_legacy <- function(res) {
   # browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 
-  lofX <- res$bullets
+  lofX <- res$lands
   #    lofX$l30 <- lofX$sig
   #    b12 <- unique(lofX$bullet)
   b12 <- c("sig1", "sig2")

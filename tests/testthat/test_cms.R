@@ -18,17 +18,17 @@ test_that("get_runs works as expected", {
 
 test_that("sig_cms_max works", {
   skip_if(skipall)
-  expect_equal(names(maxcmstest), c("maxCMS", "ccf", "lag", "lines", "bullets"))
+  expect_equal(names(maxcmstest), c("maxCMS", "ccf", "lag", "lines", "lands"))
   expect_equal(names(maxcmstest$lines), c(
     "xmin", "xmax", "match", "type",
     "meany", "heights", "sdheights"
   ))
-  expect_equal(names(maxcmstest$bullets), c("x", "sig1", "sig2"))
+  expect_equal(names(maxcmstest$lands), c("x", "sig1", "sig2"))
   expect_is(maxcmstest$maxCMS, "numeric")
   expect_is(maxcmstest$ccf, "numeric")
   expect_is(maxcmstest$lag, "numeric")
   expect_s3_class(maxcmstest$lines, "data.frame")
-  expect_s3_class(maxcmstest$bullets, "data.frame")
+  expect_s3_class(maxcmstest$lands, "data.frame")
   expect_is(maxcmstest$lines$xmin, "numeric")
   expect_is(maxcmstest$lines$xmax, "numeric")
   expect_is(maxcmstest$lines$match, "logical")
@@ -36,8 +36,8 @@ test_that("sig_cms_max works", {
   expect_is(maxcmstest$lines$meany, "numeric")
   expect_is(maxcmstest$lines$heights, "numeric")
   expect_is(maxcmstest$lines$sdheights, "numeric")
-  expect_is(maxcmstest$bullets$x, "integer")
-  expect_is(maxcmstest$bullets$sig1, "numeric")
-  expect_is(maxcmstest$bullets$sig2, "numeric")
+  expect_is(maxcmstest$lands$x, "integer")
+  expect_is(maxcmstest$lands$sig1, "numeric")
+  expect_is(maxcmstest$lands$sig2, "numeric")
   expect_equal(maxcmstest, match$maxcms)
 })

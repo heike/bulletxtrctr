@@ -32,21 +32,21 @@
 sig_cms_max <- function(aligned, span = 35) {
   check_align(aligned)
 
-  sigX <- aligned$bullets
+  sigX <- aligned$lands
 
   peaks1 <- sig_get_peaks(sigX$sig1, smoothfactor = span)
   peaks2 <- sig_get_peaks(sigX$sig2, smoothfactor = span)
 
   assert_that(has_name(peaks1, "lines"), has_name(peaks2, "lines"))
 
-  peaks1$lines$bullet <- "sig1"
-  peaks2$lines$bullet <- "sig2"
+  peaks1$lines$land <- "sig1"
+  peaks2$lines$land <- "sig2"
 
   lines <- striation_identify_matches(peaks1$lines, peaks2$lines)
 
   maxCMS <- get_longest_run(lines$match == TRUE)
   list(maxCMS = maxCMS, ccf = aligned$ccf, lag = aligned$lag,
-       lines = lines, bullets = sigX)
+       lines = lines, lands = sigX)
 }
 
 #' Length of the longest run of TRUEs

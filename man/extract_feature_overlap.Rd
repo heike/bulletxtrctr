@@ -40,7 +40,7 @@ example_data <- bullet_pipeline(
 alignment <- sig_align(example_data$sigs[[1]]$sig,
                        example_data$sigs[[2]]$sig)
 
-extract_feature_overlap(alignment$bullets)
+extract_feature_overlap(alignment$lands)
 }
 }
 \seealso{

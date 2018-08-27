@@ -21,17 +21,17 @@ test_that("cross-correlation works", {
 
 
 test_that("sig_align is working as expected", {
-  expect_true(is.na(trivial$bullets$sig2[1]))
-  expect_true(is.na(trivial$bullets$sig2[10]))
+  expect_true(is.na(trivial$lands$sig2[1]))
+  expect_true(is.na(trivial$lands$sig2[10]))
 
-  expect_equal(names(trivial), c("ccf", "lag", "bullets"))
+  expect_equal(names(trivial), c("ccf", "lag", "lands"))
   expect_is(trivial$ccf, "numeric")
   expect_is(trivial$lag, "numeric")
-  expect_s3_class(trivial$bullets, "data.frame")
-  expect_equal(names(trivial$bullets), c("x", "sig1", "sig2"))
-  expect_is(trivial$bullets$x, "integer")
-  expect_is(trivial$bullets$sig1, "numeric")
-  expect_is(trivial$bullets$sig2, "numeric")
+  expect_s3_class(trivial$lands, "data.frame")
+  expect_equal(names(trivial$lands), c("x", "sig1", "sig2"))
+  expect_is(trivial$lands$x, "integer")
+  expect_is(trivial$lands$sig1, "numeric")
+  expect_is(trivial$lands$sig2, "numeric")
 
   skip_if(skipall)
   expect_equal(aligntest, match$alignment)

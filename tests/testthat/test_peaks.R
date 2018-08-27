@@ -6,8 +6,8 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
 
   load(here::here("tests/bullets_match.Rdata"))
 
-  peakstest <- sig_get_peaks(match$alignment$bullets$sig1)
-  peakstest2 <- sig_get_peaks(match$alignment$bullets$sig2)
+  peakstest <- sig_get_peaks(match$alignment$lands$sig1)
+  peakstest2 <- sig_get_peaks(match$alignment$lands$sig2)
   matchestest <- striation_identify_matches(peakstest$lines, peakstest2$lines)
 }
 

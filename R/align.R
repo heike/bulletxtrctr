@@ -80,7 +80,7 @@ sig_align <- function(sig1, sig2) {
   # dfcor <- cor(dframe0$sig1, dframe0$sig2, use = "pairwise")
   # if (maxcor != dfcor) browser()
 
-  list(ccf = maxcor, lag = lag, bullets = dframe0)
+  list(ccf = maxcor, lag = lag, lands = dframe0)
 }
 
 #' Check align output
@@ -91,10 +91,10 @@ sig_align <- function(sig1, sig2) {
 check_align <- function(x) {
   assert_that(has_name(x, "ccf"),
               has_name(x, "lag"),
-              has_name(x, "bullets"))
-  assert_that(has_name(x$bullets, "x"),
-              has_name(x$bullets, "sig1"),
-              has_name(x$bullets, "sig2"))
+              has_name(x, "lands"))
+  assert_that(has_name(x$lands, "x"),
+              has_name(x$lands, "sig1"),
+              has_name(x$lands, "sig2"))
 }
 
 

@@ -16,10 +16,10 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     matches = extract_feature_matches(striae = match$maxcms$lines),
     mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
     sum_peaks = extract_feature_sum_peaks(striae = match$maxcms$lines),
-    ccf = extract_feature_ccf(match$alignment$bullets),
-    dist = extract_feature_D(match$alignment$bullets),
-    length = extract_feature_length(match$alignment$bullets),
-    overlap = extract_feature_overlap(match$alignment$bullets)
+    ccf = extract_feature_ccf(match$alignment$lands),
+    dist = extract_feature_D(match$alignment$lands),
+    length = extract_feature_length(match$alignment$lands),
+    overlap = extract_feature_overlap(match$alignment$lands)
   )
 
   featurestest_full <- extract_features_all(aligned = match$alignment,

@@ -142,13 +142,13 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
     b2_l4_x3p$sigs[[1]]$sig
   )
   peaks <- list(
-    sig1 = sig_get_peaks(alignment$bullets$sig1),
-    sig2 = sig_get_peaks(alignment$bullets$sig2)
+    sig1 = sig_get_peaks(alignment$lands$sig1),
+    sig2 = sig_get_peaks(alignment$lands$sig2)
   )
   matches <- bulletxtrctr:::striation_identify_matches(peaks$sig1$lines, peaks$sig2$lines)
   maxcms <- sig_cms_max(alignment)
   features_legacy <- extract_features_all_legacy(maxcms)
-  features <- extract_features_all(aligned = match$alignment, striae = maxcms)
+  features <- extract_features_all(aligned = alignment, striae = maxcms)
   match <- list(
     alignment = alignment, peaks = peaks, matches = matches,
     maxcms = maxcms, features_legacy = features_legacy,
@@ -168,10 +168,10 @@ if (!file.exists(here::here("tests/single_features.Rdata"))) {
     matches = extract_feature_matches(striae = match$maxcms$lines),
     mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
     sum_peaks = extract_feature_sum_peaks(striae = match$maxcms$lines),
-    ccf = extract_feature_ccf(match$alignment$bullets),
-    dist = extract_feature_D(match$alignment$bullets),
-    length = extract_feature_length(match$alignment$bullets),
-    overlap = extract_feature_overlap(match$alignment$bullets)
+    ccf = extract_feature_ccf(match$alignment$lands),
+    dist = extract_feature_D(match$alignment$lands),
+    length = extract_feature_length(match$alignment$lands),
+    overlap = extract_feature_overlap(match$alignment$lands)
   )
   features_full <- extract_features_all(aligned = match$alignment,
                                         striae = match$maxcms)
@@ -182,7 +182,7 @@ if (!file.exists(here::here("tests/single_features.Rdata"))) {
 # test_bullet-scores.R
 if (!file.exists(here::here("tests/rf_features.Rdata"))) {
   load(here::here("tests/bullets_match.Rdata"))
-
+  requireNamespace("randomForest")
   rf_features <- match$features %>% mutate(
     rough_cor = match$features_legacy$rough_cor,
     sd_D = match$features_legacy$sd_D)
