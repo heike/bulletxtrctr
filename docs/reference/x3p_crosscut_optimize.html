@@ -33,13 +33,13 @@
 <meta property="og:title" content="Identify a reliable cross section — x3p_crosscut_optimize" />
 
 <meta property="og:description" content="Identifies a &quot;representative&quot; cross section for a bullet land engraved area.
-Striation marks on a bullet land are the
-best expressed at the heel (bottom) of a bullet where break-off is still problematic.
+Striation marks on a bullet land are best expressed at the heel (bottom) of
+a bullet where break-off is still problematic.
 Using cross-correlation we identify a cross section that is
 the closest to the bottom of the bullet but does not suffer from break-off.
-If the resulting cross section is equal to the maximum of the search area (defined in xlimits),
-there should be some investigation, whether this cross section is usable.
-There is the risk of tank rash." />
+If the resulting cross section is equal to the maximum of the search area
+(defined in xlimits), there should be some investigation to determine
+whether this cross section is usable, due to the risk of tank rash." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -107,13 +107,13 @@ There is the risk of tank rash." />
     <div class="ref-description">
     
     <p>Identifies a "representative" cross section for a bullet land engraved area.
-Striation marks on a bullet land are the
-best expressed at the heel (bottom) of a bullet where break-off is still problematic.
+Striation marks on a bullet land are best expressed at the heel (bottom) of
+a bullet where break-off is still problematic.
 Using cross-correlation we identify a cross section that is
 the closest to the bottom of the bullet but does not suffer from break-off.
-If the resulting cross section is equal to the maximum of the search area (defined in xlimits),
-there should be some investigation, whether this cross section is usable.
-There is the risk of tank rash.</p>
+If the resulting cross section is equal to the maximum of the search area
+(defined in xlimits), there should be some investigation to determine
+whether this cross section is usable, due to the risk of tank rash.</p>
     
     </div>
 
@@ -125,16 +125,21 @@ There is the risk of tank rash.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x3p</th>
-      <td><p>if character, path to an x3p file. Otherwise a scan in x3p format is expected.
-The assumption is that the scan is taken across the bullet land, with an upright bullet, i.e.  heel along x with y = 0. (0,0) defines the bottom left corner of the scan.</p></td>
+      <td><p>if character, path to an x3p file. Otherwise a scan in x3p
+format is expected. The assumption is that the scan is taken across
+the bullet land, with an upright bullet, i.e.  heel along x with
+y = 0. (0,0) defines the bottom left corner of the scan.</p></td>
     </tr>
     <tr>
       <th>distance</th>
-      <td><p>positive numeric value indicating the distance between cross sections to use for a comparison</p></td>
+      <td><p>positive numeric value indicating the distance between cross
+sections to use for a comparison</p></td>
     </tr>
     <tr>
       <th>ylimits</th>
-      <td><p>vector of values between which to check for cross sections in a stable region. In case the upper limit is not specified explicitly, it is determined by the scan itself.</p></td>
+      <td><p>vector of values between which to check for cross sections in
+a stable region. In case the upper limit is not specified
+explicitly, it is determined by the scan itself.</p></td>
     </tr>
     <tr>
       <th>minccf</th>
@@ -146,7 +151,8 @@ The assumption is that the scan is taken across the bullet land, with an upright
     </tr>
     <tr>
       <th>percent_missing</th>
-      <td><p>maximum percent missing values allowed on the crosscut to be picked</p></td>
+      <td><p>maximum percent missing values allowed on the crosscut
+to be picked</p></td>
     </tr>
     </table>
     
@@ -156,7 +162,7 @@ The assumption is that the scan is taken across the bullet land, with an upright
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>XXX still to do: are missing values only on the right hand side (leading shoulder)?</p>
+    <p># TODO: are missing values only on the right hand side (leading shoulder)?</p>
     
 
   </div>

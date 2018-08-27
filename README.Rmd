@@ -34,7 +34,7 @@ library(ggplot2)
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
 The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.    
 
-In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 x3p files are provided in the `hamby252demo` object.
+In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 scans of bullet lands in x3p format are provided in the `hamby252demo` object.
 
 ```{r}
 b1 <- read_bullet(urllist = hamby252demo[[1]])
@@ -95,7 +95,7 @@ summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 ```
 
 
-We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
+We are working under the assumption that the scans are aligned such that the base of the bullet are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
 
 ```{r}
 image_x3p(bullets$x3p[[1]], file = "README_files/temp-before.png")
@@ -234,12 +234,6 @@ comparisons <- comparisons %>% mutate(
 ```
 
 ```{r}
-## ccf and lag are extracted below
-# comparisons <- comparisons %>% mutate(
-#   ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
-#   lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
-# #  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
-# )
 
 comparisons <- comparisons %>% mutate(
   bulletA = gsub("([1-2])-([1-6])","\\1",land1),
@@ -262,12 +256,14 @@ comparisons <- comparisons %>% mutate(
     function(a, b, c, d) list(bullets = a$bullets, lines = b$lines, 
                               maxCMS = c$cms,
                               ccf = c$ccf, lag = c$lag)),
-  features_legacy = purrr::map(res, ~extract_features_all_legacy(.x)),
-  rough_cor = purrr::map_dbl(features_legacy, ~.$rough_cor),
-  sd_D = purrr::map_dbl(features_legacy, ~.$sd_D)
+  features_legacy = purrr::map(res, ~extract_features_all_legacy(.x))
+#  rough_cor = purrr::map_dbl(features_legacy, ~.$rough_cor),
+#  sd_D = purrr::map_dbl(features_legacy, ~.$sd_D)
 )
 
-comparisons <- comparisons %>% tidyr::unnest(features)
+comparisons <- comparisons %>% tidyr::unnest(features_legacy) 
+# scale features before using them in the random forest
+
 
 # quick visualization:
 comparisons %>% 

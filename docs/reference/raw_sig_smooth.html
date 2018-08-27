@@ -131,17 +131,19 @@ between these values.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-  <span class='fu'>library</span>(<span class='no'>ggplot2</span>)
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>6</span>*<span class='no'>pi</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>.02</span>)
+<span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>6</span> * <span class='no'>pi</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>.02</span>)
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fl'>5.5</span> * <span class='fu'>sin</span>(<span class='no'>x</span>) + <span class='fu'>rnorm</span>(<span class='fu'>length</span>(<span class='no'>x</span>))
 
 
 <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>() +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fu'>length</span>(<span class='no'>y</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>), <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>1</span>) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fu'>length</span>(<span class='no'>y</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='smoothloess.html'>smoothloess</a></span>(<span class='no'>y</span>, <span class='fl'>.05</span>)),
-            <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>) +
+    <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>
+  ) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fu'>length</span>(<span class='no'>y</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>raw_sig_smooth</span>(<span class='no'>y</span>, <span class='fl'>.05</span>)),
-            <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)
+    <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>
+  )
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

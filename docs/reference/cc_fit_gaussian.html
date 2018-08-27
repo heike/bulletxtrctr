@@ -139,8 +139,10 @@ which is 24% of 2500 microns; approximately the same size as a
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='no'>ccdata</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>6000</span>, <span class='fl'>1</span>),
-                     <span class='kw'>value</span> <span class='kw'>=</span> <span class='fl'>10</span> - (<span class='fl'>3</span> - <span class='no'>x</span>/<span class='fl'>1000</span>)^<span class='fl'>2</span> + <span class='fu'>rnorm</span>(<span class='fu'>length</span>(<span class='no'>x</span>), <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>.25</span>))
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='no'>ccdata</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>6000</span>, <span class='fl'>1</span>),
+  <span class='kw'>value</span> <span class='kw'>=</span> <span class='fl'>10</span> - (<span class='fl'>3</span> - <span class='no'>x</span> / <span class='fl'>1000</span>)^<span class='fl'>2</span> + <span class='fu'>rnorm</span>(<span class='fu'>length</span>(<span class='no'>x</span>), <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>.25</span>)
+)
 <span class='fu'>cc_fit_gaussian</span>(<span class='kw'>ccdata</span> <span class='kw'>=</span> <span class='no'>ccdata</span>)</div><div class='output co'>#&gt; # A tibble: 6,001 x 7
 #&gt;        x value fitted raw_sig se    abs_resid chop 
 #&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt;     &lt;dbl&gt; &lt;lgl&gt;

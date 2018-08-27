@@ -169,6 +169,8 @@ extract_feature_cms2 <- function(striae) {
 #' extract_feature_cms(striae$lines)
 #' }
 extract_feature_cms <- function(striae) {
+  # TODO: cms is counting peaks and valleys, definition by Biasotti only counts peaks, change! - that's what cms2 is ... better name?
+  # TODO: scale cms to relative cms per millimeter to account for length of a signature
   assert_that(has_name(striae, "match"))
   get_longest_run(striae$match == TRUE)
 }
@@ -419,6 +421,34 @@ extract_feature_ccf <- function(aligned) {
   return(cor(aligned[, -1], use = "pairwise"))
 }
 
+#' Extract rough correlation from two (or more) aligned signatures
+#'
+#' @param aligned data frame with variable x (for location) and two or
+#'          more measurements
+#' @return (matrix) of correlations
+#' @importFrom stats cor
+#' @importFrom assertthat assert_that
+#' @export
+extract_feature_rough_cor <- function(aligned) {
+  assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
+  for (i in 2:dim(aligned)[2]) {
+    assert_that(
+      is.numeric(aligned[, i]),
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+  }
+
+  avgl30 <- rowSums(aligned[,-1])/(dim(aligned)[2]-1)
+  smoothavgl30 <- smoothloess(y = avgl30, span = 0.3)
+  doublesmoothed <- aligned[,-1] - smoothavgl30
+
+
+  if (dim(aligned)[2] == 3) { # only two signatures to compare
+    return(cor(doublesmoothed, use = "pairwise")[1,2])
+  }
+  return(cor(doublesmoothed, use = "pairwise"))
+}
+
+
 #' Extract lag from two (or more) aligned signatures
 #'
 #' In the case of two signatures the result is an integer definining the number
@@ -520,6 +550,26 @@ extract_feature_D <- function(aligned, ...) {
   dists / as.dist(ns)
 }
 
+#' Extract variation in the height measurements between two aligned signatures
+#'
+#' @param aligned data frame with variable x (for location) and two aligned
+#'          signatures
+#' @return numeric value
+#' @importFrom assertthat assert_that
+#' @export
+extract_feature_sd_D <- function(aligned) {
+  # TODO: sd_D does not have anything to do with D - named atm only to be consistent with legacy stuff
+  assert_that(dim(aligned)[2] > 2, msg = "aligned must have at least 3 columns")
+  for (i in 2:dim(aligned)[2]) {
+    assert_that(
+      is.numeric(aligned[, i]),
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+  }
+
+  aligned[,2:3] %>% purrr::map_dbl(.f = sd, na.rm=TRUE) %>% sum(na.rm=TRUE)
+}
+
+
 #' Extract length of two (aligned) signatures
 #'
 #' Signatures will usually be of different lengths. In a comparison, the length
@@ -527,6 +577,7 @@ extract_feature_D <- function(aligned, ...) {
 #' @inheritParams extract_feature_ccf
 #' @return integer value of the length of the shorter signature.
 #' @importFrom assertthat assert_that
+#' @importFrom zoo na.trim
 #' @export
 #' @family alignment-related-features
 #' @examples
@@ -559,8 +610,10 @@ extract_feature_length <- function(aligned) {
   }
 
   # only smaller of the length of the first two signatures
-  n1 <- sum(!is.na(aligned[, 2]))
-  n2 <- sum(!is.na(aligned[, 3]))
+  nrow(na.trim(aligned))
+
+  n1 <- length(na.trim(aligned[, 2]))
+  n2 <- length(na.trim(aligned[, 3]))
 
   min(n1, n2)
 }
@@ -615,6 +668,7 @@ extract_feature_overlap <- function(aligned) {
 #' @param aligned aligned signatures, result from `sig_cms_max`
 #' @param striae data frame with evaluated matching striae
 #' @param ... passed on to extractor functions
+#' TODO: test whether ... is actually passed on correctly
 #' @importFrom utils apropos getFromNamespace
 #' @importFrom tidyr spread
 #' @importFrom assertthat assert_that
@@ -765,3 +819,5 @@ extract_features_all_legacy <- function(res) {
       (1000 / g1_inc_x) / length(ys)
   )
 }
+
+
