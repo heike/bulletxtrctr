@@ -7,7 +7,7 @@
 check_grooves(x)
 }
 \arguments{
-\item{grooves}{output from cc_locate_grooves}
+\item{x}{output from cc_locate_grooves}
 }
 \value{
 TRUE if ok, error otherwise

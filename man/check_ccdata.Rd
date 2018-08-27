@@ -7,7 +7,7 @@
 check_ccdata(x)
 }
 \arguments{
-\item{ccdata}{data frame from x3p_crosscut_optimize}
+\item{x}{data frame from x3p_crosscut_optimize}
 }
 \value{
 TRUE if everything is ok, error otherwise

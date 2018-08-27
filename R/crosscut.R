@@ -164,11 +164,11 @@ x3p_crosscut <- function(x3p, y = NULL) {
 
 #' Check object returned by x3p_crosscut_optimize
 #'
-#' @param ccdata data frame from x3p_crosscut_optimize
+#' @param x data frame from x3p_crosscut_optimize
 #' @return TRUE if everything is ok, error otherwise
 #' @importFrom assertthat assert_that has_name
 check_ccdata <- function(x) {
   assert_that(!is.null(x), msg = "crosscut data must not be null")
-  assert_that(has_name(x, "x"), has_name(x, "y"), has_name(x, "value"))
+  assert_that(has_name(x, "x"), has_name(x, "value"))
   assert_that(nrow(x) > 0, msg = "crosscut data must have > 0 rows")
 }

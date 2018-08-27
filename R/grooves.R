@@ -299,6 +299,8 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
                                   mean_right = NULL, mean_window = 100,
                                   second_smooth = T, which_fun = mean,
                                   return_plot = F) {
+  . <- NULL
+
   assert_that(
     is.numeric(x), is.numeric(value), is.numeric(adjust),
     is.numeric(smoothfactor), is.numeric(groove_cutoff),
@@ -421,7 +423,7 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
 
 #' Check grooves for correctness
 #'
-#' @param grooves output from cc_locate_grooves
+#' @param x output from cc_locate_grooves
 #' @return TRUE if ok, error otherwise
 #' @importFrom assertthat assert_that
 check_grooves <- function(x) {
