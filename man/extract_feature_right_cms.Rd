@@ -26,7 +26,7 @@ library(x3ptools)
 example_data <- bullet_pipeline(
   location = list(
     Bullet1 = c(hamby252demo$bullet1[2]),
-    Bullet2 = c(hamby252demo$bullet1[4])
+    Bullet2 = c(hamby252demo$bullet2[4])
   ),
   x3p_clean = function(x) x \%>\%
       x3pheader_to_microns() \%>\%
@@ -39,4 +39,15 @@ alignment <- sig_align(example_data$sigs[[1]]$sig,
 striae <- sig_cms_max(alignment)
 extract_feature_right_cms(striae$lines)
 }
+}
+\seealso{
+Other striae-related-features: \code{\link{extract_feature_cms2}},
+  \code{\link{extract_feature_cms}},
+  \code{\link{extract_feature_left_cms}},
+  \code{\link{extract_feature_matches}},
+  \code{\link{extract_feature_mismatches}},
+  \code{\link{extract_feature_non_cms}},
+  \code{\link{extract_feature_sum_peaks}},
+  \code{\link{extract_features_all}},
+  \code{\link{extract_helper_feature_n_striae}}
 }

@@ -8,7 +8,8 @@ extract_feature_lag(aligned)
 }
 \arguments{
 \item{aligned}{data frame with variable x (for location) and two or
-more measurements}
+more measurements (the bullets entry in the list returned from
+sig_align)}
 }
 \value{
 (vector) of lags
@@ -22,4 +23,33 @@ integers of the same length as signatures. Each element gives the number of
 indices by which the corresponding signature is shifted compared to the
 *first* signature. By definition, one of the numbers has to be 0 indicating
 the *first* signature. XXX Need to indicate that "first" isn't the col index
+}
+\examples{
+\dontrun{
+library(bulletxtrctr)
+library(x3ptools)
+
+example_data <- bullet_pipeline(
+  location = list(
+    Bullet1 = c(hamby252demo$bullet1[2]),
+    Bullet2 = c(hamby252demo$bullet2[4])
+  ),
+  x3p_clean = function(x) x \%>\%
+      x3pheader_to_microns() \%>\%
+      rotate_x3p(angle = -90) \%>\%
+      y_flip_x3p()
+)
+
+alignment <- sig_align(example_data$sigs[[1]]$sig,
+                       example_data$sigs[[2]]$sig)
+
+extract_feature_lag(alignment$bullets)
+}
+}
+\seealso{
+Other alignment-related-features: \code{\link{extract_feature_D}},
+  \code{\link{extract_feature_ccf}},
+  \code{\link{extract_feature_length}},
+  \code{\link{extract_feature_overlap}},
+  \code{\link{extract_features_all}}
 }
