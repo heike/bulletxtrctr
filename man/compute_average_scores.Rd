@@ -2,7 +2,7 @@
 % Please edit documentation in R/bullet-scores.R
 \name{compute_average_scores}
 \alias{compute_average_scores}
-\title{Get average scores for bullet to bullet comparisons}
+\title{#' Get average scores for bullet to bullet comparisons}
 \usage{
 compute_average_scores(land1, land2, score)
 }
@@ -21,4 +21,57 @@ numeric vector of average scores. Length is the same as the number of
 Note that the combination of `land1` and `land2` are a key to the scores,
 i.e. if a bullet has six lands, each of the input vectors should have
 length 36.
+}
+\examples{
+\dontrun{
+# Set the data up to be read in, cleaned, etc.
+library(bulletxtrctr)
+library(x3ptools)
+
+bullets <- bullet_pipeline(
+  location = list(
+    Bullet1 = c(hamby252demo$bullet1),
+    Bullet2 = c(hamby252demo$bullet2)
+  ),
+  x3p_clean = function(x) x \%>\%
+      x3pheader_to_microns() \%>\%
+      rotate_x3p(angle = -90) \%>\%
+      y_flip_x3p()
+) \%>\%
+mutate(land = paste0(rep(1:2, each = 6), "-", rep(1:6, times = 2)))
+
+comparisons <- data.frame(
+  expand.grid(land1 = bullets$land, land2 = bullets$land),
+  stringsAsFactors = FALSE)
+comparisons <- comparisons \%>\%
+  mutate(
+    aligned = purrr::map2(.x = land1, .y = land2, .f = function(xx, yy) {
+      land1 <- bullets$sigs[bullets$land == xx][[1]]
+      land2 <- bullets$sigs[bullets$land == yy][[1]]
+      land1$bullet <- "first-land"
+      land2$bullet <- "second-land"
+
+      sig_align(land1$sig, land2$sig)
+    }),
+    striae = purrr::map(aligned, sig_cms_max),
+    features = purrr::map2(.x = aligned, .y = striae, extract_features_all),
+    rfscore = purrr::map_dbl(features, rowMeans) # This is a hack until the new RF is fit...
+  )
+
+# Clean up a bit
+comparisons <- comparisons \%>\%
+  mutate(
+    bulletA = gsub("(\\\\d)-\\\\d", "\\\\1", land1),
+    landA = gsub("\\\\d-(\\\\d)", "\\\\1", land1),
+    bulletB = gsub("(\\\\d)-\\\\d", "\\\\1", land2),
+    landB = gsub("\\\\d-(\\\\d)", "\\\\1", land2)
+  ) \%>\%
+  group_by(bulletA, bulletB) \%>\% tidyr::nest() \%>\%
+  mutate(
+    bullet_score = data \%>\% purrr::map_dbl(
+      .f = function(d) max(compute_average_scores(land1 = d$landA,
+                                                  land2 = d$landB,
+                                                  d$rfscore)))
+  )
+}
 }
