@@ -2,7 +2,9 @@
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-output: md_document
+output: 
+  html_document:
+    keep_md: true
 ---
 
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
@@ -21,8 +23,6 @@ Analyze bullet striations using nonparametric methods
 Stria comparisons between bullets are based on land-to-land comparisons. 
 
 1. Load libraries
-
-
 ```{r, message=FALSE}
 library(dplyr)
 library(bulletxtrctr)
@@ -32,7 +32,7 @@ library(ggplot2)
 ```
 
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
-The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.  
+The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.    
 
 In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 x3p files are provided in the `hamby252demo` object.
 
