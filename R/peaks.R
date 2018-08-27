@@ -47,6 +47,7 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
   smoothed <- rollapply(sig, smoothfactor, function(x) mean(x),
     fill = list(NA, NA, NA)
   )
+
   smoothed_truefalse <- rollapply(smoothed, smoothfactor, function(x) mean(x),
     fill = list(NA, NA, NA)
   )
@@ -54,6 +55,7 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
   find_maxs <- rollapply(smoothed_truefalse, 3, function(x) max(x) == x[2],
     fill = list(NA, NA, NA)
   )
+
   find_mins <- rollapply(smoothed_truefalse, 3, function(x) min(x) == x[2],
     fill = list(NA, NA, NA)
   )
