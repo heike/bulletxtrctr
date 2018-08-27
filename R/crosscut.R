@@ -73,6 +73,26 @@ check_x3p <- function(x3p) {
 #' @return dataframe of crosscut
 #' @importFrom x3ptools x3p_to_df
 #' @export
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#' library(ggplot2)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
+#'   stop_at_step = "clean",
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' x3p_crosscut_optimize(example_data$x3p[[1]])
+#' x3p_crosscut(example_data$x3p[[1]], 75) %>%
+#'   ggplot(aes(x = x, y = value)) + geom_line()
+#' }
 x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
                                   minccf = 0.9, span = 0.03,
                                   percent_missing = 50) {
@@ -148,6 +168,26 @@ switch_xy <- function(dataframe) {
 #' @importFrom x3ptools x3p_to_df
 #' @importFrom zoo na.trim
 #' @export
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#' library(ggplot2)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
+#'   stop_at_step = "clean",
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' x3p_crosscut_optimize(example_data$x3p[[1]])
+#' x3p_crosscut(example_data$x3p[[1]], 75) %>%
+#'   ggplot(aes(x = x, y = value)) + geom_line()
+#' }
 x3p_crosscut <- function(x3p, y = NULL) {
   bullet <- check_x3p(x3p)
 

@@ -11,7 +11,8 @@ cc_get_signature(ccdata, grooves, span1 = 0.75, span2 = 0.03)
 
 \item{grooves}{The grooves to use as a two element vector, if desired}
 
-\item{span1}{The span for the loess fit to get from the profile to the raw signature}
+\item{span1}{The span for the loess fit to get from the profile to the raw
+signature}
 
 \item{span2}{The span for the loess fit to smooth the raw signature}
 }
@@ -22,8 +23,8 @@ data frame
 x3p file of a 3d topological bullet surface is processed at surface
 crosscut y,
 measurements outside the bullet grooves in the crosscuts are left out, and
-a loess smooth
-is used (see \code{?loess} for details) to remove the big structure.
+a loess smooth is used (see \code{?loess} for details) to remove the big
+structure.
 }
 \examples{
 data(br411)
@@ -31,4 +32,22 @@ cc <- x3p_crosscut_optimize(br411)
 ccdata <- x3p_crosscut(br411, cc)
 grooves <- cc_locate_grooves(ccdata)
 signature <- cc_get_signature(ccdata, grooves)
+
+\dontrun{
+# Set the data up to be read in, cleaned, etc.
+library(bulletxtrctr)
+library(x3ptools)
+
+example_data <- bullet_pipeline(
+  location = list(Bullet1 = c(hamby252demo$bullet1[3])),
+  x3p_clean = function(x) x \%>\%
+      x3pheader_to_microns() \%>\%
+      rotate_x3p(angle = -90) \%>\%
+      y_flip_x3p()
+)
+
+cc_get_signature(example_data$ccdata[[1]],
+                 example_data$grooves[[1]]) \%>\%
+head()
+}
 }
