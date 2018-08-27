@@ -11,7 +11,8 @@ extract_features_all(aligned, striae, ...)
 
 \item{striae}{data frame with evaluated matching striae}
 
-\item{...}{passed on to extractor functions}
+\item{...}{passed on to extractor functions
+TODO: test whether ... is actually passed on correctly}
 }
 \description{
 Extract features from aligned signatures

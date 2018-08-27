@@ -34,7 +34,10 @@ Suggests:
     here,
     covr,
     testthat,
-    testthis
+    testthis,
+    knitr, 
+    rmarkdown
+VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
