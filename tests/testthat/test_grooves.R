@@ -11,7 +11,14 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     dplyr::mutate(grooves_quad = purrr::map(ccdata, cc_locate_grooves, method = "quadratic", return_plot = F))
 }
 
+# ccdata with no grooves - perfect parabola
+flat_ccdata <- data.frame(x = seq(0, 1000, 1.5625), y = 100) %>%
+  mutate(value = 50)
+
 test_that("grooves works as expected", {
+  # Tests that don't require previous data
+  expect_silent(cc_locate_grooves(flat_ccdata, method = "rollapply"))
+
   skip_if(skipall)
   expect_silent(tmp <- cc_locate_grooves(testb1$ccdata[[1]]))
   expect_silent(cc_locate_grooves(testb1$ccdata[[1]], "middle"))
@@ -65,9 +72,20 @@ test_that("grooves works as expected", {
   ## Rollapply - mean left and mean right
   tmp3 <- cc_locate_grooves(testb1$ccdata[[1]],
     method = "rollapply",
-    mean_left = 200, mean_right = 2000, second_smooth = F
-  )
+    mean_left = 200, mean_right = 2000)
   expect_error(expect_equivalent(b1_l2_x3p$grooves[[1]]$groove, tmp3$groove))
+
+  expect_silent(
+    testb1$ccdata[[1]] %>%
+      mutate(value = rev(value)) %>%
+      get_grooves_rollapply(x = .$x, value = .$value, smoothfactor = 15, adjust = 10,
+                            groove_cutoff = 400, second_smooth = F, return_plot = F)
+  )
+  expect_silent(
+    testb1$ccdata[[1]] %>%
+      get_grooves_rollapply(x = .$x, value = .$value, smoothfactor = 15, adjust = 10,
+                            groove_cutoff = 400, second_smooth = F, return_plot = F)
+  )
 
   # Check numerically identical for groove locations, at least...
   expect_identical(b1_l2_x3p$grooves[[1]]$groove, testb1$grooves[[1]]$groove)

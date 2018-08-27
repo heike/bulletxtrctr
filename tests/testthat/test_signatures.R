@@ -9,6 +9,12 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     testb1 <- b1_l2_x3p %>%
       dplyr::select(-sigs) %>%
       dplyr::mutate(
+        sigsNIST = purrr::map2(
+          .x = ccdata, .y = grooves,
+          .f = function(x, y) {
+            cc_get_signature(ccdata = x, grooves = y, span1 = 1000, span2 = 0.03)
+          }
+        ),
         sigsLL = purrr::map2(
           .x = ccdata, .y = grooves,
           .f = function(x, y) {
@@ -41,7 +47,8 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
 test_that("signatures works as expected", {
   skip_if(skipall)
   expect_s3_class(testb1$sigsLL[[1]], "data.frame")
-  expect_equivalent(names(testb1$sigsLL[[1]]), c("x", "y", "value", "raw_sig", "se", "sig"))
+  expect_silent(bulletxtrctr:::check_sig(testb1$sigsLL[[1]]))
+  expect_silent(bulletxtrctr:::check_sig(testb1$sigsNIST[[1]]))
   expect_type(testb1$sigsLL[[1]]$x, "double")
   expect_type(testb1$sigsLL[[1]]$y, "double")
   expect_type(testb1$sigsLL[[1]]$value, "double")
