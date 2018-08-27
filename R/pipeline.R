@@ -15,16 +15,18 @@
 #' @importFrom dplyr bind_rows
 #' @import assertthat
 #' @importFrom dplyr "%>%"
-bullet_pipeline <- function(
-                            location, stop_at_step = NULL, x3p_clean = function(x) x, ...) {
+bullet_pipeline <- function(location, stop_at_step = NULL,
+                            x3p_clean = function(x) x, ...) {
 
   # Define variables to make CRAN happy
-  bullet <- x3p <- cclist <- crosscut <- ccdata <- glist <- grooves <- slist <- NULL
+  bullet <- x3p <- cclist <- crosscut <- NULL
+  ccdata <- glist <- grooves <- slist <- NULL
 
   if (is.null(stop_at_step)) stop_at_step <- "signatures"
 
   assert_that("function" %in% class(x3p_clean))
-  assert_that(stop_at_step %in% c("read", "clean", "crosscut", "grooves", "signatures"))
+  assert_that(stop_at_step %in%
+                c("read", "clean", "crosscut", "grooves", "signatures"))
 
   dots <- list(...)
 
@@ -35,7 +37,8 @@ bullet_pipeline <- function(
   } else {
     assert_that(dir.exists(location))
 
-    dirfiles <- list.files(location, pattern = "x3p", full.names = T, recursive = T)
+    dirfiles <- list.files(location, pattern = "x3p",
+                           full.names = T, recursive = T)
     dirs <- dirname(dirfiles) %>% unique()
 
     assert_that(length(dirfiles) > 0)

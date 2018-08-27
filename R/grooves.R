@@ -45,7 +45,7 @@ grooves_plot <- function(land, grooves) {
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#' 
+#'
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
@@ -54,7 +54,7 @@ grooves_plot <- function(land, grooves) {
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
-#' 
+#'
 #' cc_locate_grooves(example_data$ccdata[[1]],
 #'   method = "rollapply",
 #'   adjust = 30, return_plot = T
@@ -78,7 +78,8 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   land <- ccdata
   if (is.null(ccdata) || nrow(ccdata) == 0) return(NULL)
 
-  assert_that(has_name(land, "x"), has_name(land, "y"), has_name(land, "value"))
+  check_ccdata(ccdata)
+
   assert_that(method %in% c("quadratic", "rollapply", "middle"))
   assert_that(
     is.numeric(smoothfactor), is.numeric(adjust), is.numeric(groove_cutoff),
@@ -114,7 +115,8 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
       mean_right = mean_right,
       mean_window = mean_window,
       second_smooth = TRUE,
-      return_plot = return_plot
+      return_plot = return_plot,
+      ...
     )
   }
   if (method == "middle") {
@@ -147,7 +149,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#' 
+#'
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
@@ -156,7 +158,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
-#' 
+#'
 #' get_grooves_middle(example_data$ccdata[[1]]$x,
 #'   example_data$ccdata[[1]]$value,
 #'   return_plot = T
@@ -175,7 +177,7 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 
   land <- data.frame(x = x, value = value)
   groove <- quantile(land$x,
-    probs = c((100 - middle) / 200, (100 + middle) / 200)
+                     probs = c((100 - middle) / 200, (100 + middle) / 200)
   )
 
   if (return_plot) {
@@ -203,7 +205,7 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#' 
+#'
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
@@ -212,7 +214,7 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
-#' 
+#'
 #' get_grooves_quadratic(example_data$ccdata[[1]]$x,
 #'   example_data$ccdata[[1]]$value,
 #'   adjust = 30, return_plot = T
@@ -265,16 +267,15 @@ get_grooves_quadratic <- function(x, value, adjust, return_plot = F) {
 #' @param which_fun Which function to use in the rollapply statement
 #' @param return_plot return plot of grooves?
 #' @export
-#' @import assertthat
-#' @importFrom zoo rollapply
-#' @importFrom zoo na.fill
+#' @importFrom assertthat assert_that
+#' @importFrom zoo rollapply na.fill
 #' @importFrom utils head tail
 #' @examples
 #' \dontrun{
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#' 
+#'
 #' example_data <- bullet_pipeline(
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
@@ -283,7 +284,7 @@ get_grooves_quadratic <- function(x, value, adjust, return_plot = F) {
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
-#' 
+#'
 #' get_grooves_rollapply(example_data$ccdata[[1]]$x,
 #'   example_data$ccdata[[1]]$value,
 #'   adjust = 30, return_plot = T
@@ -326,40 +327,59 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
     groove_cutoff <- Inf
   }
 
-  value_filled <- na.fill(land$value, "extend")
+  value_filled <- zoo::na.fill(land$value, "extend")
   smoothed <- rollapply(value_filled, smoothfactor, function(x) which_fun(x))
-  # Add in an if statement, to only do the first smoothing if the second_smooth parameter is equal to FALSE
-  if (second_smooth == T) {
-    smoothed_truefalse <- rollapply(smoothed, smoothfactor, function(x) which_fun(x), partial = TRUE)
-  }
-  else {
+
+  # Add in an if statement, to only do the first smoothing if the second_smooth
+  # parameter is equal to FALSE
+  if (second_smooth) {
+    smoothed_truefalse <- rollapply(smoothed, smoothfactor,
+                                    function(x) which_fun(x), partial = TRUE)
+  } else {
     smoothed_truefalse <- smoothed
   }
 
   lengthdiff <- length(land$value) - length(smoothed_truefalse)
 
-  peak_ind_smoothed <- head(which(rollapply(smoothed_truefalse, 3, function(x) which.max(x) == 2)), n = 1)
+  peak_ind_smoothed <- rollapply(smoothed_truefalse, 3,
+                                 function(x) which.max(x) == 2) %>%
+    which() %>% head(n = 1)
   peak_ind <- peak_ind_smoothed + floor(lengthdiff / 2)
   if (length(peak_ind) == 0) {
     groove_ind <- peak_ind
   } else {
-    groove_ind <- head(which(rollapply(tail(smoothed_truefalse, n = -peak_ind_smoothed), 3, function(x) which.min(x) == 2)), n = 1) + peak_ind
+    groove_ind <- tail(smoothed_truefalse, n = -peak_ind_smoothed) %>%
+      rollapply(., 3, function(x) which.min(x) == 2) %>%
+      which() %>% head(n = 1)
+    groove_ind <- groove_ind + peak_ind
   }
 
-  peak_ind2_smoothed_temp <- head(which(rollapply(rev(smoothed_truefalse), 3, function(x) which.max(x) == 2)), n = 1)
+  peak_ind2_smoothed_temp <- smoothed_truefalse %>% rev() %>%
+    rollapply(., 3, function(x) which.max(x) == 2) %>%
+    which() %>% head(n = 1)
+
   peak_ind2_temp <- peak_ind2_smoothed_temp + floor(lengthdiff / 2)
   if (length(peak_ind2_temp) == 0) {
     groove_ind2_temp <- peak_ind2_temp
   } else {
-    groove_ind2_temp <- head(which(rollapply(tail(rev(smoothed_truefalse), n = -peak_ind2_smoothed_temp), 3, function(x) which.min(x) == 2)), n = 1) + peak_ind2_temp
+    groove_ind2_temp <- rev(smoothed_truefalse) %>%
+      tail(., n = -peak_ind2_smoothed_temp) %>%
+      rollapply(., 3, function(x) which.min(x) == 2) %>%
+      which() %>% head(n = 1)
+    groove_ind2_temp <- groove_ind2_temp + peak_ind2_temp
   }
 
   # peak_ind2 <- length(land$value) - peak_ind2_temp + 1
   groove_ind2 <- length(land$value) - groove_ind2_temp + 1
 
   ## Check that it actually FOUND a groove...
-  if (length(groove_ind) == 0 || groove_ind > groove_cutoff) groove_ind <- 1
-  if (length(groove_ind2) == 0 || groove_ind2 < length(land$value) - groove_cutoff) groove_ind2 <- length(land$value)
+  if (length(groove_ind) == 0 || groove_ind > groove_cutoff) {
+    groove_ind <- 1
+  }
+  if (length(groove_ind2) == 0 ||
+      groove_ind2 < length(land$value) - groove_cutoff) {
+    groove_ind2 <- length(land$value)
+  }
 
   xvals <- original_land$x
   # yvals <- original_land$value
@@ -371,6 +391,7 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
 
   center <- which.min(abs(xvals - mean(xvals)))
 
+  # I can't figure out how to test this if statement...
   if (plot_groove_ind > center) {
     plot_groove_ind2 <- plot_groove_ind
     plot_groove_ind <- 0
@@ -396,4 +417,16 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
   } else {
     return(list(groove = groove))
   }
+}
+
+#' Check grooves for correctness
+#'
+#' @param grooves output from cc_locate_grooves
+#' @return TRUE if ok, error otherwise
+#' @importFrom assertthat assert_that
+check_grooves <- function(x) {
+  assert_that(has_name(x, "groove"))
+  assert_that(is.numeric(x$groove))
+  assert_that(length(x$groove) <= 2)
+  return(TRUE)
 }

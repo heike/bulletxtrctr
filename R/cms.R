@@ -5,10 +5,33 @@
 #' counts longest run.
 #' @param aligned data frame of location and aligned signatures
 #' @param span positive number  for the smoothfactor to use for assessing peaks.
-#' @return list of matching parameters, data set of the identified striae, and the aligned data sets.
+#' @return list of matching parameters, data set of the identified striae,
+#'    and the aligned data sets.
 #' @export
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet1[4])
+#'   ),
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' alignment <- sig_align(example_data$sigs[[1]]$sig,
+#'                        example_data$sigs[[2]]$sig)
+#' striae <- sig_cms_max(alignment)
+#' }
 sig_cms_max <- function(aligned, span = 35) {
-  assert_that(has_name(aligned, "bullets"), has_name(aligned, "ccf"))
+  check_align(aligned)
+
   sigX <- aligned$bullets
 
   peaks1 <- sig_get_peaks(sigX$sig1, smoothfactor = span)
@@ -22,7 +45,8 @@ sig_cms_max <- function(aligned, span = 35) {
   lines <- striation_identify_matches(peaks1$lines, peaks2$lines)
 
   maxCMS <- get_longest_run(lines$match == TRUE)
-  list(maxCMS = maxCMS, ccf = aligned$ccf, lag = aligned$lag, lines = lines, bullets = sigX)
+  list(maxCMS = maxCMS, ccf = aligned$ccf, lag = aligned$lag,
+       lines = lines, bullets = sigX)
 }
 
 #' Length of the longest run of TRUEs

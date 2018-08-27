@@ -1,3 +1,16 @@
+#' Check loess or gaussian curve fit object
+#'
+#' @param x output from cc_fit_loess or cc_fit_gaussian
+#' @return TRUE or error
+#' @importFrom assertthat assert_that has_name
+check_loess_fit <- function(x) {
+  assert_that(
+    has_name(x, "fitted"), has_name(x, "raw_sig"),
+    has_name(x, "se"), has_name(x, "abs_resid"),
+    has_name(x, "chop")
+  )
+}
+
 #' Fit a loess curve to a bullet data frame
 #'
 #' A loess regression is fit to the surface measurements and residuals are
@@ -25,7 +38,7 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
   value <- NULL
   x <- NULL
 
-  assert_that(has_name(ccdata, "x"), has_name(ccdata, "value"))
+  check_ccdata(ccdata)
   assert_that(is.numeric(span))
 
   # HH Mar 22: we should use lowess rather than loess
@@ -39,12 +52,6 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
   ccdata$abs_resid <- abs(ccdata$raw_sig)
   cutoff <- quantile(ccdata$abs_resid, probs = c(0.9975))
   ccdata$chop <- ccdata$abs_resid > cutoff
-
-  assert_that(
-    has_name(ccdata, "fitted"), has_name(ccdata, "raw_sig"),
-    has_name(ccdata, "se"), has_name(ccdata, "abs_resid"),
-    has_name(ccdata, "chop")
-  )
 
   return(ccdata)
 }
@@ -79,7 +86,7 @@ cc_fit_gaussian <- function(ccdata, span = 600) {
   value <- NULL
   x <- NULL
 
-  assert_that(has_name(ccdata, "x"), has_name(ccdata, "value"))
+  check_ccdata(ccdata)
   assert_that(is.numeric(span))
 
   dx <- median(diff(ccdata$x), na.rm = T)
@@ -99,12 +106,6 @@ cc_fit_gaussian <- function(ccdata, span = 600) {
   ccdata$abs_resid <- abs(ccdata$raw_sig)
   cutoff <- quantile(ccdata$abs_resid, probs = c(0.9975))
   ccdata$chop <- ccdata$abs_resid > cutoff
-
-  assert_that(
-    has_name(ccdata, "fitted"), has_name(ccdata, "raw_sig"),
-    has_name(ccdata, "se"), has_name(ccdata, "abs_resid"),
-    has_name(ccdata, "chop")
-  )
 
   return(ccdata)
 }

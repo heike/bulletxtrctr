@@ -78,12 +78,16 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
                                   percent_missing = 50) {
   bullet <- check_x3p(x3p)
 
-  dbr111 <- x3p_to_df(bullet)
-  if (is.na(ylimits[2])) ylimits[2] <- max(dbr111$y)
+  dbr111 <- x3ptools::x3p_to_df(bullet)
+  if (is.na(ylimits[2])) {
+    ylimits[2] <- max(dbr111$y)
+  }
+
   done <- FALSE
   y <- min(ylimits)
   first_cc <- land_cc(y, land = dbr111)
 
+  # This loop only entered when there is too much missingness - too hard to test
   while ((dim(first_cc)[1] < bullet$header.info$sizeX * percent_missing / 100) &
          (y < bullet$header.info$sizeY)) {
     y <- y + distance
@@ -156,4 +160,15 @@ x3p_crosscut <- function(x3p, y = NULL) {
   dbr111.fixx <- dbr111[dbr111$y == picky, ]
 
   return(na.omit(dbr111.fixx))
+}
+
+#' Check object returned by x3p_crosscut_optimize
+#'
+#' @param ccdata data frame from x3p_crosscut_optimize
+#' @return TRUE if everything is ok, error otherwise
+#' @importFrom assertthat assert_that has_name
+check_ccdata <- function(x) {
+  assert_that(!is.null(x), msg = "crosscut data must not be null")
+  assert_that(has_name(x, "x"), has_name(x, "y"), has_name(x, "value"))
+  assert_that(nrow(x) > 0, msg = "crosscut data must have > 0 rows")
 }

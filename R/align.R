@@ -12,7 +12,7 @@
 #'           c) same data frame as input, but y vectors are aligned for
 #'              maximal correlation
 #' @export
-#' @import assertthat
+#' @importFrom assertthat assert_that
 #' @importFrom zoo na.trim
 #' @importFrom stats cor
 #' @examples
@@ -20,7 +20,7 @@
 #' # Set the data up to be read in, cleaned, etc.
 #' library(bulletxtrctr)
 #' library(x3ptools)
-#' 
+#'
 #' example_data <- bullet_pipeline(
 #'   location = list(
 #'     Bullet1 = c(hamby252demo$bullet1[2]),
@@ -31,7 +31,7 @@
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
-#' 
+#'
 #' sig_align(example_data$sigs[[1]]$sig, example_data$sigs[[2]]$sig)
 #' }
 sig_align <- function(sig1, sig2) {
@@ -42,6 +42,9 @@ sig_align <- function(sig1, sig2) {
 
   n1 <- length(sig1)
   n2 <- length(sig2)
+
+  # assume y is the long vector, x is the short vector. If not, switch the
+  # vectors around
   if (n1 < n2) {
     x <- sig1
     y <- sig2
@@ -51,8 +54,7 @@ sig_align <- function(sig1, sig2) {
   }
 
   cors <- get_ccf(x, y, round(0.75 * min(length(sig1), length(sig2))))
-  # do some padding
-  # at the front
+  # do some padding at the front
   lag <- cors$lag[which.max(cors$ccf)]
   if (lag < 0) {
     x <- c(rep(NA, abs(lag)), x)
@@ -81,6 +83,20 @@ sig_align <- function(sig1, sig2) {
   list(ccf = maxcor, lag = lag, bullets = dframe0)
 }
 
+#' Check align output
+#'
+#' @param x output from sig_align
+#' @return TRUE or error
+#' @importFrom assertthat assert_that has_name
+check_align <- function(x) {
+  assert_that(has_name(x, "ccf"),
+              has_name(x, "lag"),
+              has_name(x, "bullets"))
+  assert_that(has_name(x$bullets, "x"),
+              has_name(x$bullets, "sig1"),
+              has_name(x$bullets, "sig2"))
+}
+
 
 #' Cross correlation function between two vectors
 #'
@@ -91,6 +107,7 @@ sig_align <- function(sig1, sig2) {
 #'          between x and y that should be considered?
 #' @return list with ccf values and lags
 #' @importFrom stats na.omit
+#' @importFrom assertthat assert_that
 #' @export
 #' @examples
 #' library(dplyr)
@@ -100,12 +117,14 @@ sig_align <- function(sig1, sig2) {
 #' x <- runif(100)
 #' get_ccf(x[45:50], x, min.overlap = 6)
 get_ccf <- function(x, y, min.overlap = round(0.1 * max(length(x), length(y)))) {
+
   x <- as.vector(unlist(x))
   y <- as.vector(unlist(y))
-  # assume x is the long vector, y is the short vector. If not, switch the
-  # vectors around
   nx <- length(x)
   ny <- length(y)
+
+  assert_that(is.numeric(x), is.numeric(y))
+  assert_that(nx > 0, ny > 0, nx <= ny)
 
   xx <- c(rep(NA, ny - min.overlap), x, rep(NA, ny - min.overlap))
   yy <- c(y, rep(NA, length(xx) - ny))
