@@ -29,7 +29,7 @@ library(x3ptools)
 example_data <- bullet_pipeline(
   location = list(
     Bullet1 = c(hamby252demo$bullet1[2]),
-    Bullet2 = c(hamby252demo$bullet1[4])
+    Bullet2 = c(hamby252demo$bullet2[4])
   ),
   x3p_clean = function(x) x \%>\%
       x3pheader_to_microns() \%>\%
