@@ -189,8 +189,8 @@ comparisons <- comparisons %>% mutate(
   aligned = purrr::map2(.x = land1, .y = land2, .f = function(xx, yy) {
     land1 <- bullets$sigs[bullets$land == xx][[1]]
     land2 <- bullets$sigs[bullets$land == yy][[1]]
-    #  land1$bullet <- "first-land"
-    #  land2$bullet <- "second-land"
+    land1$bullet <- "first-land"
+    land2$bullet <- "second-land"
     
     sig_align(land1$sig, land2$sig)
   })
@@ -255,7 +255,11 @@ comparisons <- comparisons %>% mutate(
                               ccf = c$ccf, lag = c$lag))
 )
 
-comparisons <- comparisons %>% tidyr::unnest(features) 
+comparisons <- comparisons %>% mutate(
+  legacy_features = purrr::map(res, extract_features_all_legacy)
+)
+
+comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
 # scale features before using them in the random forest
 
 

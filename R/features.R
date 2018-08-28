@@ -734,7 +734,7 @@ extract_features_all_legacy <- function(res) {
   # browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 
-  lofX <- res$lands
+  lofX <- res$bullets
   #    lofX$l30 <- lofX$sig
   #    b12 <- unique(lofX$bullet)
   b12 <- c("sig1", "sig2")
