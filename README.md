@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 27, 2018"
+date: "August 28, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--27-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--28-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
@@ -20,7 +20,7 @@ Analyze bullet striations using nonparametric methods
 
 ## Comparing lands from two bullets
 
-Stria comparisons between bullets are based on land-to-land comparisons. 
+Striae comparisons between bullets are based on land-to-land comparisons. 
 
 1. Load libraries
 
@@ -257,8 +257,8 @@ comparisons <- comparisons %>% mutate(
   aligned = purrr::map2(.x = land1, .y = land2, .f = function(xx, yy) {
     land1 <- bullets$sigs[bullets$land == xx][[1]]
     land2 <- bullets$sigs[bullets$land == yy][[1]]
-    #  land1$bullet <- "first-land"
-    #  land2$bullet <- "second-land"
+    land1$bullet <- "first-land"
+    land2$bullet <- "second-land"
     
     sig_align(land1$sig, land2$sig)
   })
@@ -327,7 +327,11 @@ comparisons <- comparisons %>% mutate(
                               ccf = c$ccf, lag = c$lag))
 )
 
-comparisons <- comparisons %>% tidyr::unnest(features) 
+comparisons <- comparisons %>% mutate(
+  legacy_features = purrr::map(res, extract_features_all_legacy)
+)
+
+comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
 # scale features before using them in the random forest
 
 
@@ -380,10 +384,10 @@ bullet_scores %>% select(-data)
 ## # A tibble: 4 x 3
 ##   bulletA bulletB bullet_score
 ##   <chr>   <chr>          <dbl>
-## 1 1       1              0.662
-## 2 2       1              0.567
-## 3 1       2              0.567
-## 4 2       2              0.662
+## 1 1       1              0.733
+## 2 2       1              0.529
+## 3 1       2              0.529
+## 4 2       2              0.721
 ```
 
 
