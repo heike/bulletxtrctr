@@ -35,7 +35,7 @@ library(ggplot2)
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
 The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov/NRBTD/Studies/Search] provides access to  scans of bullets and cartridge cases from various case studies.    
 
-In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 x3p files are provided in the `hamby252demo` object.
+In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 scans of bullet lands in x3p format are provided in the `hamby252demo` object.
 
 
 ```r
@@ -140,7 +140,7 @@ summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 ```
 
 
-We are working under the assumption that the scans are aligned such that the bottom of the bullet (heel) are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
+We are working under the assumption that the scans are aligned such that the base of the bullet are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
 
 
 ```r
@@ -270,15 +270,15 @@ Some features are based on aligned signatures:
 ```r
 comparisons <- comparisons %>% mutate(
   ccf0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$lands)),
   lag0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_lag(x$lands)),
   D0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_D(x$lands)),
   length0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_length(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_length(x$lands)),
   overlap0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$bullet))
+    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$lands))
 )
 ```
 
@@ -306,13 +306,6 @@ comparisons <- comparisons %>% mutate(
 
 
 ```r
-## ccf and lag are extracted below
-# comparisons <- comparisons %>% mutate(
-#   ccf = results %>% purrr::map_dbl(.f = function(x) x$ccf),
-#   lag = results %>% purrr::map_dbl(.f = function(x) x$lag) #,
-# #  cms = results %>% purrr::map_dbl(.f = function(x) x$maxCMS)
-# )
-
 comparisons <- comparisons %>% mutate(
   bulletA = gsub("([1-2])-([1-6])","\\1",land1),
   bulletB = gsub("([1-2])-([1-6])","\\1",land2),
@@ -329,15 +322,14 @@ comparisons <- comparisons %>% mutate(
   features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all),
   res = purrr::pmap(
     list(aligned, striae, features),
-    function(a, b, c, d) list(bullets = a$bullets, lines = b$lines, 
+    function(a, b, c, d) list(bullets = a$lands, lines = b$lines, 
                               maxCMS = c$cms,
-                              ccf = c$ccf, lag = c$lag)),
-  features_legacy = purrr::map(res, ~extract_features_all_legacy(.x)),
-  rough_cor = purrr::map_dbl(features_legacy, ~.$rough_cor),
-  sd_D = purrr::map_dbl(features_legacy, ~.$sd_D)
+                              ccf = c$ccf, lag = c$lag))
 )
 
-comparisons <- comparisons %>% tidyr::unnest(features)
+comparisons <- comparisons %>% tidyr::unnest(features) 
+# scale features before using them in the random forest
+
 
 # quick visualization:
 comparisons %>% 
@@ -388,10 +380,10 @@ bullet_scores %>% select(-data)
 ## # A tibble: 4 x 3
 ##   bulletA bulletB bullet_score
 ##   <chr>   <chr>          <dbl>
-## 1 1       1              0.996
-## 2 2       1              0.697
-## 3 1       2              0.697
-## 4 2       2              1.00
+## 1 1       1              0.662
+## 2 2       1              0.567
+## 3 1       2              0.567
+## 4 2       2              0.662
 ```
 
 

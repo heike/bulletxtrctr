@@ -201,15 +201,15 @@ Some features are based on aligned signatures:
 ```{r}
 comparisons <- comparisons %>% mutate(
   ccf0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_ccf(x$lands)),
   lag0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_lag(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_lag(x$lands)),
   D0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_D(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_D(x$lands)),
   length0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_length(x$bullet)),
+    purrr::map_dbl(.f = function(x) extract_feature_length(x$lands)),
   overlap0 = aligned %>% 
-    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$bullet))
+    purrr::map_dbl(.f = function(x) extract_feature_overlap(x$lands))
 )
 ```
 
@@ -253,15 +253,12 @@ comparisons <- comparisons %>% mutate(
   features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all),
   res = purrr::pmap(
     list(aligned, striae, features),
-    function(a, b, c, d) list(bullets = a$bullets, lines = b$lines, 
+    function(a, b, c, d) list(bullets = a$lands, lines = b$lines, 
                               maxCMS = c$cms,
-                              ccf = c$ccf, lag = c$lag)),
-  features_legacy = purrr::map(res, ~extract_features_all_legacy(.x))
-#  rough_cor = purrr::map_dbl(features_legacy, ~.$rough_cor),
-#  sd_D = purrr::map_dbl(features_legacy, ~.$sd_D)
+                              ccf = c$ccf, lag = c$lag))
 )
 
-comparisons <- comparisons %>% tidyr::unnest(features_legacy) 
+comparisons <- comparisons %>% tidyr::unnest(features) 
 # scale features before using them in the random forest
 
 
