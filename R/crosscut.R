@@ -1,5 +1,3 @@
-# TODO: Get rid of br111 and other hard-to-understand variable names
-
 #' Get a specified cross section
 #'
 #' @param y y coordinate of cross section
