@@ -157,6 +157,7 @@ switch_xy <- function(dataframe) {
 #'          format is expected.
 #' @param y level of the crosscut to be taken. If this level does not exist,
 #'          the crosscut along the middle of the land is returned.
+#' @param range numeric specifying a range of [y, y + range] to be extracted
 #' @return data frame
 #' @importFrom x3ptools read_x3p
 #' @importFrom x3ptools x3p_to_df
@@ -182,7 +183,7 @@ switch_xy <- function(dataframe) {
 #' x3p_crosscut(example_data$x3p[[1]], 75) %>%
 #'   ggplot(aes(x = x, y = value)) + geom_line()
 #' }
-x3p_crosscut <- function(x3p, y = NULL) {
+x3p_crosscut <- function(x3p, y = NULL, range = 1e-5) {
   x3pdat <- check_x3p(x3p)
 
   # TODO: check into how na.trim is used here
@@ -191,7 +192,7 @@ x3p_crosscut <- function(x3p, y = NULL) {
   if (is.null(y)) y <- median(ys)
 
   picky <- ys[which.min(abs(y - ys))]
-  x3p_df_fix <- x3p_df[x3p_df$y == picky, ]
+  x3p_df_fix <- x3p_df[x3p_df$y >= picky & x3p_df$y <= picky+range, ]
 
   return(na.omit(x3p_df_fix))
 }

@@ -4,7 +4,7 @@
 \alias{x3p_crosscut}
 \title{Read a crosscut from a 3d surface file}
 \usage{
-x3p_crosscut(x3p, y = NULL)
+x3p_crosscut(x3p, y = NULL, range = 1e-05)
 }
 \arguments{
 \item{x3p}{if character, path to an x3p file. Otherwise a scan in x3p
@@ -12,6 +12,8 @@ format is expected.}
 
 \item{y}{level of the crosscut to be taken. If this level does not exist,
 the crosscut along the middle of the land is returned.}
+
+\item{range}{numeric specifying a range of [y, y + range] to be extracted}
 }
 \value{
 data frame
