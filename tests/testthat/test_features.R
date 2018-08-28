@@ -18,6 +18,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     matches = extract_feature_matches(striae = match$maxcms$lines),
     mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
     sum_peaks = extract_feature_sum_peaks(striae = match$maxcms$lines),
+    rough_cor = extract_feature_rough_cor(match$alignment$lands),
     ccf = extract_feature_ccf(match$alignment$lands),
     dist = extract_feature_D(match$alignment$lands),
     length = extract_feature_length(match$alignment$lands),
@@ -267,6 +268,33 @@ test_that("extract_feature_ccf works as expected", {
   )
   skip_if(skipall)
   expect_equal(featurestest_single$ccf, features_single$ccf)
+})
+
+
+test_that("extract_feature_rough_cor works as expected", {
+  expect_error(extract_feature_rough_cor(
+    data.frame(x = 1:10, sig1 = seq(0, .9, .1), sig2 = seq(.1, 1, .1))
+  ), "length.*y.* not greater than 10")
+  expect_lte(
+    extract_feature_rough_cor(
+      data.frame(
+        x = 1:20, sig1 = seq(0, sqrt(.9), length.out = 20)^2,
+        sig2 = seq(.05, 1, .05)
+      )
+    ), -1
+  )
+  expect_gte(
+    extract_feature_rough_cor(
+      data.frame(
+        x = 1:20, sig1 = c(NA, NA, seq(.15, 1, .05)),
+        sig2 = seq(0, .95, .05), sig3 = c(NA, seq(.1, 1, .05))
+      )
+    ) %>%
+      sum(na.rm = T),
+    8.59
+  )
+  skip_if(skipall)
+  expect_equal(featurestest_single$rough_cor, features_single$rough_cor)
 })
 
 test_that("extract_feature_lag works as expected", {
