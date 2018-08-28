@@ -14,7 +14,7 @@ land_cc <- function(y, land) {
   this_land <- land[land$y == picky, ]
   this_groove <- quantile(this_land$x, probs = c(0.15, 0.85))
   this_land_filtered <- subset(this_land, !is.na(value) &
-                                 x > this_groove[1] & x < this_groove[2])
+    x > this_groove[1] & x < this_groove[2])
   this_cc_df <- cc_fit_loess(this_land_filtered, span = 0.75)
   # if (is.null(this_cc_df$raw_sig)) browser()
   this_cc_df$resid <- this_cc_df$raw_sig # where are we still using resid?
@@ -100,7 +100,7 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
 
   # This loop only entered when there is too much missingness - too hard to test
   while ((dim(first_cc)[1] < x3pdat$header.info$sizeX * percent_missing / 100) &
-         (y < x3pdat$header.info$sizeY)) {
+    (y < x3pdat$header.info$sizeY)) {
     y <- y + distance
     first_cc <- land_cc(y, land = x3p_df)
   }
@@ -138,9 +138,11 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
 #' @return dataframe
 #' @importFrom assertthat assert_that has_name
 switch_xy <- function(dataframe) {
-  assert_that(is.data.frame(dataframe),
-              has_name(dataframe, "x"),
-              has_name(dataframe, "y"))
+  assert_that(
+    is.data.frame(dataframe),
+    has_name(dataframe, "x"),
+    has_name(dataframe, "y")
+  )
   # switch x and y
   xidx <- grep("x", names(dataframe))
   yidx <- grep("y", names(dataframe))
@@ -190,7 +192,7 @@ x3p_crosscut <- function(x3p, y = NULL, range = 1e-5) {
   if (is.null(y)) y <- median(ys)
 
   picky <- ys[which.min(abs(y - ys))]
-  x3p_df_fix <- x3p_df[x3p_df$y >= picky & x3p_df$y <= picky+range, ]
+  x3p_df_fix <- x3p_df[x3p_df$y >= picky & x3p_df$y <= picky + range, ]
 
   return(na.omit(x3p_df_fix))
 }

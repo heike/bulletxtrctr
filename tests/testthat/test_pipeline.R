@@ -12,14 +12,16 @@ testthat::setup({
     dir.create(here::here("tests/Bullet1"))
     dir.create(here::here("tests/Bullet2"))
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))) {
+  hambyb1l2 <- here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p")
+  hambyb2l4 <- here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p")
+  if (!file.exists(hambyb1l2)) {
     download.file(hamby252demo[[1]][2],
-      destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"), quiet = T
+                  destfile = hambyb1l2, quiet = T
     )
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet2_Land4.x3p"))) {
+  if (!file.exists(hambyb2l4)) {
     download.file(hamby252demo[[2]][4],
-      destfile = here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p"), quiet = T
+                  destfile = hambyb2l4, quiet = T
     )
   }
 })

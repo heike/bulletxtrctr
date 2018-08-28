@@ -27,17 +27,22 @@ test_that("peaks works as expected", {
     length(peakstest$peaks) + length(peakstest$valleys),
     length(peakstest$extrema)
   )
-  expect_equal(names(peakstest$lines), c("xmin", "xmax", "type", "extrema", "heights"))
-  expect_equal(lapply(peakstest$lines, mode) %>% as.character(), rep("numeric", 5))
+  expect_equal(names(peakstest$lines), c("xmin", "xmax", "type",
+                                         "extrema", "heights"))
+  expect_equal(lapply(peakstest$lines, mode) %>% as.character(),
+               rep("numeric", 5))
   expect_s3_class(peakstest$plot, "ggplot")
   expect_equal(names(peakstest$dframe), c("x", "smoothed"))
-  expect_equal(lapply(peakstest$dframe, mode) %>% as.character(), c("numeric", "numeric"))
+  expect_equal(lapply(peakstest$dframe, mode) %>% as.character(),
+               c("numeric", "numeric"))
   expect_equal(match$peaks$sig1, peakstest)
 })
 
 test_that("striation_identify_matches works as expected", {
-  expect_equal(names(matchestest), c("xmin", "xmax", "match", "type",
-                                     "meany", "heights", "sdheights"))
+  expect_equal(names(matchestest), c(
+    "xmin", "xmax", "match", "type",
+    "meany", "heights", "sdheights"
+  ))
   expect_is(matchestest$xmin, "numeric")
   expect_is(matchestest$xmax, "numeric")
   expect_is(matchestest$match, "logical")
@@ -46,4 +51,3 @@ test_that("striation_identify_matches works as expected", {
   expect_is(matchestest$sdheights, "numeric")
   expect_equal(match$matches, matchestest)
 })
-

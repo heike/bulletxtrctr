@@ -5,7 +5,9 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
   load(here::here("tests/bullets_match.Rdata"))
   load(here::here("tests/single_features.Rdata"))
 
-  featurestest_legacy <- extract_features_all_legacy(match$maxcms)
+  old_striae <- match$maxcms
+  names(old_striae)[5] <- "bullets"
+  featurestest_legacy <- extract_features_all_legacy(old_striae)
   classes <- lapply(featurestest_legacy, mode) %>% unlist() %>% unique()
   featurestest_single <- features_single <- data.frame(
     rightcms = extract_feature_right_cms(striae = match$maxcms$lines),
@@ -22,8 +24,10 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     overlap = extract_feature_overlap(match$alignment$lands)
   )
 
-  featurestest_full <- extract_features_all(aligned = match$alignment,
-                                            striae = match$maxcms)
+  featurestest_full <- extract_features_all(
+    aligned = match$alignment,
+    striae = match$maxcms
+  )
 }
 
 test_that("features works as expected", {
@@ -228,8 +232,10 @@ test_that("extract_feature_mismatches works as expected", {
 
 test_that("extract_feature_sum_peaks works as expected", {
   expect_equal(
-    data.frame(match = c(T, F, T, T, F, T),
-               heights = c(1, -1, 1, -1, 1, -1)) %>%
+    data.frame(
+      match = c(T, F, T, T, F, T),
+      heights = c(1, -1, 1, -1, 1, -1)
+    ) %>%
       extract_feature_sum_peaks(),
     4
   )
@@ -247,13 +253,18 @@ test_that("extract_feature_ccf works as expected", {
         x = 1:10, sig1 = seq(0, sqrt(.9), length.out = 10)^2,
         sig2 = seq(.1, 1, .1)
       )
-    ), .96269)
+    ), .96269
+  )
   expect_equivalent(
     extract_feature_ccf(
-      data.frame(x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
-                 sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1)))) %>%
+      data.frame(
+        x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
+        sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1))
+      )
+    ) %>%
       sum(na.rm = T),
-    9)
+    9
+  )
   skip_if(skipall)
   expect_equal(featurestest_single$ccf, features_single$ccf)
 })
@@ -279,9 +290,13 @@ test_that("extract_feature_lag works as expected", {
   )
   expect_equivalent(
     extract_feature_lag(
-      data.frame(x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
-                 sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1)))),
-    c(2, 0, 1))
+      data.frame(
+        x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
+        sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1))
+      )
+    ),
+    c(2, 0, 1)
+  )
 })
 
 test_that("extract_feature_lag works as expected", {
@@ -305,9 +320,13 @@ test_that("extract_feature_lag works as expected", {
   )
   expect_gte(
     extract_feature_D(
-      data.frame(x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
-                 sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1))))[3],
-    0.0351)
+      data.frame(
+        x = 1:10, sig1 = c(NA, NA, seq(.3, 1, .1)),
+        sig2 = seq(0, .9, .1), sig3 = c(NA, seq(.2, 1, .1))
+      )
+    )[3],
+    0.0351
+  )
   skip_if(skipall)
   expect_equal(featurestest_single$dist, features_single$dist)
 })
@@ -340,7 +359,6 @@ test_that("extract_feature_overlap works as expected", {
   expect_equal(featurestest_single$overlap, features_single$overlap)
 })
 
-# This doesn't work with covr but works with CRAN check???
 test_that("extract_features_all works as expected", {
   skip_if(skipall)
   expect_equivalent(features_full, featurestest_full)

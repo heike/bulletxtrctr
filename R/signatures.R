@@ -70,7 +70,8 @@ cc_get_signature <- function(ccdata, grooves, span1 = 0.75, span2 = 0.03) {
 
   myspan <- ifelse(span2 > 1, span2 / diff(grooves$groove), span2)
   ccdata$sig <- with(ccdata, predict(loess(raw_sig ~ x, span = myspan),
-                                     newdata = ccdata))
+    newdata = ccdata
+  ))
 
   ccdata
 }

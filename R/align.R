@@ -89,12 +89,16 @@ sig_align <- function(sig1, sig2) {
 #' @return TRUE or error
 #' @importFrom assertthat assert_that has_name
 check_align <- function(x) {
-  assert_that(has_name(x, "ccf"),
-              has_name(x, "lag"),
-              has_name(x, "lands"))
-  assert_that(has_name(x$lands, "x"),
-              has_name(x$lands, "sig1"),
-              has_name(x$lands, "sig2"))
+  assert_that(
+    has_name(x, "ccf"),
+    has_name(x, "lag"),
+    has_name(x, "lands")
+  )
+  assert_that(
+    has_name(x$lands, "x"),
+    has_name(x$lands, "sig1"),
+    has_name(x$lands, "sig2")
+  )
 }
 
 
@@ -117,7 +121,6 @@ check_align <- function(x) {
 #' x <- runif(100)
 #' get_ccf(x[45:50], x, min.overlap = 6)
 get_ccf <- function(x, y, min.overlap = round(0.1 * max(length(x), length(y)))) {
-
   x <- as.vector(unlist(x))
   y <- as.vector(unlist(y))
   nx <- length(x)

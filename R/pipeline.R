@@ -26,7 +26,7 @@ bullet_pipeline <- function(location, stop_at_step = NULL,
 
   assert_that("function" %in% class(x3p_clean))
   assert_that(stop_at_step %in%
-                c("read", "clean", "crosscut", "grooves", "signatures"))
+    c("read", "clean", "crosscut", "grooves", "signatures"))
 
   dots <- list(...)
 
@@ -37,8 +37,10 @@ bullet_pipeline <- function(location, stop_at_step = NULL,
   } else {
     assert_that(dir.exists(location))
 
-    dirfiles <- list.files(location, pattern = "x3p",
-                           full.names = T, recursive = T)
+    dirfiles <- list.files(location,
+      pattern = "x3p",
+      full.names = T, recursive = T
+    )
     dirs <- dirname(dirfiles) %>% unique()
 
     assert_that(length(dirfiles) > 0)

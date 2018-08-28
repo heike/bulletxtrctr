@@ -45,8 +45,10 @@ sig_cms_max <- function(aligned, span = 35) {
   lines <- striation_identify_matches(peaks1$lines, peaks2$lines)
 
   maxCMS <- get_longest_run(lines$match == TRUE)
-  list(maxCMS = maxCMS, ccf = aligned$ccf, lag = aligned$lag,
-       lines = lines, lands = sigX)
+  list(
+    maxCMS = maxCMS, ccf = aligned$ccf, lag = aligned$lag,
+    lines = lines, lands = sigX
+  )
 }
 
 #' Length of the longest run of TRUEs

@@ -9,9 +9,10 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
     if (!dir.exists(here::here("tests/Bullet1"))) {
       dir.create(here::here("tests/Bullet1"))
     }
-    if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))) {
+    b1l2 <- here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p")
+    if (!file.exists(b1l2)) {
       download.file(hamby252demo[[1]][2],
-        destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"), quiet = T
+        destfile = b1l2, quiet = T
       )
     }
   })

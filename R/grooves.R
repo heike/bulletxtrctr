@@ -12,7 +12,8 @@ grooves_plot <- function(land, grooves) {
   assert_that(is.numeric(grooves), sum(!is.na(grooves)) >= 1)
   x <- value <- NULL
 
-  ggplot(aes(x = x, y = value), data = land) + geom_line(size = .5) + theme_bw() +
+  ggplot(aes(x = x, y = value), data = land) + geom_line(size = .5) +
+    theme_bw() +
     geom_vline(xintercept = grooves[1], colour = "blue") +
     geom_vline(xintercept = grooves[2], colour = "blue")
 }
@@ -70,7 +71,8 @@ grooves_plot <- function(land, grooves) {
 #' }
 cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
                               adjust = 10, groove_cutoff = 400,
-                              mean_left = NULL, mean_right = NULL, mean_window = 100,
+                              mean_left = NULL, mean_right = NULL,
+                              mean_window = 100,
                               return_plot = F, ...) {
   # TODO add documentation for different groove options, either here or by exporting the individual functions and documenting the parameters there.
 
@@ -177,7 +179,7 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 
   land <- data.frame(x = x, value = value)
   groove <- quantile(land$x,
-                     probs = c((100 - middle) / 200, (100 + middle) / 200)
+    probs = c((100 - middle) / 200, (100 + middle) / 200)
   )
 
   if (return_plot) {
@@ -336,29 +338,37 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
   # parameter is equal to FALSE
   if (second_smooth) {
     smoothed_truefalse <- rollapply(smoothed, smoothfactor,
-                                    function(x) which_fun(x), partial = TRUE)
+      function(x) which_fun(x),
+      partial = TRUE
+    )
   } else {
     smoothed_truefalse <- smoothed
   }
 
   lengthdiff <- length(land$value) - length(smoothed_truefalse)
 
-  peak_ind_smoothed <- rollapply(smoothed_truefalse, 3,
-                                 function(x) which.max(x) == 2) %>%
-    which() %>% head(n = 1)
+  peak_ind_smoothed <- rollapply(
+    smoothed_truefalse, 3,
+    function(x) which.max(x) == 2
+  ) %>%
+    which() %>%
+    head(n = 1)
   peak_ind <- peak_ind_smoothed + floor(lengthdiff / 2)
   if (length(peak_ind) == 0) {
     groove_ind <- peak_ind
   } else {
     groove_ind <- tail(smoothed_truefalse, n = -peak_ind_smoothed) %>%
       rollapply(., 3, function(x) which.min(x) == 2) %>%
-      which() %>% head(n = 1)
+      which() %>%
+      head(n = 1)
     groove_ind <- groove_ind + peak_ind
   }
 
-  peak_ind2_smoothed_temp <- smoothed_truefalse %>% rev() %>%
+  peak_ind2_smoothed_temp <- smoothed_truefalse %>%
+    rev() %>%
     rollapply(., 3, function(x) which.max(x) == 2) %>%
-    which() %>% head(n = 1)
+    which() %>%
+    head(n = 1)
 
   peak_ind2_temp <- peak_ind2_smoothed_temp + floor(lengthdiff / 2)
   if (length(peak_ind2_temp) == 0) {
@@ -367,7 +377,8 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
     groove_ind2_temp <- rev(smoothed_truefalse) %>%
       tail(., n = -peak_ind2_smoothed_temp) %>%
       rollapply(., 3, function(x) which.min(x) == 2) %>%
-      which() %>% head(n = 1)
+      which() %>%
+      head(n = 1)
     groove_ind2_temp <- groove_ind2_temp + peak_ind2_temp
   }
 
@@ -379,7 +390,7 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
     groove_ind <- 1
   }
   if (length(groove_ind2) == 0 ||
-      groove_ind2 < length(land$value) - groove_cutoff) {
+    groove_ind2 < length(land$value) - groove_cutoff) {
     groove_ind2 <- length(land$value)
   }
 

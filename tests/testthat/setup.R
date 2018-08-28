@@ -11,14 +11,16 @@ testthat::setup({
     dir.create(here::here("tests/Bullet1"))
     dir.create(here::here("tests/Bullet2"))
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"))) {
+  hambyb1l2 <- here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p")
+  hambyb2l4 <- here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p")
+  if (!file.exists(hambyb1l2)) {
     download.file(hamby252demo[[1]][2],
-      destfile = here::here("tests/Bullet1/Hamby252_Barrel1_Bullet1_Land2.x3p"), quiet = T
+      destfile = hambyb1l2, quiet = T
     )
   }
-  if (!file.exists(here::here("tests/Bullet1/Hamby252_Barrel1_Bullet2_Land4.x3p"))) {
+  if (!file.exists(hambyb2l4)) {
     download.file(hamby252demo[[2]][4],
-      destfile = here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p"), quiet = T
+      destfile = hambyb2l4, quiet = T
     )
   }
 })
@@ -52,13 +54,16 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
         x
       })
     ) %>%
-    dplyr::mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-    dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
+    dplyr::mutate(crosscut = x3p %>%
+                    purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
+    dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut,
+                                       .f = x3p_crosscut)) %>%
     dplyr::mutate(
       loess = purrr::map(ccdata, cc_fit_loess, span = .75),
       gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600)
     ) %>%
-    dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
+    dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves,
+                                       return_plot = T)) %>%
     dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves,
       method = "middle",
       return_plot = T
@@ -84,7 +89,8 @@ if (!file.exists(here::here("tests/bullet1_crosscut_extra.Rdata"))) {
   b1_l2 <- b1_l2_x3p$x3p[[1]]
   b1_l2_df <- x3ptools::x3p_to_df(b1_l2)
   cc1 <- bulletxtrctr:::land_cc(50, b1_l2_df)
-  save(b1_l2, b1_l2_df, cc1, file = here::here("tests/bullet1_crosscut_extra.Rdata"))
+  save(b1_l2, b1_l2_df, cc1,
+       file = here::here("tests/bullet1_crosscut_extra.Rdata"))
 }
 
 if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
@@ -108,13 +114,16 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
         x
       })
     ) %>%
-    dplyr::mutate(crosscut = x3p %>% purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-    dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut, .f = x3p_crosscut)) %>%
+    dplyr::mutate(crosscut = x3p %>%
+                    purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
+    dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut,
+                                       .f = x3p_crosscut)) %>%
     dplyr::mutate(
       loess = purrr::map(ccdata, cc_fit_loess, span = .75),
       gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600)
     ) %>%
-    dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T)) %>%
+    dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves,
+                                       return_plot = T)) %>%
     dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves,
       method = "middle",
       return_plot = T
@@ -128,7 +137,8 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
       )
     )
 
-  save(b1_l2_x3p, b2_l4_x3p, file = here::here("tests/bullets_signatures.Rdata"))
+  save(b1_l2_x3p, b2_l4_x3p,
+       file = here::here("tests/bullets_signatures.Rdata"))
 }
 
 # test_align.R
@@ -145,9 +155,14 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
     sig1 = sig_get_peaks(alignment$lands$sig1),
     sig2 = sig_get_peaks(alignment$lands$sig2)
   )
-  matches <- bulletxtrctr:::striation_identify_matches(peaks$sig1$lines, peaks$sig2$lines)
+  matches <- bulletxtrctr:::striation_identify_matches(peaks$sig1$lines,
+                                                       peaks$sig2$lines)
   maxcms <- sig_cms_max(alignment)
-  features_legacy <- extract_features_all_legacy(maxcms)
+
+  old_striae <- maxcms
+  names(old_striae)[5] <- "bullets"
+
+  features_legacy <- extract_features_all_legacy(old_striae)
   features <- extract_features_all(aligned = alignment, striae = maxcms)
   match <- list(
     alignment = alignment, peaks = peaks, matches = matches,
@@ -173,10 +188,13 @@ if (!file.exists(here::here("tests/single_features.Rdata"))) {
     length = extract_feature_length(match$alignment$lands),
     overlap = extract_feature_overlap(match$alignment$lands)
   )
-  features_full <- extract_features_all(aligned = match$alignment,
-                                        striae = match$maxcms)
+  features_full <- extract_features_all(
+    aligned = match$alignment,
+    striae = match$maxcms
+  )
   save(features_full, features_single,
-       file = here::here("tests/single_features.Rdata"))
+    file = here::here("tests/single_features.Rdata")
+  )
 }
 
 # test_bullet-scores.R
@@ -185,13 +203,17 @@ if (!file.exists(here::here("tests/rf_features.Rdata"))) {
   requireNamespace("randomForest")
   rf_features <- match$features %>% mutate(
     rough_cor = match$features_legacy$rough_cor,
-    sd_D = match$features_legacy$sd_D)
+    sd_D = match$features_legacy$sd_D
+  )
 
-  rf_features$rfscore <- predict(bulletr::rtrees, newdata = rf_features,
-                                 type = "prob")[,2]
+  rf_features$rfscore <- predict(bulletr::rtrees,
+    newdata = rf_features,
+    type = "prob"
+  )[, 2]
 
   save(rf_features,
-       file = here::here("tests/rf_features.Rdata"))
+    file = here::here("tests/rf_features.Rdata")
+  )
 }
 
 # test_smooth.R

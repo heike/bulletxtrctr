@@ -243,7 +243,8 @@ extract_feature_non_cms <- function(striae) {
 #' striae <- sig_cms_max(alignment)
 #' extract_helper_feature_n_striae(striae$lines, type = "all", match = T)
 #' }
-extract_helper_feature_n_striae <- function(striae, type = "peak", match = TRUE) {
+extract_helper_feature_n_striae <- function(striae, type = "peak",
+                                            match = TRUE) {
   assert_that(
     has_name(striae, "type"),
     has_name(striae, "match")
@@ -412,7 +413,8 @@ extract_feature_ccf <- function(aligned) {
   for (i in 2:dim(aligned)[2]) {
     assert_that(
       is.numeric(aligned[, i]),
-      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i])
+    )
   }
 
   if (dim(aligned)[2] == 3) { # only two signatures to compare
@@ -434,16 +436,17 @@ extract_feature_rough_cor <- function(aligned) {
   for (i in 2:dim(aligned)[2]) {
     assert_that(
       is.numeric(aligned[, i]),
-      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i])
+    )
   }
 
-  avgl30 <- rowSums(aligned[,-1])/(dim(aligned)[2]-1)
+  avgl30 <- rowSums(aligned[, -1]) / (dim(aligned)[2] - 1)
   smoothavgl30 <- smoothloess(y = avgl30, span = 0.3)
-  doublesmoothed <- aligned[,-1] - smoothavgl30
+  doublesmoothed <- aligned[, -1] - smoothavgl30
 
 
   if (dim(aligned)[2] == 3) { # only two signatures to compare
-    return(cor(doublesmoothed, use = "pairwise")[1,2])
+    return(cor(doublesmoothed, use = "pairwise")[1, 2])
   }
   return(cor(doublesmoothed, use = "pairwise"))
 }
@@ -491,7 +494,8 @@ extract_feature_lag <- function(aligned) {
   for (i in 2:dim(aligned)[2]) {
     assert_that(
       is.numeric(aligned[, i]),
-      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i])
+    )
   }
 
   lags <- sapply(aligned[, -1], function(x) {
@@ -539,7 +543,8 @@ extract_feature_D <- function(aligned, ...) {
   for (i in 2:dim(aligned)[2]) {
     assert_that(
       is.numeric(aligned[, i]),
-      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i])
+    )
   }
 
   dists <- dist(t(aligned[, -1]), ...)
@@ -563,10 +568,11 @@ extract_feature_sd_D <- function(aligned) {
   for (i in 2:dim(aligned)[2]) {
     assert_that(
       is.numeric(aligned[, i]),
-      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i])
+    )
   }
 
-  aligned[,2:3] %>% purrr::map_dbl(.f = sd, na.rm=TRUE) %>% sum(na.rm=TRUE)
+  aligned[, 2:3] %>% purrr::map_dbl(.f = sd, na.rm = TRUE) %>% sum(na.rm = TRUE)
 }
 
 
@@ -606,7 +612,8 @@ extract_feature_length <- function(aligned) {
   for (i in 2:dim(aligned)[2]) {
     assert_that(
       is.numeric(aligned[, i]),
-      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i])
+    )
   }
 
   # only smaller of the length of the first two signatures
@@ -656,11 +663,13 @@ extract_feature_overlap <- function(aligned) {
   for (i in 2:dim(aligned)[2]) {
     assert_that(
       is.numeric(aligned[, i]),
-      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i]))
+      msg = sprintf("Column %d (%s) is not numeric", i, names(aligned)[i])
+    )
   }
 
   # compute non-missing overlap of the first two signatures
-  sum(!is.na(aligned[, 2]) & !is.na(aligned[, 3])) / extract_feature_length(aligned)
+  sum(!is.na(aligned[, 2]) & !is.na(aligned[, 3])) /
+    extract_feature_length(aligned)
 }
 
 #' Extract features from aligned signatures
@@ -702,7 +711,8 @@ extract_features_all <- function(aligned, striae, ...) {
   # TODO: What happens when ... contains arguments which are not needed for w/e fcn?
   feature <- value <- NULL
   assert_that(!is.null(aligned), !is.null(striae),
-              msg = "aligned and striae must not be NULL")
+    msg = "aligned and striae must not be NULL"
+  )
 
   features <- apropos("extract_feature_")
   values <- features %>% purrr::map_dbl(.f = function(f) {
@@ -819,5 +829,3 @@ extract_features_all_legacy <- function(res) {
       (1000 / g1_inc_x) / length(ys)
   )
 }
-
-
