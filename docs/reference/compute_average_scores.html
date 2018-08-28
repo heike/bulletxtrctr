@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get average scores for bullet to bullet comparisons — compute_average_scores • bulletxtrctr</title>
+<title>#' Get average scores for bullet to bullet comparisons — compute_average_scores • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Get average scores for bullet to bullet comparisons — compute_average_scores" />
+<meta property="og:title" content="#' Get average scores for bullet to bullet comparisons — compute_average_scores" />
 
 <meta property="og:description" content="Note that the combination of `land1` and `land2` are a key to the scores,
 i.e. if a bullet has six lands, each of the input vectors should have
@@ -78,6 +78,18 @@ length 36." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/features.html">Feature Extraction</a>
+    </li>
+  </ul>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -94,7 +106,7 @@ length 36." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get average scores for bullet to bullet comparisons</h1>
+    <h1>#' Get average scores for bullet to bullet comparisons</h1>
     
     <div class="hidden name"><code>compute_average_scores.Rd</code></div>
     </div>
@@ -132,6 +144,58 @@ length 36.</p>
           land engraved areas on the bullets.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># Set the data up to be read in, cleaned, etc.</span>
+<span class='fu'>library</span>(<span class='no'>bulletxtrctr</span>)
+<span class='fu'>library</span>(<span class='no'>x3ptools</span>)
+
+<span class='no'>bullets</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bullet_pipeline.html'>bullet_pipeline</a></span>(
+  <span class='kw'>location</span> <span class='kw'>=</span> <span class='fu'>list</span>(
+    <span class='kw'>Bullet1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet1</span>),
+    <span class='kw'>Bullet2</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet2</span>)
+  ),
+  <span class='kw'>x3p_clean</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span> <span class='kw'>%&gt;%</span>
+      <span class='fu'><a href='x3pheader_to_microns.html'>x3pheader_to_microns</a></span>() <span class='kw'>%&gt;%</span>
+      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p'>rotate_x3p</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> -<span class='fl'>90</span>) <span class='kw'>%&gt;%</span>
+      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p'>y_flip_x3p</a></span>()
+) <span class='kw'>%&gt;%</span>
+<span class='fu'>mutate</span>(<span class='kw'>land</span> <span class='kw'>=</span> <span class='fu'>paste0</span>(<span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>6</span>), <span class='st'>"-"</span>, <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>6</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>2</span>)))
+
+<span class='no'>comparisons</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(
+  <span class='fu'>expand.grid</span>(<span class='kw'>land1</span> <span class='kw'>=</span> <span class='no'>bullets</span>$<span class='no'>land</span>, <span class='kw'>land2</span> <span class='kw'>=</span> <span class='no'>bullets</span>$<span class='no'>land</span>),
+  <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>comparisons</span> <span class='kw'>&lt;-</span> <span class='no'>comparisons</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>mutate</span>(
+    <span class='kw'>aligned</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/purrr/topics/map2'>map2</a></span>(<span class='kw'>.x</span> <span class='kw'>=</span> <span class='no'>land1</span>, <span class='kw'>.y</span> <span class='kw'>=</span> <span class='no'>land2</span>, <span class='kw'>.f</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>xx</span>, <span class='no'>yy</span>) {
+      <span class='no'>land1</span> <span class='kw'>&lt;-</span> <span class='no'>bullets</span>$<span class='no'>sigs</span>[<span class='no'>bullets</span>$<span class='no'>land</span> <span class='kw'>==</span> <span class='no'>xx</span>]<span class='kw'>[[</span><span class='fl'>1</span>]]
+      <span class='no'>land2</span> <span class='kw'>&lt;-</span> <span class='no'>bullets</span>$<span class='no'>sigs</span>[<span class='no'>bullets</span>$<span class='no'>land</span> <span class='kw'>==</span> <span class='no'>yy</span>]<span class='kw'>[[</span><span class='fl'>1</span>]]
+      <span class='no'>land1</span>$<span class='no'>bullet</span> <span class='kw'>&lt;-</span> <span class='st'>"first-land"</span>
+      <span class='no'>land2</span>$<span class='no'>bullet</span> <span class='kw'>&lt;-</span> <span class='st'>"second-land"</span>
+
+      <span class='fu'><a href='sig_align.html'>sig_align</a></span>(<span class='no'>land1</span>$<span class='no'>sig</span>, <span class='no'>land2</span>$<span class='no'>sig</span>)
+    }),
+    <span class='kw'>striae</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/purrr/topics/map'>map</a></span>(<span class='no'>aligned</span>, <span class='no'>sig_cms_max</span>),
+    <span class='kw'>features</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/purrr/topics/map2'>map2</a></span>(<span class='kw'>.x</span> <span class='kw'>=</span> <span class='no'>aligned</span>, <span class='kw'>.y</span> <span class='kw'>=</span> <span class='no'>striae</span>, <span class='no'>extract_features_all</span>),
+    <span class='kw'>rfscore</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/purrr/topics/map'>map_dbl</a></span>(<span class='no'>features</span>, <span class='no'>rowMeans</span>) <span class='co'># This is a hack until the new RF is fit...</span>
+  )
+
+<span class='co'># Clean up a bit</span>
+<span class='no'>comparisons</span> <span class='kw'>&lt;-</span> <span class='no'>comparisons</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>mutate</span>(
+    <span class='kw'>bulletA</span> <span class='kw'>=</span> <span class='fu'>gsub</span>(<span class='st'>"(\\d)-\\d"</span>, <span class='st'>"\\1"</span>, <span class='no'>land1</span>),
+    <span class='kw'>landA</span> <span class='kw'>=</span> <span class='fu'>gsub</span>(<span class='st'>"\\d-(\\d)"</span>, <span class='st'>"\\1"</span>, <span class='no'>land1</span>),
+    <span class='kw'>bulletB</span> <span class='kw'>=</span> <span class='fu'>gsub</span>(<span class='st'>"(\\d)-\\d"</span>, <span class='st'>"\\1"</span>, <span class='no'>land2</span>),
+    <span class='kw'>landB</span> <span class='kw'>=</span> <span class='fu'>gsub</span>(<span class='st'>"\\d-(\\d)"</span>, <span class='st'>"\\1"</span>, <span class='no'>land2</span>)
+  ) <span class='kw'>%&gt;%</span>
+  <span class='fu'>group_by</span>(<span class='no'>bulletA</span>, <span class='no'>bulletB</span>) <span class='kw'>%&gt;%</span> <span class='kw pkg'>tidyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidyr/topics/nest'>nest</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>mutate</span>(
+    <span class='kw'>bullet_score</span> <span class='kw'>=</span> <span class='no'>data</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/purrr/topics/map'>map_dbl</a></span>(
+      <span class='kw'>.f</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>d</span>) <span class='fu'>max</span>(<span class='fu'>compute_average_scores</span>(<span class='kw'>land1</span> <span class='kw'>=</span> <span class='no'>d</span>$<span class='no'>landA</span>,
+                                                  <span class='kw'>land2</span> <span class='kw'>=</span> <span class='no'>d</span>$<span class='no'>landB</span>,
+                                                  <span class='no'>d</span>$<span class='no'>rfscore</span>)))
+  )
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -139,7 +203,9 @@ length 36.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

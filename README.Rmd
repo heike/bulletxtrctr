@@ -20,7 +20,7 @@ Analyze bullet striations using nonparametric methods
 
 ## Comparing lands from two bullets
 
-Stria comparisons between bullets are based on land-to-land comparisons. 
+Striae comparisons between bullets are based on land-to-land comparisons. 
 
 1. Load libraries
 ```{r, message=FALSE}

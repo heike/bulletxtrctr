@@ -35,8 +35,8 @@
 <meta property="og:description" content="x3p file of a 3d topological bullet surface is processed at surface
 crosscut y,
 measurements outside the bullet grooves in the crosscuts are left out, and
-a loess smooth
-is used (see ?loess for details) to remove the big structure." />
+a loess smooth is used (see ?loess for details) to remove the big
+structure." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -80,6 +80,18 @@ is used (see ?loess for details) to remove the big structure." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/features.html">Feature Extraction</a>
+    </li>
+  </ul>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -106,8 +118,8 @@ is used (see ?loess for details) to remove the big structure." />
     <p>x3p file of a 3d topological bullet surface is processed at surface
 crosscut y,
 measurements outside the bullet grooves in the crosscuts are left out, and
-a loess smooth
-is used (see <code>?loess</code> for details) to remove the big structure.</p>
+a loess smooth is used (see <code>?loess</code> for details) to remove the big
+structure.</p>
     
     </div>
 
@@ -126,7 +138,8 @@ is used (see <code>?loess</code> for details) to remove the big structure.</p>
     </tr>
     <tr>
       <th>span1</th>
-      <td><p>The span for the loess fit to get from the profile to the raw signature</p></td>
+      <td><p>The span for the loess fit to get from the profile to the raw
+signature</p></td>
     </tr>
     <tr>
       <th>span2</th>
@@ -144,7 +157,23 @@ is used (see <code>?loess</code> for details) to remove the big structure.</p>
 <span class='no'>cc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='x3p_crosscut_optimize.html'>x3p_crosscut_optimize</a></span>(<span class='no'>br411</span>)
 <span class='no'>ccdata</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='x3p_crosscut.html'>x3p_crosscut</a></span>(<span class='no'>br411</span>, <span class='no'>cc</span>)
 <span class='no'>grooves</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cc_locate_grooves.html'>cc_locate_grooves</a></span>(<span class='no'>ccdata</span>)
-<span class='no'>signature</span> <span class='kw'>&lt;-</span> <span class='fu'>cc_get_signature</span>(<span class='no'>ccdata</span>, <span class='no'>grooves</span>)</div></pre>
+<span class='no'>signature</span> <span class='kw'>&lt;-</span> <span class='fu'>cc_get_signature</span>(<span class='no'>ccdata</span>, <span class='no'>grooves</span>)</div><span class='co'># NOT RUN {</span>
+<span class='co'># Set the data up to be read in, cleaned, etc.</span>
+<span class='fu'>library</span>(<span class='no'>bulletxtrctr</span>)
+<span class='fu'>library</span>(<span class='no'>x3ptools</span>)
+
+<span class='no'>example_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bullet_pipeline.html'>bullet_pipeline</a></span>(
+  <span class='kw'>location</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>Bullet1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet1</span>[<span class='fl'>3</span>])),
+  <span class='kw'>x3p_clean</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span> <span class='kw'>%&gt;%</span>
+      <span class='fu'><a href='x3pheader_to_microns.html'>x3pheader_to_microns</a></span>() <span class='kw'>%&gt;%</span>
+      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p'>rotate_x3p</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> -<span class='fl'>90</span>) <span class='kw'>%&gt;%</span>
+      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p'>y_flip_x3p</a></span>()
+)
+
+<span class='fu'>cc_get_signature</span>(<span class='no'>example_data</span>$<span class='no'>ccdata</span><span class='kw'>[[</span><span class='fl'>1</span>]],
+                 <span class='no'>example_data</span>$<span class='no'>grooves</span><span class='kw'>[[</span><span class='fl'>1</span>]]) <span class='kw'>%&gt;%</span>
+<span class='fu'>head</span>()
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
