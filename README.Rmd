@@ -234,15 +234,12 @@ comparisons <- comparisons %>% mutate(
 ```
 
 ```{r}
-
 comparisons <- comparisons %>% mutate(
   bulletA = gsub("([1-2])-([1-6])","\\1",land1),
   bulletB = gsub("([1-2])-([1-6])","\\1",land2),
   landA = gsub("([1-2])-([1-6])","\\2",land1),
   landB = gsub("([1-2])-([1-6])","\\2",land2)
 )
-
-
 ```
 
 9. Extract Features
