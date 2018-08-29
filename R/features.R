@@ -737,14 +737,15 @@ extract_features_all <- function(aligned, striae, ...) {
 #' @param res list consisting of data frames of lines and aligned signatures,
 #'          result from `sig_cms_max`
 #' XXX this needs some fixing
+#' @param resolution resolution at which the scans were taken in microns per pixel
 #' @return data frame with variables ccf, rough_cor, D, sd_D, matches,
 #'           mismatches, cms, non_cms, and sum_peaks
 #' @export
-extract_features_all_legacy <- function(res) {
+extract_features_all_legacy <- function(res, resolution) {
   # browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 
-  lofX <- res$bullets
+  lofX <- res$lands
   #    lofX$l30 <- lofX$sig
   #    b12 <- unique(lofX$bullet)
   b12 <- c("sig1", "sig2")
@@ -765,7 +766,7 @@ extract_features_all_legacy <- function(res) {
   idx1 <- which(round(subLOFx1$y, digits = 3) %in% ys)
   idx2 <- which(round(subLOFx2$y, digits = 3) %in% ys)
 
-  g1_inc_x <- 1.5625
+  g1_inc_x <- resolution
 
   sq <- function(x) x^2
 

@@ -248,19 +248,19 @@ comparisons <- comparisons %>% mutate(
 
 comparisons <- comparisons %>% mutate(
   features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all),
-  res = purrr::pmap(
-    list(aligned, striae, features),
-    function(a, b, c, d) list(bullets = a$lands, lines = b$lines, 
-                              maxCMS = c$cms,
-                              ccf = c$ccf, lag = c$lag))
+#   res = purrr::pmap(
+#     list(aligned, striae, features),
+#     function(a, b, c, d) list(lands = a$lands, lines = b$lines, 
+#                               maxCMS = c$cms,
+#                               ccf = c$ccf, lag = c$lag))
 )
 
 comparisons <- comparisons %>% mutate(
-  legacy_features = purrr::map(res, extract_features_all_legacy)
+  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = 1.5625)
 )
 
 comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
-# scale features before using them in the random forest
+# scale features before using them in the random forest, legacy features can be used out of the box
 
 
 # quick visualization:

@@ -182,7 +182,7 @@ striation_identify_matches <- function(striae1, striae2) {
     return(length(unique(type)) == 1)
   }
   groups <- ml %>% group_by(group) %>% summarise(
-    match = isMatch(type, bullet),
+    match = isMatch(type, land),
     size = n(),
     type = type[1],
     sdheights = sd(heights),

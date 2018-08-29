@@ -4,12 +4,14 @@
 \alias{extract_features_all_legacy}
 \title{Extract features from aligned signatures (legacy)}
 \usage{
-extract_features_all_legacy(res)
+extract_features_all_legacy(res, resolution)
 }
 \arguments{
 \item{res}{list consisting of data frames of lines and aligned signatures,
          result from `sig_cms_max`
 XXX this needs some fixing}
+
+\item{resolution}{resolution at which the scans were taken in microns per pixel}
 }
 \value{
 data frame with variables ccf, rough_cor, D, sd_D, matches,

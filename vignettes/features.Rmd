@@ -42,8 +42,10 @@ to be the average distance between aligned signatures $s$ and $t$.
 Consecutively matching striae is a measure first established by Alfred Biasotti in 1950 (reference). The number of consecutively matching striae is the number of consecutive *peaks* two signature have in common, i.e. the valleys in between the peaks should not be counted. XXX Currently, the function `extract_feature_cms` counts both peaks and valleys XXX
 Generally, a CMS of 6 or higher is considered to be strongly indicative of a match (need another citation for this). 
 
-### Counting striae
+### Countable features
 
 All features that return a count in one way or the other, such as `cms`, `noncms`, `matches`, `nonmatches`, ... 
-are accompanied by functions that scale these integers by the signature length (to make these numbers independent from length) and by millimeter.
+are accompanied by functions that scale these integers by the signature length (to make these numbers independent from length) and return values scaled to millimeter.
 The corresponding variables then have an appendix of `_per_mm`.
+
+
