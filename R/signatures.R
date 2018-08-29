@@ -45,6 +45,7 @@ cc_get_signature <- function(ccdata, grooves, span1 = 0.75, span2 = 0.03) {
 
   if (is.null(ccdata) | is.null(grooves) | nrow(ccdata) == 0) return(NULL)
 
+  # TODO: Clean this up and use proper names for things
   br111 <- na.trim(ccdata) %>%
     filter(between(x, grooves$groove[1], grooves$groove[2])) %>%
     group_by(x) %>%
