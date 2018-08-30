@@ -123,9 +123,10 @@ extract_feature_left_cms <- function(striae) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #' striae <- sig_cms_max(alignment)
-#' extract_feature_cms2(striae$lines)
+#' extract_feature_cms_peak_only(striae$lines)
 #' }
-extract_feature_cms2 <- function(striae) {
+extract_feature_cms_peak_only <- function(striae) {
+  # CHANGED: Renamed to indicate that this is counting cms traditionally, e.g. only including peaks
   assert_that(
     has_name(striae, "xmin"),
     has_name(striae, "type"),
@@ -166,10 +167,10 @@ extract_feature_cms2 <- function(striae) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #' striae <- sig_cms_max(alignment)
-#' extract_feature_cms(striae$lines)
+#' extract_feature_cms_all(striae$lines)
 #' }
-extract_feature_cms <- function(striae) {
-  # TODO: cms is counting peaks and valleys, definition by Biasotti only counts peaks, change! - that's what cms2 is ... better name?
+extract_feature_cms_all <- function(striae) {
+  # CHANGED: cms is counting peaks and valleys, definition by Biasotti only counts peaks, change! - that's what cms2 is ... better name?
   # TODO: scale cms to relative cms per millimeter to account for length of a signature
   assert_that(has_name(striae, "match"))
   get_longest_run(striae$match == TRUE)
