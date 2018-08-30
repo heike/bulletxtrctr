@@ -678,7 +678,6 @@ extract_feature_overlap <- function(aligned) {
 #' @param aligned aligned signatures, result from `sig_cms_max`
 #' @param striae data frame with evaluated matching striae
 #' @param ... passed on to extractor functions
-#' TODO: test whether ... is actually passed on correctly
 #' @importFrom utils apropos getFromNamespace
 #' @importFrom tidyr spread
 #' @importFrom assertthat assert_that
@@ -708,22 +707,28 @@ extract_feature_overlap <- function(aligned) {
 #' extract_features_all(alignment, striae)
 #' }
 extract_features_all <- function(aligned, striae, ...) {
-  # TODO: figure out all the different functions, then figure out the format
-  # TODO: What happens when ... contains arguments which are not needed for w/e fcn?
   feature <- value <- NULL
   assert_that(!is.null(aligned), !is.null(striae),
     msg = "aligned and striae must not be NULL"
   )
 
   features <- apropos("extract_feature_")
+  dots <- list(...)
+
   values <- features %>% purrr::map_dbl(.f = function(f) {
     fun <- getFromNamespace(f, asNamespace("bulletxtrctr"))
-    if ("aligned" %in% names(formals(fun))) {
-      res <- fun(aligned$lands, ...)
+    fun_args <- names(formals(fun))
+    matching_args <- dots[names(dots) %in% fun_args]
+
+    if ("aligned" %in% fun_args) {
+      matching_args$aligned <- aligned$lands
     }
-    if ("striae" %in% names(formals(fun))) {
-      res <- fun(striae$lines, ...)
+    if ("striae" %in% fun_args) {
+      matching_args$striae <- striae$lines
     }
+
+    res <- do.call(fun, matching_args)
+
     res
   })
 
