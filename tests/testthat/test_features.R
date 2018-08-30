@@ -3,27 +3,11 @@ skipall <- T
 if (requireNamespace("here") & requireNamespace("purrr")) {
   skipall <- F
   load(here::here("tests/bullets_match.Rdata"))
-  load(here::here("tests/single_features.Rdata"))
 
-  old_striae <- match$maxcms
-  names(old_striae)[5] <- "bullets"
-  featurestest_legacy <- extract_features_all_legacy(old_striae)
+  featurestest_legacy <- extract_features_all_legacy(match$maxcms,
+                                                     resolution = 1.5625)
+
   classes <- lapply(featurestest_legacy, mode) %>% unlist() %>% unique()
-  featurestest_single <- features_single <- data.frame(
-    rightcms = extract_feature_right_cms(striae = match$maxcms$lines),
-    leftcms = extract_feature_left_cms(striae = match$maxcms$lines),
-    cms2 = extract_feature_cms2(striae = match$maxcms$lines),
-    cms = extract_feature_cms(striae = match$maxcms$lines),
-    noncms = extract_feature_non_cms(striae = match$maxcms$lines),
-    matches = extract_feature_matches(striae = match$maxcms$lines),
-    mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
-    sum_peaks = extract_feature_sum_peaks(striae = match$maxcms$lines),
-    rough_cor = extract_feature_rough_cor(match$alignment$lands),
-    ccf = extract_feature_ccf(match$alignment$lands),
-    dist = extract_feature_D(match$alignment$lands),
-    length = extract_feature_length(match$alignment$lands),
-    overlap = extract_feature_overlap(match$alignment$lands)
-  )
 
   featurestest_full <- extract_features_all(
     aligned = match$alignment,
@@ -54,8 +38,6 @@ test_that("extract_feature_right_cms works as expected", {
       extract_feature_right_cms(),
     10
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$rightcms, features_single$rightcms)
 })
 
 test_that("extract_feature_left_cms works as expected", {
@@ -74,15 +56,13 @@ test_that("extract_feature_left_cms works as expected", {
       extract_feature_left_cms(),
     0
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$leftcms, features_single$leftcms)
 })
 
 
-test_that("extract_feature_cms2 works as expected", {
+test_that("extract_feature_cms_peak_only works as expected", {
   expect_equal(
     data.frame(xmin = 1:10, match = TRUE, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_cms2(),
+      extract_feature_cms_peak_only(),
     5
   )
   expect_equal(
@@ -90,7 +70,7 @@ test_that("extract_feature_cms2 works as expected", {
       xmin = 1:10, match = (1:10) < 5,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms2(),
+      extract_feature_cms_peak_only(),
     2
   )
   expect_equal(
@@ -98,17 +78,15 @@ test_that("extract_feature_cms2 works as expected", {
       xmin = 1:10, match = (1:10) < 0,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms2(),
+      extract_feature_cms_peak_only(),
     0
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$cms2, features_single$cms2)
 })
 
-test_that("extract_feature_cms works as expected", {
+test_that("extract_feature_cms_all works as expected", {
   expect_equal(
     data.frame(xmin = 1:10, match = TRUE, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_cms(),
+      extract_feature_cms_all(),
     10
   )
   expect_equal(
@@ -116,7 +94,7 @@ test_that("extract_feature_cms works as expected", {
       xmin = 1:10, match = (1:10) < 5,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms(),
+      extract_feature_cms_all(),
     4
   )
   expect_equal(
@@ -124,11 +102,9 @@ test_that("extract_feature_cms works as expected", {
       xmin = 1:10, match = (1:10) < 0,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms(),
+      extract_feature_cms_all(),
     0
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$cms, features_single$cms)
 })
 
 test_that("extract_feature_non_cms works as expected", {
@@ -153,8 +129,6 @@ test_that("extract_feature_non_cms works as expected", {
       extract_feature_non_cms(),
     10
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$noncms, features_single$noncms)
 })
 
 test_that("extract_helper_feature_n_striae works as expected", {
@@ -204,8 +178,6 @@ test_that("extract_feature_matches works as expected", {
       extract_feature_matches(),
     0
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$matches, features_single$matches)
 })
 
 test_that("extract_feature_mismatches works as expected", {
@@ -227,8 +199,6 @@ test_that("extract_feature_mismatches works as expected", {
       extract_feature_mismatches(),
     10
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$mismatches, features_single$mismatches)
 })
 
 test_that("extract_feature_sum_peaks works as expected", {
@@ -240,8 +210,6 @@ test_that("extract_feature_sum_peaks works as expected", {
       extract_feature_sum_peaks(),
     4
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$sum_peaks, features_single$sum_peaks)
 })
 
 test_that("extract_feature_ccf works as expected", {
@@ -266,8 +234,6 @@ test_that("extract_feature_ccf works as expected", {
       sum(na.rm = T),
     9
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$ccf, features_single$ccf)
 })
 
 
@@ -293,8 +259,6 @@ test_that("extract_feature_rough_cor works as expected", {
       sum(na.rm = T),
     8.59
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$rough_cor, features_single$rough_cor)
 })
 
 test_that("extract_feature_lag works as expected", {
@@ -327,7 +291,7 @@ test_that("extract_feature_lag works as expected", {
   )
 })
 
-test_that("extract_feature_lag works as expected", {
+test_that("extract_feature_D works as expected", {
   expect_equivalent(
     extract_feature_D(
       data.frame(
@@ -355,8 +319,6 @@ test_that("extract_feature_lag works as expected", {
     )[3],
     0.0351
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$dist, features_single$dist)
 })
 
 test_that("extract_feature_length works as expected", {
@@ -369,8 +331,6 @@ test_that("extract_feature_length works as expected", {
     ),
     8
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$length, features_single$length)
 })
 
 test_that("extract_feature_overlap works as expected", {
@@ -383,11 +343,9 @@ test_that("extract_feature_overlap works as expected", {
     ),
     1
   )
-  skip_if(skipall)
-  expect_equal(featurestest_single$overlap, features_single$overlap)
 })
 
 test_that("extract_features_all works as expected", {
   skip_if(skipall)
-  expect_equivalent(features_full, featurestest_full)
+  expect_equivalent(match$features, featurestest_full)
 })

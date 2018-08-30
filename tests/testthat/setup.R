@@ -159,10 +159,7 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
                                                        peaks$sig2$lines)
   maxcms <- sig_cms_max(alignment)
 
-  old_striae <- maxcms
-  names(old_striae)[5] <- "bullets"
-
-  features_legacy <- extract_features_all_legacy(old_striae)
+  features_legacy <- extract_features_all_legacy(maxcms, resolution = 1.5625)
   features <- extract_features_all(aligned = alignment, striae = maxcms)
   match <- list(
     alignment = alignment, peaks = peaks, matches = matches,
@@ -172,40 +169,11 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
   save(match, file = here::here("tests/bullets_match.Rdata"))
 }
 
-if (!file.exists(here::here("tests/single_features.Rdata"))) {
-  load(here::here("tests/bullets_match.Rdata"))
-  features_single <- data.frame(
-    rightcms = extract_feature_right_cms(striae = match$maxcms$lines),
-    leftcms = extract_feature_left_cms(striae = match$maxcms$lines),
-    cms2 = extract_feature_cms2(striae = match$maxcms$lines),
-    cms = extract_feature_cms(striae = match$maxcms$lines),
-    noncms = extract_feature_non_cms(striae = match$maxcms$lines),
-    matches = extract_feature_matches(striae = match$maxcms$lines),
-    mismatches = extract_feature_mismatches(striae = match$maxcms$lines),
-    sum_peaks = extract_feature_sum_peaks(striae = match$maxcms$lines),
-    rough_cor = extract_feature_rough_cor(match$alignment$lands),
-    ccf = extract_feature_ccf(match$alignment$lands),
-    dist = extract_feature_D(match$alignment$lands),
-    length = extract_feature_length(match$alignment$lands),
-    overlap = extract_feature_overlap(match$alignment$lands)
-  )
-  features_full <- extract_features_all(
-    aligned = match$alignment,
-    striae = match$maxcms
-  )
-  save(features_full, features_single,
-    file = here::here("tests/single_features.Rdata")
-  )
-}
-
 # test_bullet-scores.R
 if (!file.exists(here::here("tests/rf_features.Rdata"))) {
   load(here::here("tests/bullets_match.Rdata"))
   requireNamespace("randomForest")
-  rf_features <- match$features %>% mutate(
-    rough_cor = match$features_legacy$rough_cor,
-    sd_D = match$features_legacy$sd_D
-  )
+  rf_features <- match$features_legacy
 
   rf_features$rfscore <- predict(bulletr::rtrees,
     newdata = rf_features,
