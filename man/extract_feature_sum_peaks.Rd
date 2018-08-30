@@ -39,8 +39,8 @@ extract_feature_sum_peaks(striae$lines)
 }
 }
 \seealso{
-Other striae-related-features: \code{\link{extract_feature_cms2}},
-  \code{\link{extract_feature_cms}},
+Other striae-related-features: \code{\link{extract_feature_cms_all}},
+  \code{\link{extract_feature_cms_peak_only}},
   \code{\link{extract_feature_left_cms}},
   \code{\link{extract_feature_matches}},
   \code{\link{extract_feature_mismatches}},

@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 28, 2018"
+date: "August 30, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--28-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--30-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
@@ -320,19 +320,19 @@ comparisons <- comparisons %>% mutate(
 ```r
 comparisons <- comparisons %>% mutate(
   features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all),
-  res = purrr::pmap(
-    list(aligned, striae, features),
-    function(a, b, c, d) list(bullets = a$lands, lines = b$lines, 
-                              maxCMS = c$cms,
-                              ccf = c$ccf, lag = c$lag))
+#   res = purrr::pmap(
+#     list(aligned, striae, features),
+#     function(a, b, c, d) list(lands = a$lands, lines = b$lines, 
+#                               maxCMS = c$cms,
+#                               ccf = c$ccf, lag = c$lag))
 )
 
 comparisons <- comparisons %>% mutate(
-  legacy_features = purrr::map(res, extract_features_all_legacy)
+  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = 1.5625)
 )
 
 comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
-# scale features before using them in the random forest
+# scale features before using them in the random forest, legacy features can be used out of the box
 
 
 # quick visualization:
@@ -384,10 +384,10 @@ bullet_scores %>% select(-data)
 ## # A tibble: 4 x 3
 ##   bulletA bulletB bullet_score
 ##   <chr>   <chr>          <dbl>
-## 1 1       1              0.733
-## 2 2       1              0.529
-## 3 1       2              0.529
-## 4 2       2              0.721
+## 1 1       1              0.982
+## 2 2       1              0.674
+## 3 1       2              0.674
+## 4 2       2              0.988
 ```
 
 
