@@ -11,8 +11,7 @@ extract_features_all(aligned, striae, ...)
 
 \item{striae}{data frame with evaluated matching striae}
 
-\item{...}{passed on to extractor functions
-TODO: test whether ... is actually passed on correctly}
+\item{...}{passed on to extractor functions}
 }
 \description{
 Extract features from aligned signatures
@@ -47,8 +46,8 @@ Other alignment-related-features: \code{\link{extract_feature_D}},
   \code{\link{extract_feature_length}},
   \code{\link{extract_feature_overlap}}
 
-Other striae-related-features: \code{\link{extract_feature_cms_all}},
-  \code{\link{extract_feature_cms_peak_only}},
+Other striae-related-features: \code{\link{extract_feature_cms2}},
+  \code{\link{extract_feature_cms}},
   \code{\link{extract_feature_left_cms}},
   \code{\link{extract_feature_matches}},
   \code{\link{extract_feature_mismatches}},

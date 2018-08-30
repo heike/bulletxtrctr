@@ -1,5 +1,4 @@
-#' Extract number of consecutively matching elevated striation marks from the
-#' right of two aligned signatures
+#' Extract number of consecutively matching elevated striation marks from the right of two aligned signatures
 #'
 #' @param striae data frame of striation marks based on two aligned signatures
 #' @return number of consecutively matching striation marks (from right)
@@ -46,8 +45,7 @@ extract_feature_right_cms <- function(striae) {
   return(nrow(striae))
 }
 
-#' Extract number of consecutively matching elevated striation marks from the
-#' left of two aligned signatures
+#' Extract number of consecutively matching elevated striation marks from the left of two aligned signatures
 #'
 #' @inheritParams extract_feature_right_cms
 #' @return number of consecutively matching striation marks (from left)
@@ -94,8 +92,7 @@ extract_feature_left_cms <- function(striae) {
   return(nrow(striae))
 }
 
-#' Extract number of consecutively matching elevated striation marks from two
-#' aligned signatures
+#' Extract number of consecutively matching elevated striation marks from two aligned signatures
 #'
 #' @inheritParams extract_feature_right_cms
 #' @return number of consecutively matching elevated striation marks
@@ -125,8 +122,9 @@ extract_feature_left_cms <- function(striae) {
 #' striae <- sig_cms_max(alignment)
 #' extract_feature_cms_peak_only(striae$lines)
 #' }
-extract_feature_cms_peak_only <- function(striae) {
-  # CHANGED: Renamed to indicate that this is counting cms traditionally, e.g. only including peaks
+extract_feature_cms2 <- function(striae) {
+  # TODO: Rename function: cms2 -> cms_peak_only
+  # This cms definition is consistent with Biasotti - it only counts peaks
   assert_that(
     has_name(striae, "xmin"),
     has_name(striae, "type"),
@@ -139,11 +137,10 @@ extract_feature_cms_peak_only <- function(striae) {
   get_longest_run(peaks$match == TRUE)
 }
 
-#' Extract number of consecutively matching striation marks from two aligned
-#' signatures
+#' Extract number of consecutively matching striation marks (peaks and valleys) from two aligned signatures
 #'
 #' @inheritParams extract_feature_right_cms
-#' @return number of consecutively matching striation marks
+#' @return number of consecutively matching striation marks (peaks and valleys)
 #' @export
 #' @importFrom assertthat assert_that has_name
 #' @family striae-related-features
@@ -167,18 +164,48 @@ extract_feature_cms_peak_only <- function(striae) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #' striae <- sig_cms_max(alignment)
-#' extract_feature_cms_all(striae$lines)
+#' extract_feature_cms(striae$lines)
 #' }
-extract_feature_cms_all <- function(striae) {
-  # CHANGED: cms is counting peaks and valleys, definition by Biasotti only counts peaks, change! - that's what cms2 is ... better name?
-  # TODO: scale cms to relative cms per millimeter to account for length of a signature
+extract_feature_cms <- function(striae) {
+  # cms_all is counting peaks and valleys, definition by Biasotti only counts peaks.
+  # TODO: Rename function: cms -> cms_all
   assert_that(has_name(striae, "match"))
   get_longest_run(striae$match == TRUE)
 }
 
+# #' Extract number of consecutively matching striation marks per mm from two
+# #' aligned signatures
+# #'
+# #' @inheritParams extract_feature_cms
+# #' @inheritParams extract_feature_length
+# #' @param resolution Resolution of the scans, in microns
+# #' @return number of consecutively matching striation marks (peaks and valleys)
+# #'           per mm
+# #' @importFrom assertthat assert_that
+# #' @family striae-related-features
+# extract_feature_cms_all_mm <- function(striae, aligned, resolution = NULL) {
+#   # TODO: scale cms to relative cms per millimeter to account for length of a signature
+#
+#   if (is.null(resolution)) {
+#     warning("Assuming a resolution of 1.5625 microns")
+#     resolution <- 1.5625
+#   }
+#   assert_that(is.numeric(resolution))
+#   assert_that(!is.null(striae), !is.null(aligned))
+#
+#   # Get shortest aligned signature length in mm
+#   sequence_len <- extract_feature_length(aligned)
+#
+#   # Convert to mm length
+#   sig_len_micron <- resolution * sequence_len
+#   sig_len_mm <- sig_len_micron * 1000
+#
+#   # Get cms_all and divide by signature length in mm
+#   extract_feature_cms(striae) / sig_len_mm
+# }
 
-#' Extract number of consecutively non-matching striation marks from two
-#' aligned signatures
+
+#' Extract number of consecutively non-matching striation marks from two aligned signatures
 #'
 #' @inheritParams extract_feature_right_cms
 #' @return number of consecutively non-matching striation marks
@@ -620,10 +647,11 @@ extract_feature_length <- function(aligned) {
   # only smaller of the length of the first two signatures
   nrow(na.trim(aligned))
 
-  n1 <- length(na.trim(aligned[, 2]))
-  n2 <- length(na.trim(aligned[, 3]))
-
-  min(n1, n2)
+  # n1 <- length(na.trim(aligned[, 2]))
+  # n2 <- length(na.trim(aligned[, 3]))
+  # min(n1, n2)
+  n <- apply(aligned[,-1], 2, function(x) length(na.trim(x)))
+  min(n)
 }
 
 #' Extract overlap between two aligned signatures

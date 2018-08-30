@@ -59,10 +59,10 @@ test_that("extract_feature_left_cms works as expected", {
 })
 
 
-test_that("extract_feature_cms_peak_only works as expected", {
+test_that("extract_feature_cms2 works as expected", {
   expect_equal(
     data.frame(xmin = 1:10, match = TRUE, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_cms_peak_only(),
+      extract_feature_cms2(),
     5
   )
   expect_equal(
@@ -70,7 +70,7 @@ test_that("extract_feature_cms_peak_only works as expected", {
       xmin = 1:10, match = (1:10) < 5,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms_peak_only(),
+      extract_feature_cms2(),
     2
   )
   expect_equal(
@@ -78,15 +78,15 @@ test_that("extract_feature_cms_peak_only works as expected", {
       xmin = 1:10, match = (1:10) < 0,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms_peak_only(),
+      extract_feature_cms2(),
     0
   )
 })
 
-test_that("extract_feature_cms_all works as expected", {
+test_that("extract_feature_cms works as expected", {
   expect_equal(
     data.frame(xmin = 1:10, match = TRUE, type = rep(c(-1, 1), times = 5)) %>%
-      extract_feature_cms_all(),
+      extract_feature_cms(),
     10
   )
   expect_equal(
@@ -94,7 +94,7 @@ test_that("extract_feature_cms_all works as expected", {
       xmin = 1:10, match = (1:10) < 5,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms_all(),
+      extract_feature_cms(),
     4
   )
   expect_equal(
@@ -102,7 +102,7 @@ test_that("extract_feature_cms_all works as expected", {
       xmin = 1:10, match = (1:10) < 0,
       type = rep(c(-1, 1), times = 5)
     ) %>%
-      extract_feature_cms_all(),
+      extract_feature_cms(),
     0
   )
 })
