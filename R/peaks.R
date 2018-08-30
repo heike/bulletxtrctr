@@ -157,8 +157,8 @@ striation_identify_matches <- function(striae1, striae2) {
   check_striae(striae1)
   check_striae(striae2)
 
-  lines1 <- striae1
-  lines2 <- striae2
+  lines1 <- striae1 %>% dplyr::mutate(land = 1)
+  lines2 <- striae2 %>% dplyr::mutate(land = 2)
 
   lines <- rbind(lines1, lines2)
   lines <- lines[order(lines$xmin), ]
@@ -177,17 +177,18 @@ striation_identify_matches <- function(striae1, striae2) {
   ml$group <- 0
   ml$group[c(1, idx[-length(idx)] + 1)] <- 1
   ml$group <- cumsum(ml$group)
-  isMatch <- function(type, bullet) {
-    if (length(unique(bullet)) != 2) return(FALSE)
+  isMatch <- function(type, land) {
+    if (length(unique(land)) != 2) return(FALSE)
     return(length(unique(type)) == 1)
   }
-  groups <- ml %>% group_by(group) %>% summarise(
-    match = isMatch(type, land),
-    size = n(),
-    type = type[1],
-    sdheights = sd(heights),
-    heights = mean(heights)
-  )
+  groups <- ml %>% dplyr::group_by(group) %>%
+    dplyr::summarise(
+      match = isMatch(type, land),
+      size = n(),
+      type = type[1],
+      sdheights = sd(heights),
+      heights = mean(heights)
+    )
   lines$match <- as.vector(groups$match)
   lines$type <- as.vector(groups$type)
   lines$type[!lines$match] <- NA
