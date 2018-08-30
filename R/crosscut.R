@@ -112,10 +112,6 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
     #    res <- ccf(first_cc$resid, second_cc$resid, lag.max = .5*min(nrow(first_cc), nrow(second_cc)), plot=FALSE)
     #    ccf <- max(res$acf)
 
-    # TODO: Change from bullet - these are crosscuts
-    # first_cc$bullet <- "first-bullet"
-    # second_cc$bullet <- "second-bullet"
-
     # smooth raw signatures, then align and compare:
     first_cc$rssmooth <- raw_sig_smooth(first_cc$raw_sig, span = span)
     second_cc$rssmooth <- raw_sig_smooth(second_cc$raw_sig, span = span)
