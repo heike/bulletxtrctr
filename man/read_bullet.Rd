@@ -4,7 +4,7 @@
 \alias{read_bullet}
 \title{Reading all scans from a folder}
 \usage{
-read_bullet(folder = NULL, ext = "x3p", urllist = NULL)
+read_bullet(folder = NULL, ext = ".x3p$", urllist = NULL)
 }
 \arguments{
 \item{folder}{character describing the path to a folder}

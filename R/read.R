@@ -22,7 +22,7 @@
 #' b1 <- read_bullet(urllist = hamby252demo[[1]])
 #' b2 <- read_bullet(urllist = hamby252demo[[2]])
 #' }
-read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
+read_bullet <- function(folder = NULL, ext = ".x3p$", urllist = NULL) {
   assert_that(!is.null(folder) | !is.null(urllist))
 
   if (!is.null(folder) & !is.null(urllist)) {
@@ -41,7 +41,7 @@ read_bullet <- function(folder = NULL, ext = "x3p", urllist = NULL) {
   }
   if (length(set) == 0) stop("No files found. Check path/URL.")
 
-  if (ext == "x3p") {
+  if (ext == ".x3p$" | ext == "x3p") {
     scans <- lapply(set, FUN = x3ptools::read_x3p)
   }
   as.tbl(data.frame(source = set, x3p = I(scans), stringsAsFactors = F))
