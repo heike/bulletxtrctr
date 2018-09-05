@@ -90,6 +90,11 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
   x3pdat <- check_x3p(x3p)
 
   x3p_df <- x3ptools::x3p_to_df(x3pdat)
+
+  if (max(x3p_df$y) < min(ylimits, na.rm = T)) {
+    warning("Maximum y value is less than minimum ylimit value. Are units correct?")
+  }
+
   if (is.na(ylimits[2])) {
     ylimits[2] <- max(x3p_df$y)
   }
