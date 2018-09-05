@@ -1,7 +1,7 @@
 ---
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "August 30, 2018"
+date: "September 05, 2018"
 output: 
   html_document:
     keep_md: true
@@ -10,7 +10,7 @@ output:
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--08--30-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--09--05-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
@@ -39,21 +39,32 @@ In this tutorial, we'll work with two bullets from a single barrel of the Hamby 
 
 
 ```r
-b1 <- read_bullet(urllist = hamby252demo[[1]])
-b2 <- read_bullet(urllist = hamby252demo[[2]])
+#b1 <- read_bullet(urllist = hamby252demo[[1]])
+#b2 <- read_bullet(urllist = hamby252demo[[2]])
 ```
 
 If instead we wanted to download the files into a folder named "data" in our working directory, we would run this sequence of commands:
 
 ```r
-if (!dir.exists("data")) {
-  dir.create("data")
+if (!dir.exists("README_files/data")) {
+  dir.create("README_files/data")
 }
-if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
-  NRBTDsample_download("data")
+if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
+  NRBTDsample_download("README_files/data")
 }
-b1 <- read_bullet("data/Bullet1", "x3p")
-b2 <- read_bullet("data/Bullet2", "x3p")
+b1 <- read_bullet("README_files/data/Bullet1")
+```
+
+```
+## 6 files found. Reading ...
+```
+
+```r
+b2 <- read_bullet("README_files/data/Bullet2")
+```
+
+```
+## 6 files found. Reading ...
 ```
 
 Combine the results into a single data frame:
@@ -61,9 +72,9 @@ Combine the results into a single data frame:
 
 ```r
 b1$bullet <- 1
-b1$land <- paste0("1-", 1:6)
 b2$bullet <- 2
-b2$land <- paste0("2-", 1:6)
+b1$land <- 1:6
+b2$land <- 1:6
 bullets <- rbind(b1, b2)
 ```
 
@@ -144,11 +155,11 @@ We are working under the assumption that the scans are aligned such that the bas
 
 
 ```r
-image_x3p(bullets$x3p[[1]], file = "README_files/temp-before.png")
+image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-before.png")
 ```
 
 The raw scan needs to be flipped such that the heel is along the bottom of the image rather than along the left hand side.
-![Raw scan - needs to be rotated.](README_files/temp-before.png)
+![Raw scan - needs to be rotated.](README_files/static/temp-before.png)
 
 
 
@@ -164,12 +175,12 @@ bullets <- bullets %>% mutate(
 
 
 ```r
-image_x3p(bullets$x3p[[1]], file = "README_files/temp-after.png")
+image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-after.png")
 ```
 
 Scan after the transformation: a clear right twist is visible in the right slant of striae and grooves.
 
-![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](README_files/temp-after.png)
+![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](README_files/static/temp-after.png)
 
 3. Get the ideal cross sections
 
@@ -185,27 +196,51 @@ bullets <- bullets %>% mutate(
 )
 ```
 
+Visualize the cross cuts:
+
+```r
+crosscuts <- bullets %>% tidyr::unnest(ccdata)
+crosscuts %>% 
+  ggplot(aes(x = x, y = value)) + 
+  geom_line() +
+  facet_grid(bullet~land, labeller="label_both") +
+  theme_bw()
+```
+
+![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
+Note the rather strange cross cut for land 6 in bullet 1. We can look at the scan - and find quite pronounced tank rash. However, the extraction of the land is at a height of 375, which is not as much affected by the rash as the base of the bullet or the top of the scanning area.
+
+```
+filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p()
+```
+
 4. Get the groove locations
 
 
 ```r
 bullets <- bullets %>% mutate(
   grooves = ccdata %>% 
-    purrr::map(.f = cc_locate_grooves, method = "rollapply", 
+    purrr::map(.f = cc_locate_grooves, method = "middle", 
                adjust = 30, return_plot = TRUE)
 )
-
-bullets$grooves[[1]]
 ```
 
-```
-## $groove
-## [1]  246.875 2159.375
-## 
-## $plot
+Visualize that the grooves are identified correctly (at least enough to not distort the final result):
+
+```r
+gridExtra::grid.arrange(
+  bullets$grooves[[1]]$plot, bullets$grooves[[2]]$plot,
+  bullets$grooves[[3]]$plot, bullets$grooves[[4]]$plot,
+  bullets$grooves[[5]]$plot, bullets$grooves[[6]]$plot,
+  bullets$grooves[[7]]$plot, bullets$grooves[[8]]$plot,
+  bullets$grooves[[9]]$plot, bullets$grooves[[10]]$plot,
+  bullets$grooves[[11]]$plot, bullets$grooves[[12]]$plot,
+  ncol = 6
+)
 ```
 
-![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 5. Extract signatures
 
@@ -234,29 +269,21 @@ signatures %>%
   theme_bw()
 ```
 
-```
-## Warning: Removed 25 rows containing missing values (geom_path).
-```
-
-```
-## Warning: Removed 38 rows containing missing values (geom_path).
-```
-
-![](README_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
 8. Detect peaks and valleys in the aligned signatures
 
 
 ```r
-lands <- unique(bullets$land)
+bullets$bulletland <- paste0(bullets$bullet,"-", bullets$land)
+lands <- unique(bullets$bulletland)
 comparisons <- data.frame(
   expand.grid(land1 = lands, land2 = lands), stringsAsFactors = FALSE)
-#  comparisons <- comparisons %>% filter(b1 != b2)
 
 comparisons <- comparisons %>% mutate(
   aligned = purrr::map2(.x = land1, .y = land2, .f = function(xx, yy) {
-    land1 <- bullets$sigs[bullets$land == xx][[1]]
-    land2 <- bullets$sigs[bullets$land == yy][[1]]
+    land1 <- bullets$sigs[bullets$bulletland == xx][[1]]
+    land2 <- bullets$sigs[bullets$bulletland == yy][[1]]
     land1$bullet <- "first-land"
     land2$bullet <- "second-land"
     
@@ -346,7 +373,7 @@ comparisons %>%
   ylab("Land B")
 ```
 
-![](README_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 
 
 10. Get Score predictions for each land to land comparison
@@ -365,7 +392,7 @@ comparisons %>%
   ylab("Land B")
 ```
 
-![](README_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
 11. Determine bullet-to-bullet scores
 
@@ -385,9 +412,9 @@ bullet_scores %>% select(-data)
 ##   bulletA bulletB bullet_score
 ##   <chr>   <chr>          <dbl>
 ## 1 1       1              0.982
-## 2 2       1              0.674
-## 3 1       2              0.674
-## 4 2       2              0.988
+## 2 2       1              0.681
+## 3 1       2              0.681
+## 4 2       2              0.989
 ```
 
 

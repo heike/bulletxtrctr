@@ -24,6 +24,12 @@ The package defines a set of functions of the form `extract_feature_XXX` where `
 
 Using the function `extract_features_all` will automatically call all currently implemented functions of the form `extract_feature_XXX` and return a dataframe (of a single row) for each set of aligned signatures.
 
+There are two types of features implemented at the moment: features, that are based on 
+- only the aligned signatures: D, ccf, rough cor, ... 
+- striae extracted from aligned signatures: cms, matches, ...
+
+
+
 ### Distance $D$
 
 The Euclidean distance between two aligned signatures $s$ and $t$ is defined as

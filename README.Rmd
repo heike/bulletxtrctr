@@ -36,30 +36,30 @@ The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov
 
 In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 scans of bullet lands in x3p format are provided in the `hamby252demo` object.
 
-```{r}
-b1 <- read_bullet(urllist = hamby252demo[[1]])
-b2 <- read_bullet(urllist = hamby252demo[[2]])
+```{r, eval = TRUE}
+#b1 <- read_bullet(urllist = hamby252demo[[1]])
+#b2 <- read_bullet(urllist = hamby252demo[[2]])
 ```
 
 If instead we wanted to download the files into a folder named "data" in our working directory, we would run this sequence of commands:
-```{r eval = F}
-if (!dir.exists("data")) {
-  dir.create("data")
+```{r, eval = FALSE}
+if (!dir.exists("README_files/data")) {
+  dir.create("README_files/data")
 }
-if (!file.exists("data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
-  NRBTDsample_download("data")
+if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
+  NRBTDsample_download("README_files/data")
 }
-b1 <- read_bullet("data/Bullet1", "x3p")
-b2 <- read_bullet("data/Bullet2", "x3p")
+b1 <- read_bullet("README_files/data/Bullet1")
+b2 <- read_bullet("README_files/data/Bullet2")
 ```
 
 Combine the results into a single data frame:
 
 ```{r}
 b1$bullet <- 1
-b1$land <- paste0("1-", 1:6)
 b2$bullet <- 2
-b2$land <- paste0("2-", 1:6)
+b1$land <- 1:6
+b2$land <- 1:6
 bullets <- rbind(b1, b2)
 ```
 
@@ -98,11 +98,11 @@ summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 We are working under the assumption that the scans are aligned such that the base of the bullet are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
 
 ```{r}
-image_x3p(bullets$x3p[[1]], file = "README_files/temp-before.png")
+image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-before.png")
 ```
 
 The raw scan needs to be flipped such that the heel is along the bottom of the image rather than along the left hand side.
-![Raw scan - needs to be rotated.](README_files/temp-before.png)
+![Raw scan - needs to be rotated.](README_files/static/temp-before.png)
 
 
 ```{r}
@@ -117,12 +117,12 @@ bullets <- bullets %>% mutate(
 
 
 ```{r}
-image_x3p(bullets$x3p[[1]], file = "README_files/temp-after.png")
+image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-after.png")
 ```
 
 Scan after the transformation: a clear right twist is visible in the right slant of striae and grooves.
 
-![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](README_files/temp-after.png)
+![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](README_files/static/temp-after.png)
 
 3. Get the ideal cross sections
 
@@ -137,22 +137,48 @@ bullets <- bullets %>% mutate(
 )
 ```
 
+Visualize the cross cuts:
+```{r, fig.width = 8, fig.height=3.3}
+crosscuts <- bullets %>% tidyr::unnest(ccdata)
+crosscuts %>% 
+  ggplot(aes(x = x, y = value)) + 
+  geom_line() +
+  facet_grid(bullet~land, labeller="label_both") +
+  theme_bw()
+```
+
+Note the rather strange cross cut for land 6 in bullet 1. We can look at the scan - and find quite pronounced tank rash. However, the extraction of the land is at a height of 375, which is not as much affected by the rash as the base of the bullet or the top of the scanning area.
+
+```
+filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p()
+```
+
 4. Get the groove locations
 
 ```{r}
 bullets <- bullets %>% mutate(
   grooves = ccdata %>% 
-    purrr::map(.f = cc_locate_grooves, method = "rollapply", 
+    purrr::map(.f = cc_locate_grooves, method = "middle", 
                adjust = 30, return_plot = TRUE)
 )
+```
 
-bullets$grooves[[1]]
+Visualize that the grooves are identified correctly (at least enough to not distort the final result):
+```{r, fig.width = 8, fig.height=3.3}
+gridExtra::grid.arrange(
+  bullets$grooves[[1]]$plot, bullets$grooves[[2]]$plot,
+  bullets$grooves[[3]]$plot, bullets$grooves[[4]]$plot,
+  bullets$grooves[[5]]$plot, bullets$grooves[[6]]$plot,
+  bullets$grooves[[7]]$plot, bullets$grooves[[8]]$plot,
+  bullets$grooves[[9]]$plot, bullets$grooves[[10]]$plot,
+  bullets$grooves[[11]]$plot, bullets$grooves[[12]]$plot,
+  ncol = 6
+)
 ```
 
 5. Extract signatures
 
 ```{r}
-
 bullets <- bullets %>% mutate(
   sigs = purrr::map2(
     .x = ccdata, .y = grooves, 
@@ -180,15 +206,15 @@ signatures %>%
 8. Detect peaks and valleys in the aligned signatures
 
 ```{r}
-lands <- unique(bullets$land)
+bullets$bulletland <- paste0(bullets$bullet,"-", bullets$land)
+lands <- unique(bullets$bulletland)
 comparisons <- data.frame(
   expand.grid(land1 = lands, land2 = lands), stringsAsFactors = FALSE)
-#  comparisons <- comparisons %>% filter(b1 != b2)
 
 comparisons <- comparisons %>% mutate(
   aligned = purrr::map2(.x = land1, .y = land2, .f = function(xx, yy) {
-    land1 <- bullets$sigs[bullets$land == xx][[1]]
-    land2 <- bullets$sigs[bullets$land == yy][[1]]
+    land1 <- bullets$sigs[bullets$bulletland == xx][[1]]
+    land2 <- bullets$sigs[bullets$bulletland == yy][[1]]
     land1$bullet <- "first-land"
     land2$bullet <- "second-land"
     

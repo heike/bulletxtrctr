@@ -115,7 +115,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>x3p_crosscut</span>(<span class='no'>x3p</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>x3p_crosscut</span>(<span class='no'>x3p</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -129,6 +129,10 @@ format is expected.</p></td>
       <th>y</th>
       <td><p>level of the crosscut to be taken. If this level does not exist,
 the crosscut along the middle of the land is returned.</p></td>
+    </tr>
+    <tr>
+      <th>range</th>
+      <td><p>numeric specifying a range of [y, y + range] to be extracted</p></td>
     </tr>
     </table>
     
