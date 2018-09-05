@@ -153,6 +153,7 @@ striation_identify_matches <- function(striae1, striae2) {
   n <- NULL
   variable <- NULL
   value <- NULL
+  land <- NULL
 
   check_striae(striae1)
   check_striae(striae2)
