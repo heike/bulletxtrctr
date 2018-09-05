@@ -2,9 +2,7 @@
 title: "bulletxtrctr"
 author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-output: 
-  html_document:
-    keep_md: true
+output: github_document
 ---
 
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
@@ -36,13 +34,15 @@ The NIST Research Ballistics Toolmarks data base (NRBTD)[https://tsapps.nist.gov
 
 In this tutorial, we'll work with two bullets from a single barrel of the Hamby 252 data set. Links to the 12 scans of bullet lands in x3p format are provided in the `hamby252demo` object.
 
-```{r, eval = TRUE}
-#b1 <- read_bullet(urllist = hamby252demo[[1]])
-#b2 <- read_bullet(urllist = hamby252demo[[2]])
+These commands will read in the bullets directly from the NRBTD repository, without downloading the files into your working directory:
+
+```{r, eval = F}
+b1 <- read_bullet(urllist = hamby252demo[[1]])
+b2 <- read_bullet(urllist = hamby252demo[[2]])
 ```
 
 If instead we wanted to download the files into a folder named "data" in our working directory, we would run this sequence of commands:
-```{r, eval = FALSE}
+```{r, eval = T}
 if (!dir.exists("README_files/data")) {
   dir.create("README_files/data")
 }
