@@ -50,3 +50,4 @@ Other striae-related-features: \code{\link{extract_feature_cms2}},
   \code{\link{extract_features_all}},
   \code{\link{extract_helper_feature_n_striae}}
 }
+\concept{striae-related-features}

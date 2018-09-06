@@ -50,3 +50,4 @@ Other alignment-related-features: \code{\link{extract_feature_D}},
   \code{\link{extract_feature_length}},
   \code{\link{extract_features_all}}
 }
+\concept{alignment-related-features}

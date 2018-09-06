@@ -72,7 +72,7 @@
       <h1>Feature Extraction</h1>
                         <h4 class="author">Heike Hofmann and Susan Vanderplas</h4>
             
-            <h4 class="date">2018-09-05</h4>
+            <h4 class="date">2018-09-06</h4>
       
       
       <div class="hidden name"><code>features.Rmd</code></div>
@@ -81,28 +81,24 @@
 
     
     
-<div id="features" class="section level2">
-<h2 class="hasAnchor">
-<a href="#features" class="anchor"></a>Features</h2>
 <p>The package defines a set of functions of the form <code>extract_feature_XXX</code> where <code>XXX</code> stands for a particular feature to be extracted either directly from a set of aligned signatures or indirectly from peaks and valleys derived from a set of aligned signatures.</p>
 <p>Using the function <code>extract_features_all</code> will automatically call all currently implemented functions of the form <code>extract_feature_XXX</code> and return a dataframe (of a single row) for each set of aligned signatures.</p>
 <p>There are two types of features implemented at the moment: features, that are based on - only the aligned signatures: D, ccf, rough cor, … - striae extracted from aligned signatures: cms, matches, …</p>
-<div id="distance-d" class="section level3">
-<h3 class="hasAnchor">
+<div id="distance-d" class="section level2">
+<h2 class="hasAnchor">
 <a href="#distance-d" class="anchor"></a>Distance <span class="math inline">\(D\)</span>
-</h3>
+</h2>
 <p>The Euclidean distance between two aligned signatures <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> is defined as <span class="math display">\[ d(s,t) = \sqrt{\sum_{i=1}^N\left( s_i - t_i\right)^2}\]</span>, where <span class="math inline">\(i = 1, ..., N\)</span>, the length of the aligned signatures. Two signatures <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> of respective lengths <span class="math inline">\(n_s\)</span> and <span class="math inline">\(n_t\)</span> can be aligned by padding one or both of the signatures with missing values <code>NA</code>. The aligned form of signatures <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> then has length <span class="math inline">\(N \ge n_s, n_t\)</span>. <span class="math inline">\(d\)</span> is then a measure of the distance between the two vectors. Note that this form of <span class="math inline">\(d\)</span> is not invariant to the resolution <span class="math inline">\(r\)</span>, at which signatures <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> are collected. To make the distance invariant to the resolution, we could use <span class="math inline">\(d\cdot r\)</span> as an estimate for the area between the two signatures. However, in cases of degraded signatures (i.e. cases, in which for some reason a signature cannot be extracted from a whole land), we want to also make distance invariant to the length of the signatures involved. We therefore define <span class="math display">\[D(s,t) = d(s,t)/N\]</span> to be the average distance between aligned signatures <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>.</p>
 </div>
-<div id="consecutively-matching-striae-cms" class="section level3">
-<h3 class="hasAnchor">
-<a href="#consecutively-matching-striae-cms" class="anchor"></a>Consecutively matching striae (CMS)</h3>
+<div id="consecutively-matching-striae-cms" class="section level2">
+<h2 class="hasAnchor">
+<a href="#consecutively-matching-striae-cms" class="anchor"></a>Consecutively matching striae (CMS)</h2>
 <p>Consecutively matching striae is a measure first established by Alfred Biasotti in 1950 (reference). The number of consecutively matching striae is the number of consecutive <em>peaks</em> two signature have in common, i.e. the valleys in between the peaks should not be counted. XXX Currently, the function <code>extract_feature_cms</code> counts both peaks and valleys XXX Generally, a CMS of 6 or higher is considered to be strongly indicative of a match (need another citation for this).</p>
 </div>
-<div id="countable-features" class="section level3">
-<h3 class="hasAnchor">
-<a href="#countable-features" class="anchor"></a>Countable features</h3>
+<div id="countable-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#countable-features" class="anchor"></a>Countable features</h2>
 <p>All features that return a count in one way or the other, such as <code>cms</code>, <code>noncms</code>, <code>matches</code>, <code>nonmatches</code>, … are accompanied by functions that scale these integers by the signature length (to make these numbers independent from length) and return values scaled to millimeter. The corresponding variables then have an appendix of <code>_per_mm</code>.</p>
-</div>
 </div>
   </div>
 
@@ -111,7 +107,9 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#features">Features</a></li>
+<li><a href="#distance-d">Distance <span class="math inline">\(D\)</span></a></li>
+      <li><a href="#consecutively-matching-striae-cms">Consecutively matching striae (CMS)</a></li>
+      <li><a href="#countable-features">Countable features</a></li>
       </ul>
 </div>
       </div>

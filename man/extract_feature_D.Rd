@@ -48,3 +48,4 @@ Other alignment-related-features: \code{\link{extract_feature_ccf}},
   \code{\link{extract_feature_overlap}},
   \code{\link{extract_features_all}}
 }
+\concept{alignment-related-features}

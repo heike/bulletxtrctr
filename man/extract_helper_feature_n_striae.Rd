@@ -54,3 +54,4 @@ Other striae-related-features: \code{\link{extract_feature_cms2}},
   \code{\link{extract_feature_sum_peaks}},
   \code{\link{extract_features_all}}
 }
+\concept{striae-related-features}
