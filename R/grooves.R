@@ -82,12 +82,19 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   check_ccdata(ccdata)
 
-  assert_that(method %in% c("quadratic", "rollapply", "middle"))
+  assert_that(method %in% c("quadratic", "rollapply", "middle", "logistic")) ## too strict
+  # TODO: expand cc_locate_groove to accept user defined get_grooves_XXX function
   assert_that(
     is.numeric(smoothfactor), is.numeric(adjust), is.numeric(groove_cutoff),
     is.logical(return_plot)
   )
 
+  if (method == "logistic") {
+    grooves <- get_grooves_logistic(
+      x = land$x, value = land$value,
+      adjust = adjust, return_plot = return_plot
+    )
+  }
   if (method == "quadratic") {
     # grooves <- get_grooves_quadratic(bullet = bullet, adjust = adjust)
     grooves <- get_grooves_quadratic(
@@ -191,6 +198,91 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
     return(list(
       groove = groove,
       plot = grooves_plot(land = land, grooves = groove)
+    ))
+  } else {
+    return(list(groove = groove))
+  }
+}
+
+#' Use logistic model to identify groove locations
+#'
+#' @export
+get_grooves_logistic <- function(x, value, smoothfactor = 15, adjust = 10,
+                                 groove_cutoff = 400, return_plot = F) {
+
+  land <- data.frame(x = x, value = value)
+  original_land <- land
+
+  ## generate additional variables
+
+  check_min <- min(land$value[!is.na(land$value)])
+  land <- land %>% mutate(value_std = value - check_min)
+  #install.packages("locfit")
+  library(locfit)
+  robust_loess_fit <- locfit.robust(value_std~x, data = land, alpha = 1, kern = "tcub")
+  land$rlo_pred <- predict(robust_loess_fit, newdata = land)
+
+  land$rlo_absresid <- with(land, abs(value_std-rlo_pred))
+  land$rlo_resid <- with(land, value_std-rlo_pred)
+
+
+  median <- median(land$x)
+  land$side <- "right"
+  land$side <- ifelse(land$x <= median, "left", land$side)
+  land$depth <- abs(land$x - median)
+
+  ## range20 : range of values in a 20-wide band around each data point.
+  land$range_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){max(x) - min(x)}, partial = TRUE)
+
+  ## xint1 and xint2: the predicted locations that the robust LOESS crosses the x-axis.
+  xint1 <- min(abs(land$rlo_pred[(land$x < median(land$x))]))
+  xint2 <- min(abs(land$rlo_pred[(land$x > median(land$x))]))
+  ind1 <- which(land$rlo_pred == xint1 | land$rlo_pred == -1*xint1)
+  ind2 <- which(land$rlo_pred == xint2 | land$rlo_pred == -1*xint2)
+  land$xint1 <- land$x[ind1]
+  land$xint2 <- land$x[ind2]
+
+  ## ind_2mad: whether the data point is above the 2*MAR cutoff previously used as an ad-hoc method.
+  mar <- median(land$rlo_absresid, na.rm = T)
+  land$ind_2mad <- ifelse(land$rlo_absresid > 2*mar, 1, 0)
+
+  ## numpos_50: how many positive residuals there are in a 50-wide band around each data point.
+  land$numpos_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){sum(x > 0)}, partial = TRUE)
+
+  land$numNA_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){sum(is.na(x))}, partial = TRUE)
+  lower <- quantile(land$x, prob = .25)
+  upper <- quantile(land$x, prob = .75)
+  proxy_dat <- land %>% filter(x < upper & x > lower)
+  proxy <- sd(proxy_dat$rlo_resid, na.rm = T)
+  land$rlo_resid_std <- land$rlo_resid/proxy
+  land$range_50_std <- land$range_50/proxy
+
+  xrange <- max(land$x) - min(land$x)
+  land$depth_std <- land$depth/xrange
+  land$xint1_std <- land$xint1/xrange
+  land$xint2_std <- land$xint2/xrange
+
+  ## now get logistic predictions
+  model_all4 <- as.matrix(c(-26.7166509, 0.1727030, 0, -0.1815079, 0, 39.7340095, -1.0473396, 7.0916175, 0.2428548, 0, 1.6039295, 0, 0))
+
+
+  land <- na.omit(land)
+  X <- cbind(1, model.matrix(~rlo_resid_std + I(rlo_resid_std^2) + side +
+                               depth_std + side*depth_std + xint1_std +
+                               xint2_std + range_50 + numNA_50 + ind_2mad +
+                               numpos_50 - 1,
+                             land))
+  ymean <- X%*%model_all4
+  yhat <- exp(ymean)/(1 + exp(ymean))
+  land$pred_val <- yhat
+  land$pred_class <- ifelse(land$pred_val < .25, "LEA", "GEA")
+
+  groove <- range(land$x[land$pred_class == "LEA"])
+
+  if (return_plot) {
+    return(list(
+      groove = groove,
+      plot = grooves_plot(land = original_land, grooves = groove)
     ))
   } else {
     return(list(groove = groove))

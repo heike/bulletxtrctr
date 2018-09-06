@@ -36,13 +36,14 @@ In this tutorial, we'll work with two bullets from a single barrel of the Hamby 
 
 These commands will read in the bullets directly from the NRBTD repository, without downloading the files into your working directory:
 
-```{r, eval = F}
+```{r, eval = FALSE}
 b1 <- read_bullet(urllist = hamby252demo[[1]])
 b2 <- read_bullet(urllist = hamby252demo[[2]])
 ```
 
 If instead we wanted to download the files into a folder named "data" in our working directory, we would run this sequence of commands:
-```{r, eval = T}
+
+```{r, eval = TRUE}
 if (!dir.exists("README_files/data")) {
   dir.create("README_files/data")
 }

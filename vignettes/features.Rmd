@@ -18,8 +18,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Features
-
 The package defines a set of functions of the form `extract_feature_XXX` where `XXX` stands for a particular feature to be extracted either directly from a set of aligned signatures or indirectly from peaks and valleys derived from a set of aligned signatures.
 
 Using the function `extract_features_all` will automatically call all currently implemented functions of the form `extract_feature_XXX` and return a dataframe (of a single row) for each set of aligned signatures.
@@ -30,7 +28,7 @@ There are two types of features implemented at the moment: features, that are ba
 
 
 
-### Distance $D$
+## Distance $D$
 
 The Euclidean distance between two aligned signatures $s$ and $t$ is defined as
 $$ d(s,t) = \sqrt{\sum_{i=1}^N\left( s_i - t_i\right)^2}$$,
@@ -43,12 +41,12 @@ However, in cases of degraded signatures (i.e. cases, in which for some reason a
 $$D(s,t) = d(s,t)/N$$
 to be the average distance between aligned signatures $s$ and $t$.
 
-### Consecutively matching striae (CMS)
+## Consecutively matching striae (CMS)
 
 Consecutively matching striae is a measure first established by Alfred Biasotti in 1950 (reference). The number of consecutively matching striae is the number of consecutive *peaks* two signature have in common, i.e. the valleys in between the peaks should not be counted. XXX Currently, the function `extract_feature_cms` counts both peaks and valleys XXX
 Generally, a CMS of 6 or higher is considered to be strongly indicative of a match (need another citation for this). 
 
-### Countable features
+## Countable features
 
 All features that return a count in one way or the other, such as `cms`, `noncms`, `matches`, `nonmatches`, ... 
 are accompanied by functions that scale these integers by the signature length (to make these numbers independent from length) and return values scaled to millimeter.
