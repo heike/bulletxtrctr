@@ -26,7 +26,8 @@ Imports:
     smoother,
     ggplot2,
     assertthat,
-    purrr
+    purrr,
+    locfit
 Remotes: heike/x3ptools    
 Depends:
     R (>= 3.4)

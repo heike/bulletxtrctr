@@ -206,9 +206,13 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 
 #' Use logistic model to identify groove locations
 #'
+#' @inheritParams get_grooves_quadratic
+#' @importFrom locfit locfit.robust
+#' @importFrom stats model.matrix
 #' @export
-get_grooves_logistic <- function(x, value, smoothfactor = 15, adjust = 10,
-                                 groove_cutoff = 400, return_plot = F) {
+get_grooves_logistic <- function(x, value, adjust = 10, # smoothfactor = 15,
+                                 #groove_cutoff = 400,
+                                 return_plot = F) {
 
   land <- data.frame(x = x, value = value)
   original_land <- land
@@ -216,9 +220,9 @@ get_grooves_logistic <- function(x, value, smoothfactor = 15, adjust = 10,
   ## generate additional variables
 
   check_min <- min(land$value[!is.na(land$value)])
-  land <- land %>% mutate(value_std = value - check_min)
+  land <- mutate(land, value_std = value - check_min)
   #install.packages("locfit")
-  library(locfit)
+  #library(locfit)
   robust_loess_fit <- locfit.robust(value_std~x, data = land, alpha = 1, kern = "tcub")
   land$rlo_pred <- predict(robust_loess_fit, newdata = land)
 

@@ -4,8 +4,16 @@
 \alias{get_grooves_logistic}
 \title{Use logistic model to identify groove locations}
 \usage{
-get_grooves_logistic(x, value, smoothfactor = 15, adjust = 10,
-  groove_cutoff = 400, return_plot = F)
+get_grooves_logistic(x, value, adjust = 10, return_plot = F)
+}
+\arguments{
+\item{x}{numeric vector of locations (in microns)}
+
+\item{value}{numeric values of surface measurements in microns}
+
+\item{adjust}{positive number to adjust the grooves}
+
+\item{return_plot}{return plot of grooves?}
 }
 \description{
 Use logistic model to identify groove locations
