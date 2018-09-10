@@ -424,5 +424,36 @@ bullet_scores %>% select(-data)
     ## 3 1       2              0.681
     ## 4 2       2              0.989
 
+12. Use bullet-to-bullet scores to predict land to land scores
+
+<!-- end list -->
+
+``` r
+bullet_scores <- bullet_scores %>% mutate(
+  data = data %>% purrr::map(
+    .f = function(d) {
+      d$samesource = bullet_to_land_predict(
+        land1 = d$landA, land2 = d$landB, d$rfscore)
+      d
+    })
+)
+comparisons <- bullet_scores %>% tidyr::unnest(data)
+comparisons %>% 
+  ggplot(aes(x = landA, y = landB, 
+             fill = rfscore, colour=samesource)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "grey80", high = "darkorange", 
+                       midpoint = .5) +
+  scale_colour_manual(values = c("grey80", "darkorange")) +
+  geom_tile(size = 1, 
+            data = comparisons %>% filter(samesource)) +
+  facet_grid(bulletB~bulletA, labeller = "label_both") +
+  xlab("Land A") +
+  ylab("Land B") +
+  theme(aspect.ratio = 1)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+
 An interactive interface for doing comparisons is available
 <https://oaiti.org/apps/bulletmatcher/>

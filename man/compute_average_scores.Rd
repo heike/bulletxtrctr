@@ -2,7 +2,7 @@
 % Please edit documentation in R/bullet-scores.R
 \name{compute_average_scores}
 \alias{compute_average_scores}
-\title{#' Get average scores for bullet to bullet comparisons}
+\title{Get average scores for bullet to bullet comparisons}
 \usage{
 compute_average_scores(land1, land2, score)
 }

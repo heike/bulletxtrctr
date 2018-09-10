@@ -1,4 +1,4 @@
-#' #' Get average scores for bullet to bullet comparisons
+#' Get average scores for bullet to bullet comparisons
 #'
 #' Note that the combination of `land1` and `land2` are a key to the scores,
 #' i.e. if a bullet has six lands, each of the input vectors should have
@@ -96,3 +96,28 @@ compute_average_scores <- function(land1, land2, score) {
   })
   scores
 }
+
+
+#' Get land to land prediction based on bullet to bullet comparisons
+#'
+#' The combination of `land1` and `land2` are a key to the scores,
+#' i.e. if a bullet has six lands, each of the input vectors should have
+#' length 36.
+#' @param land1 (numeric) vector with land ids of bullet 1
+#' @param land2 (numeric) vector with land ids of bullet 2
+#' @param score numeric vector of scores to be summarized into a single number
+#' @export
+#' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
+bullet_to_land_predict <- function(land1, land2, scores) {
+    avgs <- compute_average_scores(land2, land1, scores)
+    p <- length(unique(land1))
+
+    # pick the maximum to determine the phase
+    idx <- which.max(avgs)
+    dd <- data.frame(
+      land1 = parse_number(land1),
+      land2 = parse_number(land2))
+    dd$diff = (dd$land1 -dd$land2 + 1) %% p
+
+    dd$diff == idx
+  }
