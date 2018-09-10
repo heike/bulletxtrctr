@@ -123,7 +123,8 @@ extract_feature_left_cms <- function(striae) {
 #' extract_feature_cms_peak_only(striae$lines)
 #' }
 extract_feature_cms2 <- function(striae) {
-  # TODO: Rename function: cms2 -> cms_peak_only
+  # TODO: Rename function: cms2 -> cms
+  # TODO: Rename function cms -> cms_all
   # This cms definition is consistent with Biasotti - it only counts peaks
   assert_that(
     has_name(striae, "xmin"),
@@ -136,6 +137,45 @@ extract_feature_cms2 <- function(striae) {
   peaks <- filter(striae, type == 1)
   get_longest_run(peaks$match == TRUE)
 }
+
+#' Extract scaled number of consecutively matching elevated striation marks from two aligned signatures
+#'
+#' @inheritParams extract_feature_cms_per_mm
+#' @return scaled number of consecutively matching elevated striation marks per millimeter
+#' @export
+#' @importFrom assertthat assert_that has_name
+#' @importFrom dplyr filter arrange '%>%'
+#' @family striae-related-features
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet2[4])
+#'   ),
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' alignment <- sig_align(example_data$sigs[[1]]$sig,
+#'                        example_data$sigs[[2]]$sig)
+#' striae <- sig_cms_max(alignment)
+#' extract_feature_cms_peak_only(striae$lines)
+#' }
+extract_feature_cms2_per_mm <- function(striae, aligned, resolution) {
+  # TODO: Rename function: cms2 -> cms
+  # TODO: Rename function cms -> cms_all
+  # This cms definition is consistent with Biasotti - it only counts peaks
+
+  extract_feature_cms2(striae)/extract_feature_length_mm(aligned, resolution)
+}
+
 
 #' Extract number of consecutively matching striation marks (peaks and valleys) from two aligned signatures
 #'
@@ -172,6 +212,44 @@ extract_feature_cms <- function(striae) {
   assert_that(has_name(striae, "match"))
   get_longest_run(striae$match == TRUE)
 }
+
+#' Extract scaled number of consecutively matching striation marks (peaks and valleys) from two aligned signatures
+#'
+#' @inheritParams extract_feature_right_cms
+#' @param aligned two aligned signatures
+#' @param resolution micron per pixel resolution
+#' @return scaled number of consecutively matching striation marks (peaks and valleys)
+#' @export
+#' @importFrom assertthat assert_that has_name
+#' @family scaled-features
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet2[4])
+#'   ),
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' alignment <- sig_align(example_data$sigs[[1]]$sig,
+#'                        example_data$sigs[[2]]$sig)
+#' striae <- sig_cms_max(alignment)
+#' extract_feature_cms(striae$lines)
+#' }
+extract_feature_cms_per_mm <- function(striae, aligned, resolution) {
+  cms <- extract_feature_cms(striae)
+  length <- extract_feature_length_mm(aligned, resolution)
+  cms/length
+}
+
 
 # #' Extract number of consecutively matching striation marks per mm from two
 # #' aligned signatures
@@ -239,6 +317,39 @@ extract_feature_non_cms <- function(striae) {
   get_longest_run(striae$match == FALSE)
 }
 
+#' Extract scaled number of consecutively non-matching striation marks from two aligned signatures
+#'
+#' @inheritParams extract_feature_cms_per_mm
+#' @return scaled number of consecutively non-matching striation marks
+#' @export
+#' @importFrom assertthat assert_that has_name
+#' @family striae-related-features
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet2[4])
+#'   ),
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' alignment <- sig_align(example_data$sigs[[1]]$sig,
+#'                        example_data$sigs[[2]]$sig)
+#' striae <- sig_cms_max(alignment)
+#' extract_feature_non_cms(striae$lines)
+#' }
+extract_feature_non_cms_per_mm <- function(striae, aligned, resolution) {
+  extract_feature_non_cms(striae)/extract_feature_length_mm(aligned, resolution)
+}
+
 #' Extract information for striation marks from two aligned signatures
 #'
 #' internal function, called by multiple extract_feature functions
@@ -293,6 +404,39 @@ extract_helper_feature_n_striae <- function(striae, type = "peak",
   }
 
   return(n)
+}
+
+#' Extract scaled number of matching striation marks from two aligned signatures
+#'
+#' @inheritParams extract_feature_cms_per_mm
+#' @return scaled number of matching striation marks per mm
+#' @export
+#' @family striae-related-features
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet2[4])
+#'   ),
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' alignment <- sig_align(example_data$sigs[[1]]$sig,
+#'                        example_data$sigs[[2]]$sig)
+#' striae <- sig_cms_max(alignment)
+#' extract_feature_matches(striae$lines)
+#' extract_feature_mismatches(striae$lines)
+#' }
+extract_feature_matches_per_mm <- function(striae, aligned, resolution) {
+  extract_feature_matches(striae)/extract_feature_length_mm(aligned, resolution)
 }
 
 #' Extract number of matching striation marks from two aligned signatures
@@ -359,6 +503,39 @@ extract_feature_matches <- function(striae) {
 #' }
 extract_feature_mismatches <- function(striae) {
   extract_helper_feature_n_striae(striae, type = "all", match = FALSE)
+}
+
+#' Extract number of mismatched striation marks from two aligned signatures
+#'
+#' @inheritParams extract_feature_cms_per_mm
+#' @return number of mismatched striation marks
+#' @export
+#' @family striae-related-features
+#' @examples
+#' \dontrun{
+#' # Set the data up to be read in, cleaned, etc.
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet2[4])
+#'   ),
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' alignment <- sig_align(example_data$sigs[[1]]$sig,
+#'                        example_data$sigs[[2]]$sig)
+#' striae <- sig_cms_max(alignment)
+#' extract_feature_matches(striae$lines)
+#' extract_feature_mismatches(striae$lines)
+#' }
+extract_feature_mismatches_per_mm <- function(striae, aligned, resolution) {
+  extract_feature_mismatches(striae)/extract_feature_length_mm(aligned, resolution)
 }
 
 #' Extract the combined height of aligned striae between two aligned signatures
@@ -604,6 +781,42 @@ extract_feature_sd_D <- function(aligned) {
 }
 
 
+#' Length of two (aligned) signatures in millimeter
+#'
+#' Signatures will usually be of different lengths. In a comparison, the length
+#' of the shorter signature represents the potential length for a match.
+#' @inheritParams extract_feature_ccf
+#' @param resolution micron per pixel resolution
+#' @return length of the shorter signature in millimeters.
+#' @importFrom assertthat assert_that
+#' @importFrom zoo na.trim
+#' @export
+#' @family alignment-related-features
+#' @examples
+#' \dontrun{
+#' library(bulletxtrctr)
+#' library(x3ptools)
+#'
+#' example_data <- bullet_pipeline(
+#'   location = list(
+#'     Bullet1 = c(hamby252demo$bullet1[2]),
+#'     Bullet2 = c(hamby252demo$bullet2[4])
+#'   ),
+#'   x3p_clean = function(x) x %>%
+#'       x3pheader_to_microns() %>%
+#'       rotate_x3p(angle = -90) %>%
+#'       y_flip_x3p()
+#' )
+#'
+#' alignment <- sig_align(example_data$sigs[[1]]$sig,
+#'                        example_data$sigs[[2]]$sig)
+#'
+#' extract_feature_length(alignment$lands)
+#' }
+extract_feature_length_mm <- function(aligned, resolution) {
+  extract_feature_length(aligned)*resolution/1000 # one millimiter is 1000 microns
+}
+
 #' Extract length of two (aligned) signatures
 #'
 #' Signatures will usually be of different lengths. In a comparison, the length
@@ -705,6 +918,7 @@ extract_feature_overlap <- function(aligned) {
 #'
 #' @param aligned aligned signatures, result from `sig_cms_max`
 #' @param striae data frame with evaluated matching striae
+#' @param resolution micron per pixel resolution of scans
 #' @param ... passed on to extractor functions
 #' @importFrom utils apropos getFromNamespace
 #' @importFrom tidyr spread
@@ -734,7 +948,7 @@ extract_feature_overlap <- function(aligned) {
 #'
 #' extract_features_all(alignment, striae)
 #' }
-extract_features_all <- function(aligned, striae, ...) {
+extract_features_all <- function(aligned, striae, resolution, ...) {
   feature <- value <- NULL
   assert_that(!is.null(aligned), !is.null(striae),
     msg = "aligned and striae must not be NULL"
@@ -754,7 +968,9 @@ extract_features_all <- function(aligned, striae, ...) {
     if ("striae" %in% fun_args) {
       matching_args$striae <- striae$lines
     }
-
+    if ("resolution" %in% fun_args) {
+      matching_args$resolution <- resolution
+    }
     res <- do.call(fun, matching_args)
 
     res

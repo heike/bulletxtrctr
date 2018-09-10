@@ -27,6 +27,7 @@ library(bulletxtrctr)
 library(x3ptools)
 library(randomForest)
 library(ggplot2)
+library(readr)
 ```
 
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.
@@ -251,6 +252,9 @@ comparisons <- comparisons %>% mutate(
 
 ```{r}
 comparisons <- comparisons %>% mutate(
+  cms_per_mm = purrr::map2(striae, aligned, .f = function(s, a) {
+    extract_feature_cms_per_mm(s$lines, a$lands, resolution=1.5625)
+  }),
   matches0 = striae %>% purrr::map_dbl(.f = function(s) {
     bulletxtrctr:::extract_helper_feature_n_striae(s$lines, type = "peak", match = TRUE)
   }),
@@ -275,12 +279,7 @@ comparisons <- comparisons %>% mutate(
 ```{r}
 
 comparisons <- comparisons %>% mutate(
-  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all),
-#   res = purrr::pmap(
-#     list(aligned, striae, features),
-#     function(a, b, c, d) list(lands = a$lands, lines = b$lines, 
-#                               maxCMS = c$cms,
-#                               ccf = c$ccf, lag = c$lag))
+  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = 1.5625)
 )
 
 comparisons <- comparisons %>% mutate(
@@ -299,7 +298,8 @@ comparisons %>%
                        midpoint = 0.5) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
-  ylab("Land B")
+  ylab("Land B") +
+  theme(aspect.ratio = 1)
 ```
 
 
@@ -315,13 +315,13 @@ comparisons %>%
                        midpoint = .5) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
-  ylab("Land B")
+  ylab("Land B") +
+  theme(aspect.ratio = 1)
 ```
 
 11. Determine bullet-to-bullet scores
 
 ```{r}
-parse_number <- readr::parse_number
 bullet_scores <- comparisons %>% group_by(bulletA, bulletB) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(

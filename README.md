@@ -327,6 +327,9 @@ comparisons <- comparisons %>% mutate(
 
 ``` r
 comparisons <- comparisons %>% mutate(
+  cms_per_mm = purrr::map2(striae, aligned, .f = function(s, a) {
+    extract_feature_cms_per_mm(s$lines, a$lands, resolution=1.5625)
+  }),
   matches0 = striae %>% purrr::map_dbl(.f = function(s) {
     bulletxtrctr:::extract_helper_feature_n_striae(s$lines, type = "peak", match = TRUE)
   }),
@@ -352,7 +355,7 @@ comparisons <- comparisons %>% mutate(
 
 ``` r
 comparisons <- comparisons %>% mutate(
-  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all),
+  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = 1.5625),
 #   res = purrr::pmap(
 #     list(aligned, striae, features),
 #     function(a, b, c, d) list(lands = a$lands, lines = b$lines, 

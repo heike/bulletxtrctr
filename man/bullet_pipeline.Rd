@@ -4,8 +4,8 @@
 \alias{bullet_pipeline}
 \title{Helper file to setup data}
 \usage{
-bullet_pipeline(location, stop_at_step = NULL, x3p_clean = function(x)
-  x, ...)
+bullet_pipeline(location, stop_at_step = NULL, x3p_clean = function(x) x,
+  ...)
 }
 \arguments{
 \item{location}{directory or list of urls containing x3p files.
