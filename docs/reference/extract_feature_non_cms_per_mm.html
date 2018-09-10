@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract number of consecutively matching elevated striation marks from the right of two aligned signatures — extract_feature_right_cms • bulletxtrctr</title>
+<title>Extract scaled number of consecutively non-matching striation marks from two aligned signatures — extract_feature_non_cms_per_mm • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Extract number of consecutively matching elevated striation marks from the right of two aligned signatures — extract_feature_right_cms" />
+<meta property="og:title" content="Extract scaled number of consecutively non-matching striation marks from two aligned signatures — extract_feature_non_cms_per_mm" />
 
-<meta property="og:description" content="Extract number of consecutively matching elevated striation marks from the right of two aligned signatures" />
+<meta property="og:description" content="Extract scaled number of consecutively non-matching striation marks from two aligned signatures" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,18 +104,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract number of consecutively matching elevated striation marks from the right of two aligned signatures</h1>
+    <h1>Extract scaled number of consecutively non-matching striation marks from two aligned signatures</h1>
     
-    <div class="hidden name"><code>extract_feature_right_cms.Rd</code></div>
+    <div class="hidden name"><code>extract_feature_non_cms_per_mm.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Extract number of consecutively matching elevated striation marks from the right of two aligned signatures</p>
+    <p>Extract scaled number of consecutively non-matching striation marks from two aligned signatures</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_feature_right_cms</span>(<span class='no'>striae</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_feature_non_cms_per_mm</span>(<span class='no'>striae</span>, <span class='no'>aligned</span>, <span class='no'>resolution</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -124,11 +124,19 @@
       <th>striae</th>
       <td><p>data frame of striation marks based on two aligned signatures</p></td>
     </tr>
+    <tr>
+      <th>aligned</th>
+      <td><p>two aligned signatures</p></td>
+    </tr>
+    <tr>
+      <th>resolution</th>
+      <td><p>micron per pixel resolution</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>number of consecutively matching striation marks (from right)</p>
+    <p>scaled number of consecutively non-matching striation marks</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -140,8 +148,8 @@
   <code><a href='extract_feature_matches.html'>extract_feature_matches</a></code>,
   <code><a href='extract_feature_mismatches_per_mm.html'>extract_feature_mismatches_per_mm</a></code>,
   <code><a href='extract_feature_mismatches.html'>extract_feature_mismatches</a></code>,
-  <code><a href='extract_feature_non_cms_per_mm.html'>extract_feature_non_cms_per_mm</a></code>,
   <code><a href='extract_feature_non_cms.html'>extract_feature_non_cms</a></code>,
+  <code><a href='extract_feature_right_cms.html'>extract_feature_right_cms</a></code>,
   <code><a href='extract_feature_sum_peaks.html'>extract_feature_sum_peaks</a></code>,
   <code><a href='extract_features_all.html'>extract_features_all</a></code>,
   <code><a href='extract_helper_feature_n_striae.html'>extract_helper_feature_n_striae</a></code></p></div>
@@ -167,7 +175,7 @@
 <span class='no'>alignment</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sig_align.html'>sig_align</a></span>(<span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>sig</span>,
                        <span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>2</span>]]$<span class='no'>sig</span>)
 <span class='no'>striae</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sig_cms_max.html'>sig_cms_max</a></span>(<span class='no'>alignment</span>)
-<span class='fu'>extract_feature_right_cms</span>(<span class='no'>striae</span>$<span class='no'>lines</span>)
+<span class='fu'><a href='extract_feature_non_cms.html'>extract_feature_non_cms</a></span>(<span class='no'>striae</span>$<span class='no'>lines</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

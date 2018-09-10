@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-September 06, 2018
+September 10, 2018
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,7 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--09--06-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--09--10-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
@@ -35,6 +35,7 @@ library(bulletxtrctr)
 library(x3ptools)
 library(randomForest)
 library(ggplot2)
+library(readr)
 ```
 
 2.  `bulletxtrctr` only works on x3p files. See package `x3ptools` at
@@ -355,12 +356,7 @@ comparisons <- comparisons %>% mutate(
 
 ``` r
 comparisons <- comparisons %>% mutate(
-  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = 1.5625),
-#   res = purrr::pmap(
-#     list(aligned, striae, features),
-#     function(a, b, c, d) list(lands = a$lands, lines = b$lines, 
-#                               maxCMS = c$cms,
-#                               ccf = c$ccf, lag = c$lag))
+  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = 1.5625)
 )
 
 comparisons <- comparisons %>% mutate(
@@ -379,7 +375,8 @@ comparisons %>%
                        midpoint = 0.5) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
-  ylab("Land B")
+  ylab("Land B") +
+  theme(aspect.ratio = 1)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
@@ -399,17 +396,18 @@ comparisons %>%
                        midpoint = .5) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
-  ylab("Land B")
+  ylab("Land B") +
+  theme(aspect.ratio = 1)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
-11. Determine bullet-to-bullet scores
+11. Determine bullet-to-bullet
+scores
 
 <!-- end list -->
 
 ``` r
-parse_number <- readr::parse_number
 bullet_scores <- comparisons %>% group_by(bulletA, bulletB) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
