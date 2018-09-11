@@ -433,7 +433,8 @@ bullet_scores <- bullet_scores %>% mutate(
   data = data %>% purrr::map(
     .f = function(d) {
       d$samesource = bullet_to_land_predict(
-        land1 = d$landA, land2 = d$landB, d$rfscore)
+        land1 = d$landA, land2 = d$landB, 
+        d$rfscore, difference=0.1)
       d
     })
 )

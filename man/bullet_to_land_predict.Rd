@@ -4,14 +4,16 @@
 \alias{bullet_to_land_predict}
 \title{Get land to land prediction based on bullet to bullet comparisons}
 \usage{
-bullet_to_land_predict(land1, land2, scores)
+bullet_to_land_predict(land1, land2, scores, difference)
 }
 \arguments{
 \item{land1}{(numeric) vector with land ids of bullet 1}
 
 \item{land2}{(numeric) vector with land ids of bullet 2}
 
-\item{score}{numeric vector of scores to be summarized into a single number}
+\item{scores}{numeric vector of scores to be summarized into a single number}
+
+\item{difference}{numeric value describing the minimal difference between scores from same source versus different sources.}
 }
 \value{
 numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.

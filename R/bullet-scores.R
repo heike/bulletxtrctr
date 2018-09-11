@@ -98,6 +98,19 @@ compute_average_scores <- function(land1, land2, score) {
 }
 
 
+#' Helper function: bootstrap scores
+#'
+#' @param scores numeric values of scores
+#' @param k number of lands to average across
+#' @param K number of replicates
+#' @param value observed value
+bootstrap_k <- function(scores, k, K, value) {
+  res <- replicate(K, {
+    mean(sample(scores, size = k, replace = TRUE), na.rm = TRUE)
+  })
+  sum(res >= value)/K
+}
+
 #' Get land to land prediction based on bullet to bullet comparisons
 #'
 #' The combination of `land1` and `land2` are a key to the scores,
@@ -105,19 +118,27 @@ compute_average_scores <- function(land1, land2, score) {
 #' length 36.
 #' @param land1 (numeric) vector with land ids of bullet 1
 #' @param land2 (numeric) vector with land ids of bullet 2
-#' @param score numeric vector of scores to be summarized into a single number
+#' @param scores numeric vector of scores to be summarized into a single number
+#' @param difference numeric value describing the minimal difference between scores from same source versus different sources.
 #' @export
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
-bullet_to_land_predict <- function(land1, land2, scores) {
+bullet_to_land_predict <- function(land1, land2, scores, difference) {
+    land1 <- as.numeric(land1)
+    land2 <- as.numeric(land2)
     avgs <- compute_average_scores(land2, land1, scores)
-    p <- length(unique(land1))
-
+    p <- max(c(land1, land2))
+    if ( (diff(sort(-avgs))[1] > difference) & bootstrap_k(scores, p, 1000, max(avgs)) < 0.05) {
     # pick the maximum to determine the phase
     idx <- which.max(avgs)
     dd <- data.frame(
       land1 = parse_number(land1),
       land2 = parse_number(land2))
-    dd$diff = (dd$land1 -dd$land2 + 1) %% p
+    dd$diff = (dd$land1 - dd$land2) %% p + 1
 
-    dd$diff == idx
+
+    return(dd$diff == idx)
+    } else {
+
+      return(rep(FALSE, length=length(land1)))
+    }
   }

@@ -713,6 +713,20 @@ extract_feature_lag <- function(aligned) {
   lags
 }
 
+#' Extract lag in mm from two (or more) aligned signatures
+#'
+#'
+#' @inheritParams extract_feature_ccf
+#' @param resolution numeric value of resolution in micron per pixel
+#' @return (vector) of lags in millimeter
+#' @importFrom assertthat assert_that
+#' @export
+#' @family alignment-related-features
+extract_feature_lag_mm <- function(aligned, resolution) {
+  extract_feature_lag(aligned)*resolution/1000
+}
+
+
 #' Extract average distance between two (or more) aligned signatures
 #'
 #' @inheritParams extract_feature_ccf
