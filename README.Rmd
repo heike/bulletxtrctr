@@ -42,7 +42,7 @@ b1 <- read_bullet(urllist = hamby252demo[[1]])
 b2 <- read_bullet(urllist = hamby252demo[[2]])
 ```
 
-If instead we wanted to download the files into a folder named "data" in our working directory, we would run this sequence of commands:
+Instead, we could also download the files into a folder named "data" in our working directory. This is shown in the sequence of commands below:
 
 ```{r, eval = TRUE}
 if (!dir.exists("README_files/data")) {
