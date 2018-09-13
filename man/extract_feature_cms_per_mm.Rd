@@ -42,3 +42,4 @@ striae <- sig_cms_max(alignment)
 extract_feature_cms(striae$lines)
 }
 }
+\concept{scaled-features}

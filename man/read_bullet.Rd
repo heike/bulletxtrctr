@@ -4,7 +4,8 @@
 \alias{read_bullet}
 \title{Reading all scans from a folder}
 \usage{
-read_bullet(folder = NULL, ext = ".x3p$", urllist = NULL)
+read_bullet(folder = NULL, ext = ".x3p$", urllist = NULL,
+  size = NA)
 }
 \arguments{
 \item{folder}{character describing the path to a folder}
@@ -13,6 +14,8 @@ read_bullet(folder = NULL, ext = ".x3p$", urllist = NULL)
 file format the scans are in}
 
 \item{urllist}{list of URLs pointing to x3p files}
+
+\item{size}{specify size for reading binary file of surface matrix in x3p format}
 }
 \value{
 data frame with two variables, source and x3p, containing the path
