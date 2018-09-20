@@ -102,7 +102,7 @@
 <p>These commands will read in the bullets directly from the NRBTD repository, without downloading the files into your working directory:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">b1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="dt">urllist =</span> hamby252demo[[<span class="dv">1</span>]])</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">b2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_bullet.html">read_bullet</a></span>(<span class="dt">urllist =</span> hamby252demo[[<span class="dv">2</span>]])</a></code></pre></div>
-<p>If instead we wanted to download the files into a folder named “data” in our working directory, we would run this sequence of commands:</p>
+<p>Instead, we could also download the files into a folder named “data” in our working directory. This is shown in the sequence of commands below:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(<span class="st">"README_files/data"</span>)) {</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">  <span class="kw">dir.create</span>(<span class="st">"README_files/data"</span>)</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">}</a>
@@ -333,6 +333,33 @@
 ## 2 2       1              0.681
 ## 3 1       2              0.681
 ## 4 2       2              0.989</code></pre>
+<ol start="12" style="list-style-type: decimal">
+<li>Use bullet-to-bullet scores to predict land to land scores</li>
+</ol>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">bullet_scores &lt;-<span class="st"> </span>bullet_scores <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">  <span class="dt">data =</span> data <span class="op">%&gt;%</span><span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(</a>
+<a class="sourceLine" id="cb40-3" data-line-number="3">    <span class="dt">.f =</span> <span class="cf">function</span>(d) {</a>
+<a class="sourceLine" id="cb40-4" data-line-number="4">      d<span class="op">$</span>samesource =<span class="st"> </span><span class="kw"><a href="reference/bullet_to_land_predict.html">bullet_to_land_predict</a></span>(</a>
+<a class="sourceLine" id="cb40-5" data-line-number="5">        <span class="dt">land1 =</span> d<span class="op">$</span>landA, <span class="dt">land2 =</span> d<span class="op">$</span>landB, </a>
+<a class="sourceLine" id="cb40-6" data-line-number="6">        d<span class="op">$</span>rfscore, <span class="dt">difference=</span><span class="fl">0.1</span>)</a>
+<a class="sourceLine" id="cb40-7" data-line-number="7">      d</a>
+<a class="sourceLine" id="cb40-8" data-line-number="8">    })</a>
+<a class="sourceLine" id="cb40-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb40-10" data-line-number="10">comparisons &lt;-<span class="st"> </span>bullet_scores <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>(data)</a>
+<a class="sourceLine" id="cb40-11" data-line-number="11">comparisons <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> landA, <span class="dt">y =</span> landB, </a>
+<a class="sourceLine" id="cb40-13" data-line-number="13">             <span class="dt">fill =</span> rfscore, <span class="dt">colour=</span>samesource)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_gradient">scale_fill_gradient2</a></span>(<span class="dt">low =</span> <span class="st">"grey80"</span>, <span class="dt">high =</span> <span class="st">"darkorange"</span>, </a>
+<a class="sourceLine" id="cb40-16" data-line-number="16">                       <span class="dt">midpoint =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_manual">scale_colour_manual</a></span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"grey80"</span>, <span class="st">"darkorange"</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-18" data-line-number="18"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>(<span class="dt">size =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb40-19" data-line-number="19">            <span class="dt">data =</span> comparisons <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(samesource)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-20" data-line-number="20"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_grid">facet_grid</a></span>(bulletB<span class="op">~</span>bulletA, <span class="dt">labeller =</span> <span class="st">"label_both"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-21" data-line-number="21"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"Land A"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-22" data-line-number="22"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Land B"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-23" data-line-number="23"><span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">aspect.ratio =</span> <span class="dv">1</span>)</a></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 <p>An interactive interface for doing comparisons is available <a href="https://oaiti.org/apps/bulletmatcher/" class="uri">https://oaiti.org/apps/bulletmatcher/</a></p>
 </div>
 </div>
@@ -342,7 +369,7 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Report a bug at <br><a href="NA">NA</a>
+<li>Report a bug at <br><a href="https://github.com/heike/bulletxtrctr/issues">https://​github.com/​heike/​bulletxtrctr/​issues</a>
 </li>
 </ul>
 </div>
@@ -369,7 +396,7 @@
 <li><a href="http://www.r-pkg.org/pkg/bulletxtrctr"><img src="http://cranlogs.r-pkg.org/badges/bulletxtrctr" alt="CRAN RStudio mirror downloads"></a></li>
 <li><a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
 <li><a href="https://travis-ci.org/heike/bulletxtrctr"><img src="https://travis-ci.org/heike/bulletxtrctr.svg?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="/commits/master"><img src="https://img.shields.io/badge/last%20change-2018--09--10-yellowgreen.svg" alt="Last-changedate"></a></li>
+<li><a href="/commits/master"><img src="https://img.shields.io/badge/last%20change-2018--09--20-yellowgreen.svg" alt="Last-changedate"></a></li>
 <li><a href="https://codecov.io/github/heike/bulletxtrctr?branch=master"><img src="https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
 </ul>
 </div>

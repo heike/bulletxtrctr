@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract ccf from two (or more) aligned signatures — extract_feature_ccf • bulletxtrctr</title>
+<title>Get land to land prediction based on bullet to bullet comparisons — bullet_to_land_predict • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,11 @@
 
 
 
-<meta property="og:title" content="Extract ccf from two (or more) aligned signatures — extract_feature_ccf" />
+<meta property="og:title" content="Get land to land prediction based on bullet to bullet comparisons — bullet_to_land_predict" />
 
-<meta property="og:description" content="Extract ccf from two (or more) aligned signatures" />
+<meta property="og:description" content="The combination of `land1` and `land2` are a key to the scores,
+i.e. if a bullet has six lands, each of the input vectors should have
+length 36." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,66 +106,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract ccf from two (or more) aligned signatures</h1>
+    <h1>Get land to land prediction based on bullet to bullet comparisons</h1>
     
-    <div class="hidden name"><code>extract_feature_ccf.Rd</code></div>
+    <div class="hidden name"><code>bullet_to_land_predict.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Extract ccf from two (or more) aligned signatures</p>
+    <p>The combination of `land1` and `land2` are a key to the scores,
+i.e. if a bullet has six lands, each of the input vectors should have
+length 36.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_feature_ccf</span>(<span class='no'>aligned</span>)</pre>
+    <pre class="usage"><span class='fu'>bullet_to_land_predict</span>(<span class='no'>land1</span>, <span class='no'>land2</span>, <span class='no'>scores</span>, <span class='no'>difference</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>aligned</th>
-      <td><p>data frame with variable x (for location) and two or
-more measurements (the bullets entry in the list returned from
-sig_align)</p></td>
+      <th>land1</th>
+      <td><p>(numeric) vector with land ids of bullet 1</p></td>
+    </tr>
+    <tr>
+      <th>land2</th>
+      <td><p>(numeric) vector with land ids of bullet 2</p></td>
+    </tr>
+    <tr>
+      <th>scores</th>
+      <td><p>numeric vector of scores to be summarized into a single number</p></td>
+    </tr>
+    <tr>
+      <th>difference</th>
+      <td><p>numeric value describing the minimal difference between scores from same source versus different sources.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>(matrix) of correlations</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other alignment-related-features: <code><a href='extract_feature_D.html'>extract_feature_D</a></code>,
-  <code><a href='extract_feature_lag_mm.html'>extract_feature_lag_mm</a></code>,
-  <code><a href='extract_feature_lag.html'>extract_feature_lag</a></code>,
-  <code><a href='extract_feature_length_mm.html'>extract_feature_length_mm</a></code>,
-  <code><a href='extract_feature_length.html'>extract_feature_length</a></code>,
-  <code><a href='extract_feature_overlap.html'>extract_feature_overlap</a></code>,
-  <code><a href='extract_features_all.html'>extract_features_all</a></code></p></div>
+    <p>numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>bulletxtrctr</span>)
-<span class='fu'>library</span>(<span class='no'>x3ptools</span>)
-
-<span class='no'>example_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bullet_pipeline.html'>bullet_pipeline</a></span>(
-  <span class='kw'>location</span> <span class='kw'>=</span> <span class='fu'>list</span>(
-    <span class='kw'>Bullet1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet1</span>[<span class='fl'>2</span>]),
-    <span class='kw'>Bullet2</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet2</span>[<span class='fl'>4</span>])
-  ),
-  <span class='kw'>x3p_clean</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span> <span class='kw'>%&gt;%</span>
-      <span class='fu'><a href='x3pheader_to_microns.html'>x3pheader_to_microns</a></span>() <span class='kw'>%&gt;%</span>
-      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p'>rotate_x3p</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> -<span class='fl'>90</span>) <span class='kw'>%&gt;%</span>
-      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p'>y_flip_x3p</a></span>()
-)
-
-<span class='no'>alignment</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sig_align.html'>sig_align</a></span>(<span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>sig</span>,
-                       <span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>2</span>]]$<span class='no'>sig</span>)
-
-<span class='fu'>extract_feature_ccf</span>(<span class='no'>alignment</span>$<span class='no'>lands</span>)
-<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -171,11 +154,7 @@ sig_align)</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

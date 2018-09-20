@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract ccf from two (or more) aligned signatures — extract_feature_ccf • bulletxtrctr</title>
+<title>Helper function: bootstrap scores — bootstrap_k • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Extract ccf from two (or more) aligned signatures — extract_feature_ccf" />
+<meta property="og:title" content="Helper function: bootstrap scores — bootstrap_k" />
 
-<meta property="og:description" content="Extract ccf from two (or more) aligned signatures" />
+<meta property="og:description" content="Helper function: bootstrap scores" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,78 +104,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract ccf from two (or more) aligned signatures</h1>
+    <h1>Helper function: bootstrap scores</h1>
     
-    <div class="hidden name"><code>extract_feature_ccf.Rd</code></div>
+    <div class="hidden name"><code>bootstrap_k.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Extract ccf from two (or more) aligned signatures</p>
+    <p>Helper function: bootstrap scores</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_feature_ccf</span>(<span class='no'>aligned</span>)</pre>
+    <pre class="usage"><span class='fu'>bootstrap_k</span>(<span class='no'>scores</span>, <span class='no'>k</span>, <span class='no'>K</span>, <span class='no'>value</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>aligned</th>
-      <td><p>data frame with variable x (for location) and two or
-more measurements (the bullets entry in the list returned from
-sig_align)</p></td>
+      <th>scores</th>
+      <td><p>numeric values of scores</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>number of lands to average across</p></td>
+    </tr>
+    <tr>
+      <th>K</th>
+      <td><p>number of replicates</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>observed value</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>(matrix) of correlations</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other alignment-related-features: <code><a href='extract_feature_D.html'>extract_feature_D</a></code>,
-  <code><a href='extract_feature_lag_mm.html'>extract_feature_lag_mm</a></code>,
-  <code><a href='extract_feature_lag.html'>extract_feature_lag</a></code>,
-  <code><a href='extract_feature_length_mm.html'>extract_feature_length_mm</a></code>,
-  <code><a href='extract_feature_length.html'>extract_feature_length</a></code>,
-  <code><a href='extract_feature_overlap.html'>extract_feature_overlap</a></code>,
-  <code><a href='extract_features_all.html'>extract_features_all</a></code></p></div>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>bulletxtrctr</span>)
-<span class='fu'>library</span>(<span class='no'>x3ptools</span>)
-
-<span class='no'>example_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bullet_pipeline.html'>bullet_pipeline</a></span>(
-  <span class='kw'>location</span> <span class='kw'>=</span> <span class='fu'>list</span>(
-    <span class='kw'>Bullet1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet1</span>[<span class='fl'>2</span>]),
-    <span class='kw'>Bullet2</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet2</span>[<span class='fl'>4</span>])
-  ),
-  <span class='kw'>x3p_clean</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span> <span class='kw'>%&gt;%</span>
-      <span class='fu'><a href='x3pheader_to_microns.html'>x3pheader_to_microns</a></span>() <span class='kw'>%&gt;%</span>
-      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p'>rotate_x3p</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> -<span class='fl'>90</span>) <span class='kw'>%&gt;%</span>
-      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p'>y_flip_x3p</a></span>()
-)
-
-<span class='no'>alignment</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sig_align.html'>sig_align</a></span>(<span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>sig</span>,
-                       <span class='no'>example_data</span>$<span class='no'>sigs</span><span class='kw'>[[</span><span class='fl'>2</span>]]$<span class='no'>sig</span>)
-
-<span class='fu'>extract_feature_ccf</span>(<span class='no'>alignment</span>$<span class='no'>lands</span>)
-<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

@@ -123,9 +123,9 @@ bootstrap_k <- function(scores, k, K, value) {
 #' @export
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
 bullet_to_land_predict <- function(land1, land2, scores, difference) {
-    land1 <- as.numeric(land1)
-    land2 <- as.numeric(land2)
-    avgs <- compute_average_scores(land2, land1, scores)
+  land1 <- readr::parse_number(land1)
+  land2 <- readr::parse_number(land2)
+  avgs <- compute_average_scores(land2, land1, scores)
     p <- max(c(land1, land2))
     if ( (diff(sort(-avgs))[1] > difference) & bootstrap_k(scores, p, 1000, max(avgs)) < 0.05) {
     # pick the maximum to determine the phase
