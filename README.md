@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-September 12, 2018
+September 20, 2018
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,7 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--09--12-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--09--20-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
@@ -115,13 +115,7 @@ Change measurements to microns:
 
 ``` r
 bullets <- bullets %>% mutate(
-  x3p = x3p %>% purrr::map(.f = function(x) {
-    # make sure all measurements are in microns
-    x$surface.matrix <- x$surface.matrix*10^6
-    x$header.info$incrementY <- x$header.info$incrementY*10^6
-    x$header.info$incrementX <- x$header.info$incrementX*10^6
-    x
-  })
+  x3p = x3p %>% purrr::map(.f = x3p_m_to_mum)
 )
 ```
 
@@ -160,7 +154,8 @@ image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-before.png")
 
 The raw scan needs to be flipped such that the heel is along the bottom
 of the image rather than along the left hand side. ![Raw scan - needs to
-be rotated.](README_files/static/temp-before.png)
+be
+rotated.](https://heike.github.io/bulletxtrctr/index_files/static/temp-before.png)
 
 ``` r
 # turn the scans such that (0,0) is bottom left
@@ -179,7 +174,8 @@ Scan after the transformation: a clear right twist is visible in the
 right slant of striae and grooves.
 
 ![Scan after rotation, a clear right twist is visible in the right slant
-of the left and right shoulders.](README_files/static/temp-after.png)
+of the left and right
+shoulders.](https://heike.github.io/bulletxtrctr/index_files/static/temp-after.png)
 
 3.  Get the ideal cross sections
 
@@ -218,7 +214,8 @@ rash as the base of the bullet or the top of the scanning
     filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p(file="bullet1-land6.png")
 
 ![Scan of land 6 on bullet 1. The land is affected by quite pronounced
-tank rash](README_files/static/bullet1-land6.png)
+tank
+rash](https://heike.github.io/bulletxtrctr/index_files/static/bullet1-land6.png)
 
 4.  Get the groove locations
 

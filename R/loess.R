@@ -44,13 +44,14 @@ cc_fit_loess <- function(ccdata, span = 0.75) {
   # HH Mar 22: we should use lowess rather than loess
 
   my.loess <- loess(value ~ x, data = ccdata, span = span)
-  ccdata$fitted <- fitted(my.loess)
-  ccdata$raw_sig <- resid(my.loess)
-  ccdata$se <- predict(my.loess, se = TRUE)$se.fit
+  pred <- predict(my.loess, newdata = ccdata, se=TRUE)
+  ccdata$fitted <- pred$fit
+  ccdata$raw_sig <-  ccdata$value - ccdata$fitted
+  ccdata$se <- pred$se.fit
 
   # filter out most extreme residuals
   ccdata$abs_resid <- abs(ccdata$raw_sig)
-  cutoff <- quantile(ccdata$abs_resid, probs = c(0.9975))
+  cutoff <- quantile(ccdata$abs_resid, probs = c(0.9975), na.rm=TRUE)
   ccdata$chop <- ccdata$abs_resid > cutoff
 
   return(ccdata)
