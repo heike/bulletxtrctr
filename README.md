@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-September 20, 2018
+October 05, 2018
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,7 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--09--20-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--10--05-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
@@ -275,7 +275,7 @@ signatures %>%
 
 ![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
-8.  Detect peaks and valleys in the aligned signatures
+8.  Align signatures and extract features
 
 <!-- end list -->
 
@@ -296,6 +296,22 @@ comparisons <- comparisons %>% mutate(
   })
 )
 ```
+
+Aligned signatures of two matching
+lands:
+
+``` r
+subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>% 
+  tidyr::gather(sigs, value, sig1, sig2) %>% 
+  ggplot(aes(x = x, y = value, colour = sigs)) + 
+    geom_line() +
+  theme_bw() +
+  scale_color_brewer(palette = "Dark2")
+```
+
+    ## Warning: Removed 37 rows containing missing values (geom_path).
+
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Some features are based on aligned signatures:
 
@@ -376,7 +392,7 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 10. Get Score predictions for each land to land
 comparison
@@ -397,7 +413,7 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 11. Determine bullet-to-bullet
 scores
@@ -451,7 +467,7 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 An interactive interface for doing comparisons is available
 <https://oaiti.org/apps/bulletmatcher/>

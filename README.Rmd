@@ -200,7 +200,7 @@ signatures %>%
 
 ```
 
-8. Detect peaks and valleys in the aligned signatures
+8. Align signatures and extract features
 
 ```{r}
 bullets$bulletland <- paste0(bullets$bullet,"-", bullets$land)
@@ -219,6 +219,20 @@ comparisons <- comparisons %>% mutate(
   })
 )
 ```
+
+Aligned signatures of two matching lands:
+
+```{r, fig.width = 5, fig.height = 3, fig.caption="Aligned signatures of two different but matching lands"}
+subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>% 
+  tidyr::gather(sigs, value, sig1, sig2) %>% 
+  ggplot(aes(x = x, y = value, colour = sigs)) + 
+    geom_line() +
+  theme_bw() +
+  scale_color_brewer(palette = "Dark2")
+```
+
+
+
 Some features are based on aligned signatures:
 
 ```{r}
@@ -243,6 +257,7 @@ comparisons <- comparisons %>% mutate(
   striae = aligned %>% purrr::map(.f = sig_cms_max, span = 75) 
 )
 ```
+
 
 ```{r}
 comparisons <- comparisons %>% mutate(
