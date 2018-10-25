@@ -82,7 +82,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   check_ccdata(ccdata)
 
-  assert_that(method %in% c("quadratic", "rollapply", "middle", "logistic")) ## too strict
+  assert_that(method %in% c("quadratic", "rollapply", "middle", "logistic", "bcp")) ## too strict
   # TODO: expand cc_locate_groove to accept user defined get_grooves_XXX function
   assert_that(
     is.numeric(smoothfactor), is.numeric(adjust), is.numeric(groove_cutoff),
@@ -138,6 +138,11 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
       middle = middle,
       return_plot = return_plot
     )
+  }
+
+  if (method == "bcp") {
+    bcp_out <- bulletcp::get_grooves_bcp(x = land$x, value = land$value, adjust = adjust)
+    grooves <- bcp_out$groove
   }
 
   return(grooves)
