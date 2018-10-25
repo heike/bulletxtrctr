@@ -208,6 +208,7 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 #'
 #' @inheritParams get_grooves_quadratic
 #' @importFrom locfit locfit.robust
+#' @importFrom locfit locfit
 #' @importFrom stats model.matrix
 #' @export
 get_grooves_logistic <- function(x, value, adjust = 10, # smoothfactor = 15,
