@@ -68,9 +68,11 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
       method = "middle",
       return_plot = T
     )) %>%
-    dplyr::mutate(grooves_quad = purrr::map(ccdata, cc_locate_grooves,
-      method = "quadratic", return_plot = F
-    )) %>%
+    dplyr::mutate(
+      grooves_quad = purrr::map(ccdata, cc_locate_grooves,
+                                method = "quadratic", return_plot = F),
+      grooves_log = purrr::map(ccdata, cc_locate_grooves,
+                               method = "logistic", return_plot = F)) %>%
     dplyr::mutate(
       sigs = purrr::map2(
         .x = ccdata, .y = grooves,
@@ -160,7 +162,7 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
   maxcms <- sig_cms_max(alignment)
 
   features_legacy <- extract_features_all_legacy(maxcms, resolution = 1.5625)
-  features <- extract_features_all(aligned = alignment, striae = maxcms)
+  features <- extract_features_all(aligned = alignment, striae = maxcms, resolution = 1.5625)
   match <- list(
     alignment = alignment, peaks = peaks, matches = matches,
     maxcms = maxcms, features_legacy = features_legacy,

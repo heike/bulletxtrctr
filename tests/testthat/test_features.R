@@ -11,7 +11,8 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
 
   featurestest_full <- extract_features_all(
     aligned = match$alignment,
-    striae = match$maxcms
+    striae = match$maxcms,
+    resolution = 1.5625
   )
 }
 
