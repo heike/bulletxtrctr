@@ -351,9 +351,7 @@ test_that("extract_features_all works as expected", {
                 "lag_mm", "left_cms", "length", "length_mm", "matches", "matches_per_mm",
                 "mismatches", "mismatches_per_mm", "non_cms", "non_cms_per_mm",
                 "overlap", "right_cms", "rough_cor", "sd_D", "sum_peaks")
-  expect_equal(names(featurestest_full), ft_names)
-  # skip_if(skipall)
-  # for (i in 1:length(match$features)) {
-  #   try(expect_equal(match$features[i], featurestest_full[i]))
-  # }
+  expect_equal(sort(names(featurestest_full)), sort(ft_names))
+  skip_if(skipall)
+  expect_setequal(match$features, featurestest_full)
 })
