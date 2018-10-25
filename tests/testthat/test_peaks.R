@@ -35,7 +35,7 @@ test_that("peaks works as expected", {
   expect_equal(names(peakstest$dframe), c("x", "smoothed"))
   expect_equal(lapply(peakstest$dframe, mode) %>% as.character(),
                c("numeric", "numeric"))
-  expect_equal(match$peaks$sig1, peakstest)
+  expect_equivalent(match$peaks$sig1, peakstest)
 })
 
 test_that("striation_identify_matches works as expected", {
@@ -51,3 +51,4 @@ test_that("striation_identify_matches works as expected", {
   expect_is(matchestest$sdheights, "numeric")
   expect_equal(match$matches, matchestest)
 })
+

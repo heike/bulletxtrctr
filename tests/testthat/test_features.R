@@ -348,5 +348,5 @@ test_that("extract_feature_overlap works as expected", {
 
 test_that("extract_features_all works as expected", {
   skip_if(skipall)
-  expect_equivalent(match$features, featurestest_full)
+  expect_equivalent(as.numeric(match$features), as.numeric(featurestest_full))
 })
