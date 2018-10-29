@@ -6,3 +6,4 @@
 ^docs$
 ^\.travis\.yml$
 codecov.yml
+^data-raw$
