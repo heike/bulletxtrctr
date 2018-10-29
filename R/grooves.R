@@ -211,7 +211,7 @@ get_grooves_middle <- function(x, value, middle = 75, return_plot = F) {
 #' @importFrom locfit locfit
 #' @importFrom stats model.matrix
 #' @export
-get_grooves_logistic <- function(x, value, adjust = 10, # smoothfactor = 15,
+get_grooves_logisticlegacy <- function(x, value, adjust = 10, # smoothfactor = 15,
                                  #groove_cutoff = 400,
                                  return_plot = F) {
 
@@ -293,6 +293,243 @@ get_grooves_logistic <- function(x, value, adjust = 10, # smoothfactor = 15,
     return(list(groove = groove))
   }
 }
+
+
+#' Use logistic model to identify groove locations
+#'
+#' @inheritParams get_grooves_quadratic
+#' @param pred_cutoff equal error rate cutoff for classification into GEA or LEA, trained on Hamby set 44
+#' @importFrom locfit locfit.robust
+#' @importFrom locfit locfit
+#' @importFrom stats model.matrix
+#' @export
+get_grooves_lassobasic <- function(x, value, smoothfactor = 15, adjust = 10, pred_cutoff = 0.07,
+                                 groove_cutoff = 400, return_plot = F) {
+
+  land <- data.frame(x = x, value = value)
+  original_land <- land
+
+  ## generate additional variables
+
+  check_min <- min(land$value[!is.na(land$value)])
+  land <- land %>% mutate(value_std = value - check_min)
+  #install.packages("locfit")
+  #library(locfit)
+
+  robust_loess_fit <- function(bullet, iter){
+    n <- nrow(bullet)
+    weights <- rep(1, n)
+    fit <- loess(value_std~x, data = bullet, span = 1)
+    bullet$fit <- predict(fit, newdata = bullet)
+    bullet$resid <- bullet$value_std - bullet$fit
+    i <- 1
+    while(i < iter){
+      mar <- median(abs(bullet$resid), na.rm = T)
+      bullet$bisq <- pmax(1 - (bullet$resid/(6*mar))^2, 0)^2
+      weights <- ifelse(bullet$resid > 0 , bullet$bisq, 1)
+      fit <- loess(value_std~x, data = bullet, span = 1, weights = weights)
+      bullet$fit <- predict(fit, newdata = bullet)
+      bullet$resid <- bullet$value_std - bullet$fit
+      i <- i+1
+    }
+    return(fit)
+  }
+
+  rlo_fit <- robust_loess_fit(bullet = land, iter = 20)
+  #robust_loess_fit <- locfit.robust(value_std~x, data = land, alpha = 1, kern = "tcub")
+  land$rlo_pred <- predict(rlo_fit, newdata = land)
+
+  land$rlo_absresid <- with(land, abs(value_std-rlo_pred))
+  land$rlo_resid <- with(land, value_std-rlo_pred)
+
+
+  mx <- max(land$x, na.rm = T)
+  diff_mx <- mx/2 - land$x
+  median <- land$x[which.min(abs(tst_mx))]
+  #median <- median(land$x) # some of the houston data appears to have a shifted x
+  land$side <- "right"
+  land$side <- ifelse(land$x <= median, "left", land$side)
+  land$depth <- abs(land$x - median)
+
+  ## range20 : range of values in a 20-wide band around each data point.
+  land$range_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){max(x) - min(x)}, partial = TRUE)
+
+  ## xint1 and xint2: the predicted locations that the robust LOESS crosses the x-axis.
+  xint1 <- min(abs(land$rlo_pred[(land$x < median(land$x))]), na.rm = T)
+  xint2 <- min(abs(land$rlo_pred[(land$x > median(land$x))]), na.rm = T)
+  ind1 <- which(land$rlo_pred == xint1 | land$rlo_pred == -1*xint1)
+  ind2 <- which(land$rlo_pred == xint2 | land$rlo_pred == -1*xint2)
+  land$xint1 <- land$x[ind1]
+  land$xint2 <- land$x[ind2]
+
+  land$ind_edges <- ifelse(land$x < land$xint1 | land$x > land$xint2, 1, 0)
+
+  ## ind_2mad: whether the data point is above the 2*MAR cutoff previously used as an ad-hoc method.
+  mad <- mad(land$rlo_resid, na.rm = T)
+  land$ind_2mad <- ifelse(land$rlo_resid > 2*mad, 1, 0)
+
+  ## numpos_50: how many positive residuals there are in a 50-wide band around each data point.
+  land$numpos_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){sum(x > 0)}, partial = TRUE)
+
+  land$numNA_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){sum(is.na(x))}, partial = TRUE)
+  lower <- quantile(land$x, prob = .25)
+  upper <- quantile(land$x, prob = .75)
+  proxy_dat <- land %>% filter(x < upper & x > lower)
+  proxy <- sd(proxy_dat$rlo_resid, na.rm = T)
+  land$rlo_resid_std <- land$rlo_resid/proxy
+  land$range_50_std <- land$range_50/proxy
+
+  xrange <- max(land$x) #- min(land$x) # again correcting for shifted houston persistence data
+  land$depth_std <- land$depth/xrange
+  land$xint1_std <- land$xint1/xrange
+  land$xint2_std <- land$xint2/xrange
+
+  ## now get logistic predictions
+
+
+
+  land <- na.omit(land)
+  X <- cbind(1, model.matrix(~rlo_resid_std + I(rlo_resid_std^2) + side +
+                               depth_std + side*depth_std + xint1_std +
+                               xint2_std + range_50 + numNA_50 + ind_2mad +
+                               numpos_50 + ind_edges - 1,
+                             land))
+  ymean <- X%*%lasso_simple
+  yhat <- as.vector(exp(ymean)/(1 + exp(ymean)))
+  land$pred_val <- yhat
+  land$pred_class <- ifelse(land$pred_val < pred_cutoff, "LEA", "GEA")
+
+  groove <- range(land$x[land$pred_class == "LEA"])
+
+  if (return_plot) {
+    return(list(
+      groove = groove,
+      plot = grooves_plot(land = original_land, grooves = groove)
+    ))
+  } else {
+    return(list(groove = groove))
+  }
+}
+
+
+
+#' Use logistic model to identify groove locations
+#'
+#' @inheritParams get_grooves_quadratic
+#' @param pred_cutoff equal error rate cutoff for classification into GEA or LEA, trained on Hamby set 44
+#' @importFrom locfit locfit.robust
+#' @importFrom locfit locfit
+#' @importFrom stats model.matrix
+#' @export
+get_grooves_lassofull <- function(x, value, smoothfactor = 15, adjust = 10, pred_cutoff = 0.06,
+                                     groove_cutoff = 400, return_plot = F) {
+
+  land <- data.frame(x = x, value = value)
+  original_land <- land
+
+  ## generate additional variables
+
+  check_min <- min(land$value[!is.na(land$value)])
+  land <- land %>% mutate(value_std = value - check_min)
+  #install.packages("locfit")
+  #library(locfit)
+
+  robust_loess_fit <- function(bullet, iter){
+    n <- nrow(bullet)
+    weights <- rep(1, n)
+    fit <- loess(value_std~x, data = bullet, span = 1)
+    bullet$fit <- predict(fit, newdata = bullet)
+    bullet$resid <- bullet$value_std - bullet$fit
+    i <- 1
+    while(i < iter){
+      mar <- median(abs(bullet$resid), na.rm = T)
+      bullet$bisq <- pmax(1 - (bullet$resid/(6*mar))^2, 0)^2
+      weights <- ifelse(bullet$resid > 0 , bullet$bisq, 1)
+      fit <- loess(value_std~x, data = bullet, span = 1, weights = weights)
+      bullet$fit <- predict(fit, newdata = bullet)
+      bullet$resid <- bullet$value_std - bullet$fit
+      i <- i+1
+    }
+    return(fit)
+  }
+
+  rlo_fit <- robust_loess_fit(bullet = land, iter = 20)
+  #robust_loess_fit <- locfit.robust(value_std~x, data = land, alpha = 1, kern = "tcub")
+  land$rlo_pred <- predict(rlo_fit, newdata = land)
+
+  land$rlo_absresid <- with(land, abs(value_std-rlo_pred))
+  land$rlo_resid <- with(land, value_std-rlo_pred)
+
+
+  mx <- max(land$x, na.rm = T)
+  diff_mx <- mx/2 - land$x
+  median <- land$x[which.min(abs(tst_mx))]
+  #median <- median(land$x) # some of the houston data appears to have a shifted x
+  land$side <- "right"
+  land$side <- ifelse(land$x <= median, "left", land$side)
+  land$depth <- abs(land$x - median)
+
+  ## range20 : range of values in a 20-wide band around each data point.
+  land$range_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){max(x) - min(x)}, partial = TRUE)
+
+  ## xint1 and xint2: the predicted locations that the robust LOESS crosses the x-axis.
+  xint1 <- min(abs(land$rlo_pred[(land$x < median(land$x))]), na.rm = T)
+  xint2 <- min(abs(land$rlo_pred[(land$x > median(land$x))]), na.rm = T)
+  ind1 <- which(land$rlo_pred == xint1 | land$rlo_pred == -1*xint1)
+  ind2 <- which(land$rlo_pred == xint2 | land$rlo_pred == -1*xint2)
+  land$xint1 <- land$x[ind1]
+  land$xint2 <- land$x[ind2]
+
+  land$ind_edges <- ifelse(land$x < land$xint1 | land$x > land$xint2, 1, 0)
+
+  ## ind_2mad: whether the data point is above the 2*MAR cutoff previously used as an ad-hoc method.
+  mad <- mad(land$rlo_resid, na.rm = T)
+  land$ind_2mad <- ifelse(land$rlo_resid > 2*mad, 1, 0)
+
+  ## numpos_50: how many positive residuals there are in a 50-wide band around each data point.
+  land$numpos_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){sum(x > 0)}, partial = TRUE)
+
+  land$numNA_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x){sum(is.na(x))}, partial = TRUE)
+  lower <- quantile(land$x, prob = .25)
+  upper <- quantile(land$x, prob = .75)
+  proxy_dat <- land %>% filter(x < upper & x > lower)
+  proxy <- sd(proxy_dat$rlo_resid, na.rm = T)
+  land$rlo_resid_std <- land$rlo_resid/proxy
+  land$range_50_std <- land$range_50/proxy
+
+  xrange <- max(land$x) #- min(land$x) # again correcting for shifted houston persistence data
+  land$depth_std <- land$depth/xrange
+  land$xint1_std <- land$xint1/xrange
+  land$xint2_std <- land$xint2/xrange
+
+  ## now get logistic predictions
+
+
+  land <- na.omit(land)
+  X <- cbind(1, model.matrix(~(rlo_resid_std + I(rlo_resid_std^2) + side +
+                                 depth_std + xint1_std +
+                                 xint2_std + range_50 + numNA_50 + ind_2mad +
+                                 numpos_50 + ind_edges)^2 - 1,
+                             land))
+  ymean <- X%*%lasso_interactions
+  yhat <- as.vector(exp(ymean)/(1 + exp(ymean)))
+  land$pred_val <- yhat
+  land$pred_class <- ifelse(land$pred_val < pred_cutoff, "LEA", "GEA")
+
+  groove <- range(land$x[land$pred_class == "LEA"])
+
+  if (return_plot) {
+    return(list(
+      groove = groove,
+      plot = grooves_plot(land = original_land, grooves = groove)
+    ))
+  } else {
+    return(list(groove = groove))
+  }
+}
+
+
+
 
 #' Quadratic fit to find groove locations
 #'
