@@ -13,7 +13,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
       grooves_quad = purrr::map(ccdata, cc_locate_grooves,
                                 method = "quadratic", return_plot = F),
       grooves_log = purrr::map(ccdata, cc_locate_grooves,
-                               method = "logistic", return_plot = F))
+                               method = "logisticlegacy", return_plot = F))
 }
 
 # ccdata with no grooves - perfect parabola
@@ -47,7 +47,7 @@ test_that("grooves works as expected", {
   expect_s3_class(tmp2$plot, "ggplot")
 
   ## Logistic
-  tmp2 <- cc_locate_grooves(testb1$ccdata[[1]], method = "logistic",
+  tmp2 <- cc_locate_grooves(testb1$ccdata[[1]], method = "logisticlegacy",
                             return_plot = T)
   expect_length(tmp2, 2)
   expect_equal(names(tmp2), c("groove", "plot"))
