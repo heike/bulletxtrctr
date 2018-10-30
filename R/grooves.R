@@ -313,25 +313,6 @@ get_grooves_logisticlegacy <- function(x, value, adjust = 10, # smoothfactor = 1
   }
 }
 
-
-
-
-#' Calculate predicted values and residuals
-#'
-#' @param cc crosscut data, including columns value_std and x
-#' @param fit fitted loess object from robust_loess_fit
-#' @importFrom stats predict
-#' @importFrom assertthat assert_that
-#' @importFrom assertthat has_name
-resid_calc <- function(cc, fit) {
-  assert_that(has_name(cc, "x"), has_name(cc, "value_std"))
-  cc$rlo_pred <- predict(fit, newdata = cc)
-  cc$rlo_resid <- cc$value_std - cc$rlo_pred
-  cc$rlo_absresid <- abs(cc$rlo_resid)
-  return(cc)
-}
-
-
 #' Fit a robust loess regression
 #'
 #' Internal function called by get_grooves_lassobasic and get_grooves_lassofull
@@ -389,16 +370,18 @@ get_grooves_lasso <- function(x, value, lasso_method = 'basic', pred_cutoff = if
 
   ## fit robust loess, calculate residuals
   rlo_fit <- robust_loess_fit(cc = land, iter = 20)
-  land <- resid_calc(cc = land, fit = rlo_fit)
+  land$rlo_pred <- predict(rlo_fit, newdata = land)
+  land$rlo_resid <- land$value_std - land$rlo_pred
+  land$rlo_absresid <- abs(land$rlo_resid)
 
   mx <- max(land$x, na.rm = T)
   diff_mx <- mx / 2 - land$x
   ## Use this method because some data may have shifted x values
-  median <- land$x[which.min(abs(diff_mx))] # changed abs(tst_mx) to abs(diff_mx) - tst_mx not defined
-  #median <- median(land$x) # some of the houston data appears to have a shifted x
+  med_value <- land$x[which.min(abs(diff_mx))] # changed abs(tst_mx) to abs(diff_mx) - tst_mx not defined
+  #med_value <- median(land$x) # some of the houston data appears to have a shifted x
   land$side <- "right"
-  land$side <- ifelse(land$x <= median, "left", land$side)
-  land$depth <- abs(land$x - median)
+  land$side <- ifelse(land$x <= med_value, "left", land$side)
+  land$depth <- abs(land$x - med_value)
 
   ## range50 : range of values in a 50-wide band around each data point.
   land$range_50 <- rollapply(land$rlo_resid, width = 50, FUN = function(x) {
