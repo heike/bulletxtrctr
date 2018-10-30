@@ -149,7 +149,7 @@ Note the rather strange cross cut for land 6 in bullet 1. We can look at the sca
 ```
 filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p(file="bullet1-land6.png", crosscut = 375)
 ```
-![Scan of land 6 on bullet 1. The land is affected by quite pronounced tank rash](https://heike.github.io/bulletxtrctr/index_files/static/bullet1-land6.png)
+![Scan of land 6 on bullet 1. The land is affected by quite pronounced tank rash](https://heike.github.io/bulletxtrctr/README_files/static/bullet1-land6.png)
 
 4. Get the groove locations
 

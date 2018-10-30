@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Match striation marks across two aligned signatures — striation_identify_matches • bulletxtrctr</title>
+<title>Use logistic model to identify groove locations — get_grooves_logisticlegacy • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Match striation marks across two aligned signatures — striation_identify_matches" />
+<meta property="og:title" content="Use logistic model to identify groove locations — get_grooves_logisticlegacy" />
 
-<meta property="og:description" content="`striae1` and `striae2` are data frames of previously identified peaks and
-valleys returned by `sig_get_peaks`" />
+<meta property="og:description" content="Use logistic model to identify groove locations" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,46 +105,39 @@ valleys returned by `sig_get_peaks`" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Match striation marks across two aligned signatures</h1>
+    <h1>Use logistic model to identify groove locations</h1>
     
-    <div class="hidden name"><code>striation_identify_matches.Rd</code></div>
+    <div class="hidden name"><code>get_grooves_logisticlegacy.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>`striae1` and `striae2` are data frames of previously identified peaks and
-valleys returned by `sig_get_peaks`</p>
+    <p>Use logistic model to identify groove locations</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>striation_identify_matches</span>(<span class='no'>striae1</span>, <span class='no'>striae2</span>)</pre>
+    <pre class="usage"><span class='fu'>get_grooves_logisticlegacy</span>(<span class='no'>x</span>, <span class='no'>value</span>, <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>return_plot</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>striae1</th>
-      <td><p>data frame as returned from sig_get_peaks function.
-data frames are expected to have the following variables:
-xmin, xmax, group, type, bullet, heights</p></td>
+      <th>x</th>
+      <td><p>numeric vector of locations (in microns)</p></td>
     </tr>
     <tr>
-      <th>striae2</th>
-      <td><p>data frame as returned from sig_get_peaks function.
-data frames are expected to have the following variables:
-xmin, xmax, group, type, bullet, heights#' Check a striae object is valid</p></td>
+      <th>value</th>
+      <td><p>numeric values of surface measurements in microns</p></td>
+    </tr>
+    <tr>
+      <th>adjust</th>
+      <td><p>positive number to adjust the grooves</p></td>
+    </tr>
+    <tr>
+      <th>return_plot</th>
+      <td><p>return plot of grooves?</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>data frame of the same form as lines1 and lines2, but with an
-  additional variable of whether the striation marks are matches</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>adapted from function `striation_identify` in the bulletr package, just used
-internally. Not intended for public consumption.</p>
     
 
   </div>
@@ -153,11 +145,7 @@ internally. Not intended for public consumption.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
