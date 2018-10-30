@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-October 12, 2018
+October 30, 2018
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,7 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--10--12-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2018--10--30-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
@@ -68,6 +68,11 @@ if (!dir.exists("README_files/data")) {
 if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
   NRBTDsample_download("README_files/data")
 }
+```
+
+    ##  [1] 0 0 0 0 0 0 0 0 0 0 0 0
+
+``` r
 b1 <- read_bullet("README_files/data/Bullet1")
 ```
 
