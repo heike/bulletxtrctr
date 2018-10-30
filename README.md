@@ -68,11 +68,6 @@ if (!dir.exists("README_files/data")) {
 if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
   NRBTDsample_download("README_files/data")
 }
-```
-
-    ##  [1] 0 0 0 0 0 0 0 0 0 0 0 0
-
-``` r
 b1 <- read_bullet("README_files/data/Bullet1")
 ```
 
@@ -216,7 +211,7 @@ of the land is at a height of 375, which is not as much affected by the
 rash as the base of the bullet or the top of the scanning
     area.
 
-    filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p(file="bullet1-land6.png")
+    filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p(file="bullet1-land6.png", crosscut = 375)
 
 ![Scan of land 6 on bullet 1. The land is affected by quite pronounced
 tank
