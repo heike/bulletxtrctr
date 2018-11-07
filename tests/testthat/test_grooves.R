@@ -13,11 +13,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
       grooves_quad = purrr::map(ccdata, cc_locate_grooves,
                                 method = "quadratic", return_plot = F),
       grooves_log = purrr::map(ccdata, cc_locate_grooves,
-                               method = "logisticlegacy", return_plot = F),
-      grooves_lassofull = purrr::map(ccdata, cc_locate_grooves,
-                                     method = "lassofull", return_plot = F),
-      grooves_lassobasic = purrr::map(ccdata, cc_locate_grooves,
-                                      method = "lassobasic", return_plot = F))
+                               method = "logisticlegacy", return_plot = F))
 }
 
 # ccdata with no grooves - perfect parabola
@@ -52,20 +48,6 @@ test_that("grooves works as expected", {
 
   ## Logistic
   tmp2 <- cc_locate_grooves(testb1$ccdata[[1]], method = "logisticlegacy",
-                            return_plot = T)
-  expect_length(tmp2, 2)
-  expect_equal(names(tmp2), c("groove", "plot"))
-  expect_s3_class(tmp2$plot, "ggplot")
-
-  ## Lasso - Full
-  tmp2 <- cc_locate_grooves(testb1$ccdata[[1]], method = "lassofull",
-                            return_plot = T)
-  expect_length(tmp2, 2)
-  expect_equal(names(tmp2), c("groove", "plot"))
-  expect_s3_class(tmp2$plot, "ggplot")
-
-  ## Lasso - Basic
-  tmp2 <- cc_locate_grooves(testb1$ccdata[[1]], method = "lassobasic",
                             return_plot = T)
   expect_length(tmp2, 2)
   expect_equal(names(tmp2), c("groove", "plot"))
