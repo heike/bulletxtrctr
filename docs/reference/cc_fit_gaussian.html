@@ -148,7 +148,9 @@ which is 24% of 2500 microns; approximately the same size as a
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
@@ -159,16 +161,16 @@ which is 24% of 2500 microns; approximately the same size as a
 <span class='fu'>cc_fit_gaussian</span>(<span class='kw'>ccdata</span> <span class='kw'>=</span> <span class='no'>ccdata</span>)</div><div class='output co'>#&gt; # A tibble: 6,001 x 7
 #&gt;        x value fitted raw_sig se    abs_resid chop 
 #&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt;     &lt;dbl&gt; &lt;lgl&gt;
-#&gt;  1    0. 0.650   1.55  -0.901 NA        0.901 TRUE 
-#&gt;  2    1. 1.07    1.55  -0.483 NA        0.483 FALSE
-#&gt;  3    2. 0.403   1.56  -1.15  NA        1.15  TRUE 
-#&gt;  4    3. 1.02    1.56  -0.541 NA        0.541 FALSE
-#&gt;  5    4. 1.18    1.56  -0.381 NA        0.381 FALSE
-#&gt;  6    5. 1.32    1.56  -0.245 NA        0.245 FALSE
-#&gt;  7    6. 0.581   1.56  -0.984 NA        0.984 TRUE 
-#&gt;  8    7. 0.980   1.57  -0.587 NA        0.587 FALSE
-#&gt;  9    8. 0.987   1.57  -0.583 NA        0.583 FALSE
-#&gt; 10    9. 0.983   1.57  -0.589 NA        0.589 FALSE
+#&gt;  1     0 0.650   1.55  -0.901 NA        0.901 TRUE 
+#&gt;  2     1 1.07    1.55  -0.483 NA        0.483 FALSE
+#&gt;  3     2 0.403   1.56  -1.15  NA        1.15  TRUE 
+#&gt;  4     3 1.02    1.56  -0.541 NA        0.541 FALSE
+#&gt;  5     4 1.18    1.56  -0.381 NA        0.381 FALSE
+#&gt;  6     5 1.32    1.56  -0.245 NA        0.245 FALSE
+#&gt;  7     6 0.581   1.56  -0.984 NA        0.984 TRUE 
+#&gt;  8     7 0.980   1.57  -0.587 NA        0.587 FALSE
+#&gt;  9     8 0.987   1.57  -0.583 NA        0.583 FALSE
+#&gt; 10     9 0.983   1.57  -0.589 NA        0.589 FALSE
 #&gt; # ... with 5,991 more rows</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
