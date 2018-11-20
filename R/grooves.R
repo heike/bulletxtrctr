@@ -155,13 +155,13 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   if (method == "bcp") {
     bcp_out <- bulletcp::get_grooves_bcp(x = land$x, value = land$value, adjust = adjust, ...)
-    grooves <- bcp_out$groove
-    if (return_plot == T)
-    {
-      return(list(
+    if (return_plot == T) {
+      grooves <- list(
         groove = bcp_out$groove,
         plot = grooves_plot(land = land, grooves = bcp_out$groove)
-      ))
+      )
+    } else {
+      grooves <- bcp_out
     }
   }
 
