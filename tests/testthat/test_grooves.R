@@ -4,6 +4,7 @@ skipall <- T
 if (requireNamespace("here") & requireNamespace("purrr")) {
   skipall <- F
   load(here::here("tests/bullet1_only.Rdata"))
+  set.seed(3402953)
   testb1 <- b1_l2_x3p %>%
     dplyr::select(-grooves, -grooves_mid) %>%
     dplyr::mutate(
@@ -17,7 +18,9 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
       grooves_lassofull = purrr::map(ccdata, cc_locate_grooves,
                                      method = "lassofull", return_plot = F),
       grooves_lassobasic = purrr::map(ccdata, cc_locate_grooves,
-                                      method = "lassobasic", return_plot = F))
+                                      method = "lassobasic", return_plot = F),
+      grooves_bcp = purrr::map(ccdata, cc_locate_grooves,
+                               method = "bcp", return_plot = F))
 }
 
 # ccdata with no grooves - perfect parabola
@@ -156,5 +159,7 @@ test_that("grooves works as expected", {
                    testb1$grooves_lassofull[[1]]$groove)
   expect_identical(b1_l2_x3p$grooves_lassobasic[[1]]$groove,
                    testb1$grooves_lassobasic[[1]]$groove)
+  expect_identical(b1_l2_x3p$grooves_bcp[[1]]$groove,
+                   testb1$grooves_bcp[[1]]$groove)
 })
 

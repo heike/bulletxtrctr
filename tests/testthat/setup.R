@@ -37,6 +37,7 @@ testthat::setup({
 # test_signatures.R
 if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
   message("Generating data file for bullet 1 land 2 with crosscuts, grooves, and signatures")
+  set.seed(3402953)
   b1_l2_x3p <- read_bullet(here::here("tests/Bullet1"), "x3p") %>%
     # dplyr::filter(dplyr::row_number() == 3) %>%
     # turn the scans such that (0,0) is bottom left
@@ -73,7 +74,9 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
       grooves_lassofull = purrr::map(ccdata, cc_locate_grooves,
                                      method = "lassofull", return_plot = F),
       grooves_lassobasic = purrr::map(ccdata, cc_locate_grooves,
-                                      method = "lassobasic", return_plot = F)) %>%
+                                      method = "lassobasic", return_plot = F),
+      grooves_bcp = purrr::map(ccdata, cc_locate_grooves, method = "bcp",
+                               return_plot = F)) %>%
     dplyr::mutate(
       sigs = purrr::map2(
         .x = ccdata, .y = grooves,
