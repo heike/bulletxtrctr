@@ -120,14 +120,25 @@ bootstrap_k <- function(scores, k, K, value) {
 #' @param land2 (numeric) vector with land ids of bullet 2
 #' @param scores numeric vector of scores to be summarized into a single number
 #' @param difference numeric value describing the minimal difference between scores from same source versus different sources.
+#' @param alpha numeric value describing the significance level for the bootstrap
 #' @export
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
-bullet_to_land_predict <- function(land1, land2, scores, difference) {
+bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.05) {
   land1 <- readr::parse_number(land1)
   land2 <- readr::parse_number(land2)
   avgs <- compute_average_scores(land2, land1, scores)
+
     p <- max(c(land1, land2))
-    if ( (diff(sort(-avgs))[1] > difference) & bootstrap_k(scores, p, 1000, max(avgs)) < 0.05) {
+    boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
+    if (!is.numeric(boot)) {
+      boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
+ #     print("boot is not numeric")
+#      browser()
+    }
+
+    getdiff <- diff(sort(-avgs))[1]
+    if (!is.numeric(getdiff)) print("getdiff is not numeric") #browser()
+    if (getdiff > difference & boot) {
     # pick the maximum to determine the phase
     idx <- which.max(avgs)
     dd <- data.frame(
