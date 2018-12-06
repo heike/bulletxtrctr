@@ -35,7 +35,7 @@ example_data <- bullet_pipeline(
 alignment <- sig_align(example_data$sigs[[1]]$sig,
                        example_data$sigs[[2]]$sig)
 striae <- sig_cms_max(alignment)
-extract_feature_cms_peak_only(striae$lines)
+extract_feature_cms2(striae$lines)
 }
 }
 \seealso{

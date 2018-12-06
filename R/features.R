@@ -120,7 +120,7 @@ extract_feature_left_cms <- function(striae) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #' striae <- sig_cms_max(alignment)
-#' extract_feature_cms_peak_only(striae$lines)
+#' extract_feature_cms2(striae$lines)
 #' }
 extract_feature_cms2 <- function(striae) {
   # TODO: Rename function: cms2 -> cms
@@ -166,7 +166,7 @@ extract_feature_cms2 <- function(striae) {
 #' alignment <- sig_align(example_data$sigs[[1]]$sig,
 #'                        example_data$sigs[[2]]$sig)
 #' striae <- sig_cms_max(alignment)
-#' extract_feature_cms_peak_only(striae$lines)
+#' extract_feature_cms2_per_mm(striae$lines)
 #' }
 extract_feature_cms2_per_mm <- function(striae, aligned, resolution) {
   # TODO: Rename function: cms2 -> cms
