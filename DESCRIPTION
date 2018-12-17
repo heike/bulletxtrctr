@@ -7,7 +7,9 @@ Authors@R: c(
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre")),
     person("Susan", "Vanderplas", email = "srvander@iastate.edu", role = "aut"),
     person("Ganesh", "Krishnan", role = "aut", email = "ganeshk@iastate.edu"),
-    person("Eric", "Hare", email = "eric@oaiti.org", role = "ctb")
+    person("Eric", "Hare", email = "eric@oaiti.org", role = "ctb"),
+    person("Kiegan", "Rice", email = "ricek@iastate.edu", role = "ctb"),
+    person("Nate", "Garton", email = "nmgarton@iastate.edu", role = "ctb")
     )
 Maintainer: Heike Hofmann <hofmann@iastate.edu>
 Date: 2018-08-02
