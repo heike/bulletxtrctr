@@ -14,7 +14,7 @@
 #' hamby252demo
 #'
 #' Links to barrel 1, bullets 1 and 2, with all 6 lands.
-#' @format a list containing lists of links for 6 lands of each bullet
+#' @format a list containing lists of links for the 6 lands of bullet 1 and 2
 "hamby252demo"
 
 # hamby252demo <- list(
@@ -34,3 +34,26 @@
 #       "https://tsapps.nist.gov/NRBTD/Studies/BulletMeasurement/DownloadMeasurement/a172932e-121c-4bee-9477-ae2454f0b513")
 # )
 # save(hamby252demo, file = here::here("data/hamby252demo.rda"))
+
+#' hamby252demo_github
+#'
+#' Links to barrel 1, bullets 1 and 2, with all 6 lands, mirrored on github in case NBTRD is down
+#' @format a list containing lists of links for the 6 lands of bullet 1 and 2
+"hamby252demo_github"
+
+# hamby252demo_github <- list(
+#   bullet1 = c("https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet1_Land1.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet1_Land2.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet1_Land3.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet1_Land4.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet1_Land5.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet1_Land6.x3p?raw=true"),
+#   bullet2 = c("https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet2_Land1.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet2_Land2.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet2_Land3.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet2_Land4.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet2_Land5.x3p?raw=true",
+#               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet2_Land6.x3p?raw=true")
+# )
+# usethis::use_data(hamby252demo_github)
+

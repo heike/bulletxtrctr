@@ -23,6 +23,17 @@ testthat::setup({
       destfile = hambyb2l4, quiet = T
     )
   }
+  # Download from github only if NBTRD is down
+  if (!file.exists(hambyb1l2)) {
+    download.file(hamby252demo_github[[1]][2],
+                  destfile = hambyb1l2, quiet = T
+    )
+  }
+  if (!file.exists(hambyb2l4)) {
+    download.file(hamby252demo_github[[2]][4],
+                  destfile = hambyb2l4, quiet = T
+    )
+  }
 })
 
 # testthat::teardown({
