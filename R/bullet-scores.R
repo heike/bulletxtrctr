@@ -65,8 +65,8 @@
 #'   )
 #' }
 compute_average_scores <- function(land1, land2, score) {
-  land1 <- readr::parse_number(land1)
-  land2 <- readr::parse_number(land2)
+  if (!is.numeric(land1)) land1 <- readr::parse_number(land1)
+  if (!is.numeric(land2)) land2 <- readr::parse_number(land2)
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
 
   maxland <- max(land1, land2)
@@ -124,8 +124,8 @@ bootstrap_k <- function(scores, k, K, value) {
 #' @export
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
 bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.05) {
-  land1 <- readr::parse_number(land1)
-  land2 <- readr::parse_number(land2)
+  if (!is.numeric(land1)) land1 <- readr::parse_number(land1)
+  if (!is.numeric(land2)) land2 <- readr::parse_number(land2)
   avgs <- compute_average_scores(land2, land1, scores)
 
     p <- max(c(land1, land2))
@@ -142,8 +142,10 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
     # pick the maximum to determine the phase
     idx <- which.max(avgs)
     dd <- data.frame(
-      land1 = parse_number(land1),
-      land2 = parse_number(land2))
+      land1,
+      land2
+    ) %>%
+        mutate_if(function(.) !is.numeric(.), parse_number)
     dd$diff = (dd$land1 - dd$land2) %% p + 1
 
 
