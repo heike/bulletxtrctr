@@ -142,8 +142,10 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
     # pick the maximum to determine the phase
     idx <- which.max(avgs)
     dd <- data.frame(
-      land1 = parse_number(land1),
-      land2 = parse_number(land2))
+      land1,
+      land2
+    ) %>%
+        mutate_if(function(.) !is.numeric(.), parse_number)
     dd$diff = (dd$land1 - dd$land2) %% p + 1
 
 
