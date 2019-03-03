@@ -1036,8 +1036,8 @@ extract_features_all_legacy <- function(res, resolution) {
 
   distr.dist <- ((subLOFx1$val[idx1] - subLOFx2$val[idx2]) * g1_inc_x / 1000) %>%
     sq() %>%
-    mean(na.rm = TRUE) %>%
-    sqrt()
+    mean(na.rm = TRUE)
+  distr.dist <- sqrt(distr.dist) # Fixed so pipe doesn't cause check() to freak
   distr.sd <- sd(subLOFx1$val * g1_inc_x / 1000, na.rm = TRUE) +
     sd(subLOFx2$val * g1_inc_x / 1000, na.rm = TRUE)
 
