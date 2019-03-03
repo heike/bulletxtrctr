@@ -1,4 +1,3 @@
-^README\.Rmd$
 ^_pkgdown\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -9,4 +8,4 @@
 ^\.travis\.yml$
 codecov.yml
 ^data-raw$
-extra
+^extra$

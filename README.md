@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-November 20, 2018
+March 03, 2019
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,7 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2018--11--20-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2019--03--03-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
@@ -65,9 +65,23 @@ our working directory. This is shown in the sequence of commands below:
 if (!dir.exists("README_files/data")) {
   dir.create("README_files/data")
 }
+```
+
+    ## Warning in dir.create("README_files/data"): cannot create dir
+    ## 'README_files/data', reason 'No such file or directory'
+
+``` r
 if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
   NRBTDsample_download("README_files/data")
 }
+```
+
+    ## Warning in NRBTDsample_download("README_files/data"): Directory does not
+    ## exist. It will be created.
+
+    ##  [1] 0 0 0 0 0 0 0 0 0 0 0 0
+
+``` r
 b1 <- read_bullet("README_files/data/Bullet1")
 ```
 
@@ -152,6 +166,11 @@ image.
 image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-before.png")
 ```
 
+    ## Warning in rgl.snapshot(filename = file): RGL: Pixmap save: unable to open
+    ## file 'README_files/static/temp-before.png' for writing
+
+    ## Warning in rgl.snapshot(filename = file): 'rgl.snapshot' failed
+
 The raw scan needs to be flipped such that the heel is along the bottom
 of the image rather than along the left hand side. ![Raw scan - needs to
 be
@@ -169,6 +188,11 @@ bullets <- bullets %>% mutate(
 ``` r
 image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-after.png")
 ```
+
+    ## Warning in rgl.snapshot(filename = file): RGL: Pixmap save: unable to open
+    ## file 'README_files/static/temp-after.png' for writing
+
+    ## Warning in rgl.snapshot(filename = file): 'rgl.snapshot' failed
 
 Scan after the transformation: a clear right twist is visible in the
 right slant of striae and grooves.
