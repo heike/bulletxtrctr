@@ -5,9 +5,12 @@ sudo: false
 cache: packages
 r_packages:
   - covr
+  - smoother
 
 r_binary_packages:
   - rgl
+
+r_github_packages: nategarton/bulletcp
 
 before_script:
   - "export DISPLAY=:99.0"
