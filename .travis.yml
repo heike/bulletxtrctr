@@ -10,14 +10,14 @@ r_packages:
 r_binary_packages:
   - rgl
 
-r_github_packages:
-  - nategarton13/bulletcp
-  - heike/x3ptools
-
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3
+
+r_github_packages:
+  - nategarton13/bulletcp
+  - heike/x3ptools
 
 after_success:
   - Rscript -e 'covr::codecov()'
