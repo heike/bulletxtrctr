@@ -10,7 +10,7 @@ r_packages:
 r_binary_packages:
   - rgl
 
-r_github_packages: nategarton/bulletcp
+r_github_packages: nategarton13/bulletcp
 
 before_script:
   - "export DISPLAY=:99.0"
