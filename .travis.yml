@@ -7,10 +7,12 @@ r_packages:
   - covr
   - smoother
 
+r_github_packages:
+  - nategarton13/bulletcp
+  - heike/x3ptools
+
 r_binary_packages:
   - rgl
-
-r_github_packages: nategarton13/bulletcp
 
 before_script:
   - "export DISPLAY=:99.0"
