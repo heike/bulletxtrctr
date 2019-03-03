@@ -4,6 +4,10 @@ language: R
 sudo: false
 cache: packages
 
+env_vars:
+  global:
+    - RGL_USE_NULL=TRUE
+
 r_binary_packages:
   - rgl
 
