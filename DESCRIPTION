@@ -18,17 +18,17 @@ Description: Analyze bullet lands in x3p format. We provide a
     probability that two bullets were fired from the same gun barrel. 
     This is an update and re-factoring of the bulletr package.
 Imports:
-    zoo,
-    dplyr,
-    tidyr,
+    assertthat (>= 0.2.0),
+    dplyr (>= 0.7.8),
+    ggplot2 (>= 3.1.0),
+    locfit (>= 1.5.1),
+    MASS (>= 7.3.1),
+    purrr (>= 0.3.0),
+    readr (>= 1.1.1),
+    smoother (>= 1.1),
+    tidyr (>= 0.8.2),
     x3ptools (>= 0.0.2),
-    readr,
-    MASS,
-    smoother,
-    ggplot2,
-    assertthat,
-    purrr,
-    locfit,
+    zoo (>= 1.8),
     bulletcp (>= 0.1.0)
 Remotes: 
     heike/x3ptools,
