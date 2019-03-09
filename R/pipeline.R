@@ -143,6 +143,7 @@ bullet_pipeline <- function(location, stop_at_step = NULL,
 #' @export
 #' @import assertthat
 x3pheader_to_microns <- function(x3p) {
+  .Deprecated(msg="Function x3pheader_to_microns is deprecated. Use x3p_scale_unit with scale_by=10^6 in package x3ptools instead")
   assert_that("x3p" %in% class(x3p))
 
   # make sure all measurements are in microns

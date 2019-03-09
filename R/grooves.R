@@ -51,7 +51,7 @@ grooves_plot <- function(land, grooves) {
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -188,7 +188,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -499,7 +499,7 @@ get_grooves_lasso <- function(x, value, lasso_method = 'basic', pred_cutoff = if
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -569,7 +569,7 @@ get_grooves_quadratic <- function(x, value, adjust, return_plot = F) {
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "crosscut",
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )

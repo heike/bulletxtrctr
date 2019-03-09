@@ -33,7 +33,7 @@ testthat::setup({
 # })
 
 cleanfun <- function(x) x %>%
-    x3pheader_to_microns() %>%
+    x3ptools::x3p_scale_unit(scale_by=10^6) %>%
     x3ptools::rotate_x3p(angle = -90) %>%
     x3ptools::y_flip_x3p()
 

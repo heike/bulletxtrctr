@@ -18,7 +18,7 @@
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -65,7 +65,7 @@ extract_feature_right_cms <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -112,7 +112,7 @@ extract_feature_left_cms <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -158,7 +158,7 @@ extract_feature_cms2 <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -196,7 +196,7 @@ extract_feature_cms2_per_mm <- function(striae, aligned, resolution) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -234,7 +234,7 @@ extract_feature_cms <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -302,7 +302,7 @@ extract_feature_cms_per_mm <- function(striae, aligned, resolution) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -336,7 +336,7 @@ extract_feature_non_cms <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -372,7 +372,7 @@ extract_feature_non_cms_per_mm <- function(striae, aligned, resolution) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -424,7 +424,7 @@ extract_helper_feature_n_striae <- function(striae, type = "peak",
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -457,7 +457,7 @@ extract_feature_matches_per_mm <- function(striae, aligned, resolution) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -490,7 +490,7 @@ extract_feature_matches <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -523,7 +523,7 @@ extract_feature_mismatches <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -558,7 +558,7 @@ extract_feature_mismatches_per_mm <- function(striae, aligned, resolution) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -603,7 +603,7 @@ extract_feature_sum_peaks <- function(striae) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -684,7 +684,7 @@ extract_feature_rough_cor <- function(aligned) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -747,7 +747,7 @@ extract_feature_lag_mm <- function(aligned, resolution) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -817,7 +817,7 @@ extract_feature_sd_D <- function(aligned) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -852,7 +852,7 @@ extract_feature_length_mm <- function(aligned, resolution) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -904,7 +904,7 @@ extract_feature_length <- function(aligned) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -951,7 +951,7 @@ extract_feature_overlap <- function(aligned) {
 #'     Bullet2 = c(hamby252demo$bullet2[4])
 #'   ),
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )

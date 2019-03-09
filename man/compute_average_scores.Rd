@@ -34,7 +34,7 @@ bullets <- bullet_pipeline(
     Bullet2 = c(hamby252demo$bullet2)
   ),
   x3p_clean = function(x) x \%>\%
-      x3pheader_to_microns() \%>\%
+      x3p_scale_unit(scale_by=10^6) \%>\%
       rotate_x3p(angle = -90) \%>\%
       y_flip_x3p()
 ) \%>\%

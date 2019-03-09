@@ -75,7 +75,7 @@ check_x3p <- function(x3p) {
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "clean",
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
@@ -175,7 +175,7 @@ switch_xy <- function(dataframe) {
 #'   location = list(Bullet1 = c(hamby252demo$bullet1[3])),
 #'   stop_at_step = "clean",
 #'   x3p_clean = function(x) x %>%
-#'       x3pheader_to_microns() %>%
+#'       x3p_scale_unit(scale_by=10^6) %>%
 #'       rotate_x3p(angle = -90) %>%
 #'       y_flip_x3p()
 #' )
