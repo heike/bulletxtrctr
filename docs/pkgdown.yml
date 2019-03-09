@@ -3,5 +3,4 @@ pkgdown: 1.1.0
 pkgdown_sha: ~
 articles:
   features: features.html
-  hamby-224: hamby-224.html
 

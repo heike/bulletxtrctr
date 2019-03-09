@@ -12,7 +12,7 @@ Authors@R: c(
     person("Nate", "Garton", email = "nmgarton@iastate.edu", role = "ctb")
     )
 Maintainer: Heike Hofmann <hofmann@iastate.edu>
-Date: 2018-08-02
+Date: 2019-03-01
 Description: Analyze bullet lands in x3p format. We provide a
     a host of analysis functions designed to assess the
     probability that two bullets were fired from the same gun barrel. 
@@ -21,7 +21,7 @@ Imports:
     zoo,
     dplyr,
     tidyr,
-    x3ptools (>= 0.0.1.9000),
+    x3ptools (>= 0.0.2),
     readr,
     MASS,
     smoother,

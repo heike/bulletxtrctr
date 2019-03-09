@@ -87,9 +87,6 @@ of the shorter signature represents the potential length for a match." />
     <li>
       <a href="../articles/features.html">Feature Extraction</a>
     </li>
-    <li>
-      <a href="../articles/hamby-224.html">Hamby Clone 224</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -163,7 +160,7 @@ sig_align)</p></td>
     <span class='kw'>Bullet2</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='no'>hamby252demo</span>$<span class='no'>bullet2</span>[<span class='fl'>4</span>])
   ),
   <span class='kw'>x3p_clean</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span> <span class='kw'>%&gt;%</span>
-      <span class='fu'><a href='x3pheader_to_microns.html'>x3pheader_to_microns</a></span>() <span class='kw'>%&gt;%</span>
+      <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/x3p_scale_unit'>x3p_scale_unit</a></span>(<span class='kw'>scale_by</span><span class='kw'>=</span><span class='fl'>10</span>^<span class='fl'>6</span>) <span class='kw'>%&gt;%</span>
       <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/rotate_x3p'>rotate_x3p</a></span>(<span class='kw'>angle</span> <span class='kw'>=</span> -<span class='fl'>90</span>) <span class='kw'>%&gt;%</span>
       <span class='fu'><a href='http://www.rdocumentation.org/packages/x3ptools/topics/y_flip_x3p'>y_flip_x3p</a></span>()
 )
