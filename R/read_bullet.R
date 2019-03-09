@@ -1,6 +1,6 @@
-#' Reading all scans from a folder
+#' Reading all x3p scans from a folder
 #'
-#' some more description
+#' Read all scans of a specified format from a folder. This operation is recursive, i.e. also reads scans from the folder of a folder.
 #' @param folder character describing the path to a folder
 #' @param ext character value, consisting of the extension(s) describing the
 #'          file format the scans are in

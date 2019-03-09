@@ -83,7 +83,6 @@ bullets <- bullets %>% mutate(
 )
 ```
 
-<!-- This could also be done with the `x3pheader_to_microns` function.  -->
 
 ```{r}
 bullets$x3p[[1]]$header.info$incrementY
