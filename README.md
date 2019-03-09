@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-March 03, 2019
+March 09, 2019
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,7 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2019--03--03-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2019--03--09-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
@@ -65,23 +65,9 @@ our working directory. This is shown in the sequence of commands below:
 if (!dir.exists("README_files/data")) {
   dir.create("README_files/data")
 }
-```
-
-    ## Warning in dir.create("README_files/data"): cannot create dir
-    ## 'README_files/data', reason 'No such file or directory'
-
-``` r
 if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")) {
   NRBTDsample_download("README_files/data")
 }
-```
-
-    ## Warning in NRBTDsample_download("README_files/data"): Directory does not
-    ## exist. It will be created.
-
-    ##  [1] 0 0 0 0 0 0 0 0 0 0 0 0
-
-``` r
 b1 <- read_bullet("README_files/data/Bullet1")
 ```
 
@@ -159,22 +145,16 @@ the base of the bullet are at the bottom (y = 0) of the image, and the
 land engraved area is displayed left to right from groove to groove,
 i.e. we are assuming that (0,0) is in the bottom left corner of the
 image. In scans where no adjustment was made for the barrel’s twist (not
-recommended) the twist will be visible in the
-image.
+recommended) the twist will be visible in the image.
 
 ``` r
-image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-before.png")
+image_x3p(bullets$x3p[[1]], file = "man/figures/temp-before.png")
 ```
 
-    ## Warning in rgl.snapshot(filename = file): RGL: Pixmap save: unable to open
-    ## file 'README_files/static/temp-before.png' for writing
-
-    ## Warning in rgl.snapshot(filename = file): 'rgl.snapshot' failed
+![](man/figures/temp-before.png)<!-- -->
 
 The raw scan needs to be flipped such that the heel is along the bottom
-of the image rather than along the left hand side. ![Raw scan - needs to
-be
-rotated.](https://heike.github.io/bulletxtrctr/index_files/static/temp-before.png)
+of the image rather than along the left hand side.
 
 ``` r
 # turn the scans such that (0,0) is bottom left
@@ -185,21 +165,14 @@ bullets <- bullets %>% mutate(
 ) 
 ```
 
+Scan after the transformation: a clear right twist is visible in the
+right slant of striae and grooves:
+
 ``` r
-image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-after.png")
+image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```
 
-    ## Warning in rgl.snapshot(filename = file): RGL: Pixmap save: unable to open
-    ## file 'README_files/static/temp-after.png' for writing
-
-    ## Warning in rgl.snapshot(filename = file): 'rgl.snapshot' failed
-
-Scan after the transformation: a clear right twist is visible in the
-right slant of striae and grooves.
-
-![Scan after rotation, a clear right twist is visible in the right slant
-of the left and right
-shoulders.](https://heike.github.io/bulletxtrctr/index_files/static/temp-after.png)
+![](man/figures/temp-after.png)<!-- -->
 
 3.  Get the ideal cross sections
 
@@ -227,19 +200,23 @@ crosscuts %>%
   theme_bw()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Note the rather strange cross cut for land 6 in bullet 1. We can look at
 the scan - and find quite pronounced tank rash. However, the extraction
 of the land is at a height of 375, which is not as much affected by the
-rash as the base of the bullet or the top of the scanning
-    area.
+rash as the base of the bullet or the top of the scanning area.
 
-    filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p(file="bullet1-land6.png", crosscut = 375)
+Scan of land 6 on bullet 1. The land is affected by quite pronounced
+tank rash:
 
-![Scan of land 6 on bullet 1. The land is affected by quite pronounced
-tank
-rash](https://heike.github.io/bulletxtrctr/README_files/static/bullet1-land6.png)
+``` r
+filter(bullets, land==6, bullet==1)$x3p[[1]] %>%
+  x3p_add_hline(yintercept = 375, size = 10, color = "#e6bf98") %>% 
+  image_x3p(file="man/figures/bullet1-land6.png")
+```
+
+![](man/figures/bullet1-land6.png)<!-- -->
 
 4.  Get the groove locations
 
@@ -268,7 +245,7 @@ gridExtra::grid.arrange(
 )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 5.  Extract signatures
 
@@ -297,7 +274,7 @@ signatures %>%
   theme_bw()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 8.  Align signatures and extract features
 
@@ -335,7 +312,7 @@ subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>%
 
     ## Warning: Removed 37 rows containing missing values (geom_path).
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 Some features are based on aligned signatures:
 
@@ -416,7 +393,7 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 10. Get Score predictions for each land to land
 comparison
@@ -437,7 +414,7 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
 11. Determine bullet-to-bullet
 scores
@@ -491,7 +468,7 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 An interactive interface for doing comparisons is available
 <https://oaiti.org/apps/bulletmatcher/>

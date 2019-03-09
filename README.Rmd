@@ -94,12 +94,14 @@ summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 
 We are working under the assumption that the scans are aligned such that the base of the bullet are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
 
-```{r}
-image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-before.png")
+```{r, eval = FALSE}
+image_x3p(bullets$x3p[[1]], file = "man/figures/temp-before.png")
+```
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/temp-before.png")
 ```
 
 The raw scan needs to be flipped such that the heel is along the bottom of the image rather than along the left hand side.
-![Raw scan - needs to be rotated.](https://heike.github.io/bulletxtrctr/index_files/static/temp-before.png)
 
 
 ```{r}
@@ -112,14 +114,16 @@ bullets <- bullets %>% mutate(
 
 ```
 
+Scan after the transformation: a clear right twist is visible in the right slant of striae and grooves:
 
-```{r}
-image_x3p(bullets$x3p[[1]], file = "README_files/static/temp-after.png")
+```{r, eval= FALSE}
+image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```
 
-Scan after the transformation: a clear right twist is visible in the right slant of striae and grooves.
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/temp-after.png")
+```
 
-![Scan after rotation, a clear right twist is visible in the right slant of the left and right shoulders.](https://heike.github.io/bulletxtrctr/index_files/static/temp-after.png)
 
 3. Get the ideal cross sections
 
@@ -146,10 +150,16 @@ crosscuts %>%
 
 Note the rather strange cross cut for land 6 in bullet 1. We can look at the scan - and find quite pronounced tank rash. However, the extraction of the land is at a height of 375, which is not as much affected by the rash as the base of the bullet or the top of the scanning area.
 
+Scan of land 6 on bullet 1. The land is affected by quite pronounced tank rash:
+```{r, eval=FALSE}
+filter(bullets, land==6, bullet==1)$x3p[[1]] %>%
+  x3p_add_hline(yintercept = 375, size = 10, color = "#e6bf98") %>% 
+  image_x3p(file="man/figures/bullet1-land6.png")
 ```
-filter(bullets, land==6, bullet==1)$x3p[[1]] %>% image_x3p(file="bullet1-land6.png", crosscut = 375)
+
+```{r, echo=FALSE}
+knitr::include_graphics("man/figures/bullet1-land6.png")
 ```
-![Scan of land 6 on bullet 1. The land is affected by quite pronounced tank rash](https://heike.github.io/bulletxtrctr/README_files/static/bullet1-land6.png)
 
 4. Get the groove locations
 
