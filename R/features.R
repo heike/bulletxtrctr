@@ -998,12 +998,12 @@ extract_features_all <- function(aligned, striae, resolution, tmpfile=NULL, ...)
 
   if (!is.null(tmpfile))
     if (file.exists(tmpfile)) {
-      write_table(dframe, file = tmpfile, sep=",", append = TRUE,
+      write.table(dframe, file = tmpfile, sep=",", append = TRUE,
                   col.names = FALSE)
     } else {
       file.create(tmpfile)
-      write_table(dframe, file = tmpfile, sep=",", append = FALSE,
-                  col.names = FALSE)
+      write.table(dframe, file = tmpfile, sep=",", append = FALSE,
+                  col.names = TRUE)
     }
 
   dframe
@@ -1110,12 +1110,12 @@ extract_features_all_legacy <- function(res, resolution, tmpfile=NULL) {
 
   if (!is.null(tmpfile))
     if (file.exists(tmpfile)) {
-      write_table(dframe, file = tmpfile, sep=",", append = TRUE,
+      write.table(dframe, file = tmpfile, sep=",", append = TRUE,
                   col.names = FALSE)
     } else {
       file.create(tmpfile)
-      write_table(dframe, file = tmpfile, sep=",", append = FALSE,
-                  col.names = FALSE)
+      write.table(dframe, file = tmpfile, sep=",", append = FALSE,
+                  col.names = TRUE)
     }
 
   dframe
