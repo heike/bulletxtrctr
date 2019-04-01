@@ -136,6 +136,8 @@ bullet_pipeline <- function(location, stop_at_step = NULL,
   return(land_list)
 }
 
+
+
 #' Convert x3p header information to microns from meters
 #'
 #' @param x3p x3p data read in using read_x3p or read_bullet
@@ -152,3 +154,5 @@ x3pheader_to_microns <- function(x3p) {
   x3p$header.info$incrementX <- x3p$header.info$incrementX * 10^6
   x3p
 }
+
+

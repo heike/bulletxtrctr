@@ -32,7 +32,8 @@ Imports:
     bulletcp (>= 0.1.0)
 Remotes: 
     heike/x3ptools,
-    nategarton13/bulletcp
+    nategarton13/bulletcp,
+    csafe-isu/nbtrd
 URL: https://heike.github.io/bulletxtrctr/
 BugReports: https://github.com/heike/bulletxtrctr/issues
 Depends:
@@ -43,7 +44,8 @@ Suggests:
     testthat,
     testthis,
     knitr, 
-    rmarkdown
+    rmarkdown,
+    nbtrd
 VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8

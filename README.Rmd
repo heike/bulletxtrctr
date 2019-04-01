@@ -29,6 +29,7 @@ library(x3ptools)
 library(randomForest)
 library(ggplot2)
 library(readr)
+library(nbtrd) # devtools::install_github("csafe-isu/nbtrd")
 ```
 
 2. `bulletxtrctr` only works on x3p files. See package `x3ptools` at https://heike.github.io/x3ptools/ for ways to convert different file formats into x3p standard files.

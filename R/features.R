@@ -933,6 +933,7 @@ extract_feature_overlap <- function(aligned) {
 #' @param aligned aligned signatures, result from `sig_cms_max`
 #' @param striae data frame with evaluated matching striae
 #' @param resolution micron per pixel resolution of scans
+#' @param tmpfile character consisting of the path to a temporary file. If not `NULL`, one line is appended to the file each time the function is executed.
 #' @param ... passed on to extractor functions
 #' @importFrom utils apropos getFromNamespace
 #' @importFrom tidyr spread
@@ -962,7 +963,7 @@ extract_feature_overlap <- function(aligned) {
 #'
 #' extract_features_all(alignment, striae)
 #' }
-extract_features_all <- function(aligned, striae, resolution, ...) {
+extract_features_all <- function(aligned, striae, resolution, tmpfile=NULL, ...) {
   feature <- value <- NULL
   assert_that(!is.null(aligned), !is.null(striae),
     msg = "aligned and striae must not be NULL"
@@ -990,10 +991,14 @@ extract_features_all <- function(aligned, striae, resolution, ...) {
     res
   })
 
-  data.frame(
+  dframe <- data.frame(
     feature = gsub("extract_feature_", "", features),
     value = values
   ) %>% spread(feature, value)
+
+  if (!is.null(tmpfile)) write.csv(dframe, file = tmpfile, append=TRUE, col.names = !file.exists(tmpfile))
+
+  dframe
 }
 
 #' Extract features from aligned signatures (legacy)
@@ -1002,10 +1007,11 @@ extract_features_all <- function(aligned, striae, resolution, ...) {
 #'          result from `sig_cms_max`
 #' XXX this needs some fixing
 #' @param resolution resolution at which the scans were taken in microns per pixel
+#' @param tmpfile character value consisting of a path to a temporary file. If not NULL, a line is added to this file each time this function is executed.
 #' @return data frame with variables ccf, rough_cor, D, sd_D, matches,
 #'           mismatches, cms, non_cms, and sum_peaks
 #' @export
-extract_features_all_legacy <- function(res, resolution) {
+extract_features_all_legacy <- function(res, resolution, tmpfile=NULL) {
   # browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 
@@ -1067,7 +1073,7 @@ extract_features_all_legacy <- function(res, resolution) {
     use = "pairwise.complete.obs"
   )
 
-  data.frame(
+  dframe <- data.frame(
     ccf = res$ccf,
     rough_cor = rough_cor,
     lag = res$lag / 1000,
@@ -1093,4 +1099,7 @@ extract_features_all_legacy <- function(res, resolution) {
     sum_peaks = sum(abs(res$lines$heights[res$lines$match]), na.rm = TRUE) *
       (1000 / g1_inc_x) / length(ys)
   )
+  if (!is.null(tmpfile)) write.csv(dframe, file = tmpfile, append=TRUE, col.names = !file.exists(tmpfile))
+
+  dframe
 }

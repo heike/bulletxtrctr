@@ -4,7 +4,7 @@
 \alias{extract_features_all_legacy}
 \title{Extract features from aligned signatures (legacy)}
 \usage{
-extract_features_all_legacy(res, resolution)
+extract_features_all_legacy(res, resolution, tmpfile = NULL)
 }
 \arguments{
 \item{res}{list consisting of data frames of lines and aligned signatures,
@@ -12,6 +12,8 @@ extract_features_all_legacy(res, resolution)
 XXX this needs some fixing}
 
 \item{resolution}{resolution at which the scans were taken in microns per pixel}
+
+\item{tmpfile}{character value consisting of a path to a temporary file. If not NULL, a line is added to this file each time this function is executed.}
 }
 \value{
 data frame with variables ccf, rough_cor, D, sd_D, matches,

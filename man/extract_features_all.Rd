@@ -4,7 +4,7 @@
 \alias{extract_features_all}
 \title{Extract features from aligned signatures}
 \usage{
-extract_features_all(aligned, striae, resolution, ...)
+extract_features_all(aligned, striae, resolution, tmpfile = NULL, ...)
 }
 \arguments{
 \item{aligned}{aligned signatures, result from `sig_cms_max`}
@@ -12,6 +12,8 @@ extract_features_all(aligned, striae, resolution, ...)
 \item{striae}{data frame with evaluated matching striae}
 
 \item{resolution}{micron per pixel resolution of scans}
+
+\item{tmpfile}{character consisting of the path to a temporary file. If not `NULL`, one line is appended to the file each time the function is executed.}
 
 \item{...}{passed on to extractor functions}
 }

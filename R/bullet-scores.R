@@ -65,8 +65,8 @@
 #'   )
 #' }
 compute_average_scores <- function(land1, land2, score) {
-  if (!is.numeric(land1)) land1 <- readr::parse_number(land1)
-  if (!is.numeric(land2)) land2 <- readr::parse_number(land2)
+  if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
+  if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
 
   maxland <- max(land1, land2)
