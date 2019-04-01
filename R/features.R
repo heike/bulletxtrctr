@@ -996,7 +996,15 @@ extract_features_all <- function(aligned, striae, resolution, tmpfile=NULL, ...)
     value = values
   ) %>% spread(feature, value)
 
-  if (!is.null(tmpfile)) write.csv(dframe, file = tmpfile, append=TRUE, col.names = !file.exists(tmpfile))
+  if (!is.null(tmpfile))
+    if (file.exists(tmpfile)) {
+      write_table(dframe, file = tmpfile, sep=",", append = TRUE,
+                  col.names = FALSE)
+    } else {
+      file.create(tmpfile)
+      write_table(dframe, file = tmpfile, sep=",", append = FALSE,
+                  col.names = FALSE)
+    }
 
   dframe
 }
@@ -1099,7 +1107,16 @@ extract_features_all_legacy <- function(res, resolution, tmpfile=NULL) {
     sum_peaks = sum(abs(res$lines$heights[res$lines$match]), na.rm = TRUE) *
       (1000 / g1_inc_x) / length(ys)
   )
-  if (!is.null(tmpfile)) write.csv(dframe, file = tmpfile, append=TRUE, col.names = !file.exists(tmpfile))
+
+  if (!is.null(tmpfile))
+    if (file.exists(tmpfile)) {
+      write_table(dframe, file = tmpfile, sep=",", append = TRUE,
+                  col.names = FALSE)
+    } else {
+      file.create(tmpfile)
+      write_table(dframe, file = tmpfile, sep=",", append = FALSE,
+                  col.names = FALSE)
+    }
 
   dframe
 }
