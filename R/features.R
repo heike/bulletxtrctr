@@ -935,7 +935,7 @@ extract_feature_overlap <- function(aligned) {
 #' @param resolution micron per pixel resolution of scans
 #' @param tmpfile character consisting of the path to a temporary file. If not `NULL`, one line is appended to the file each time the function is executed.
 #' @param ... passed on to extractor functions
-#' @importFrom utils apropos getFromNamespace
+#' @importFrom utils apropos getFromNamespace write.table
 #' @importFrom tidyr spread
 #' @importFrom assertthat assert_that
 #' @export
@@ -999,11 +999,10 @@ extract_features_all <- function(aligned, striae, resolution, tmpfile=NULL, ...)
   if (!is.null(tmpfile))
     if (file.exists(tmpfile)) {
       write.table(dframe, file = tmpfile, sep=",", append = TRUE,
-                  col.names = FALSE)
+                  col.names = FALSE, row.names=FALSE)
     } else {
-      file.create(tmpfile)
       write.table(dframe, file = tmpfile, sep=",", append = FALSE,
-                  col.names = TRUE)
+                  col.names = TRUE, row.names=FALSE)
     }
 
   dframe
@@ -1111,11 +1110,10 @@ extract_features_all_legacy <- function(res, resolution, tmpfile=NULL) {
   if (!is.null(tmpfile))
     if (file.exists(tmpfile)) {
       write.table(dframe, file = tmpfile, sep=",", append = TRUE,
-                  col.names = FALSE)
+                  col.names = FALSE, row.names=FALSE)
     } else {
-      file.create(tmpfile)
       write.table(dframe, file = tmpfile, sep=",", append = FALSE,
-                  col.names = TRUE)
+                  col.names = TRUE, row.names=FALSE)
     }
 
   dframe
