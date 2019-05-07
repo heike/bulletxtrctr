@@ -17,7 +17,6 @@ r_binary_packages:
 r_packages:
   - covr
   - smoother
-  - randomForest
   
 r_github_packages:
   - nategarton13/bulletcp
@@ -28,4 +27,5 @@ before_script:
   - sleep 3
   
 after_success:
+  - Rscript -e 'install.packages("randomForest")'
   - Rscript -e 'covr::codecov()'
