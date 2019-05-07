@@ -23,7 +23,7 @@ r_github_packages:
   - r-lib/remotes
   
 install:
-  - R -e 'remotes::safe_install_packages(".")'
+  - R CMD INSTALL .
   - R -e 'remotes::install_deps(dependencies = TRUE)'
   
 after_success:
