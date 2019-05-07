@@ -2,7 +2,7 @@
 
 language: R
 sudo: false
-cache: packages
+#cache: packages
 
 env_vars:
   global:
@@ -17,6 +17,7 @@ r_binary_packages:
 r_packages:
   - covr
   - smoother
+  
 r_github_packages:
   - nategarton13/bulletcp
   - r-lib/remotes
