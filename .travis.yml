@@ -8,18 +8,23 @@ env_vars:
   global:
     - RGL_USE_NULL=TRUE
 
-r_binary_packages:
-  - rgl
-
+services:
+  - xvfb
+  
 r_packages:
   - covr
   - smoother
+  
+r_binary_packages:
+  - rgl
 
 r_github_packages:
   - nategarton13/bulletcp
-
-services:
-  - xvfb
-
+  - r-lib/remotes
+  
+install:
+  - R -e 'remotes::safe_install_packages(".")'
+  - R -e 'remotes::install_deps(dependencies = TRUE)'
+  
 after_success:
   - Rscript -e 'covr::codecov()'
