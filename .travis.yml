@@ -11,20 +11,20 @@ env_vars:
 services:
   - xvfb
   
+r_binary_packages:
+  - rgl
+  
 r_packages:
   - covr
   - smoother
-  
-r_binary_packages:
-  - rgl
-
 r_github_packages:
   - nategarton13/bulletcp
   - r-lib/remotes
   
-install:
-  - R CMD INSTALL .
-  - R -e 'remotes::install_deps(dependencies = TRUE)'
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3
   
 after_success:
   - Rscript -e 'covr::codecov()'
