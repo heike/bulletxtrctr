@@ -17,6 +17,8 @@ r_binary_packages:
 r_packages:
   - covr
   - smoother
+  - randomForest
+  - zoo
   
 r_github_packages:
   - nategarton13/bulletcp
