@@ -20,7 +20,6 @@ r_packages:
   
 r_github_packages:
   - nategarton13/bulletcp
-  - r-lib/remotes
   
 before_script:
   - "export DISPLAY=:99.0"
