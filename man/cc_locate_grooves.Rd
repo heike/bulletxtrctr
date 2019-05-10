@@ -13,7 +13,7 @@ cc_locate_grooves(ccdata, method = "rollapply", smoothfactor = 15,
 measured values as `value`. If multiple crosscuts are to be
 considered, include a variable y and use as a key.}
 
-\item{method}{method to use for identifying grooves. Defaults to "rollapply"}
+\item{method}{method to use for identifying grooves. One of "quadratic", "rollapply", "middle", "lassobasic", "lassofull", "bcp". Defaults to "rollapply"}
 
 \item{smoothfactor}{The smoothing window to use - XXX the smoothing window
 seems to depend on the resolution at which the data has been
