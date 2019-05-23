@@ -82,7 +82,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   check_ccdata(ccdata)
 
-  assert_that(method %in% c("quadratic", "rollapply", "middle", "logisticlegacy", "lassobasic", "lassofull", "bcp")) ## too strict
+  assert_that(method %in% c("quadratic", "rollapply", "middle", "logisticlegacy", "lassobasic", "lassofull", "bcp", "hough")) ## too strict
 
   # TODO: expand cc_locate_groove to accept user defined get_grooves_XXX function
   assert_that(
@@ -165,9 +165,12 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
     }
   }
 
+  if(method == "hough"){
+    grooves <- get_grooves_hough(land = land, return_plot = return_plot)
+  }
+
   return(grooves)
 }
-
 
 #' Use the center of a crosscut
 #'
@@ -717,6 +720,100 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
   } else {
     return(list(groove = groove))
   }
+}
+
+
+#' Re-parameterize the Hough transform output for pixel identification
+#'
+#' @param rho Numeric vector containing the shortest distance from the line to the origin
+#' @param theta Numeric vector containing the angle of the line from the positive x axis
+#' @param df Data frame containing output from a Hough transformation
+#' @importFrom plyr mutate
+#' @export
+
+
+rho_to_ab <- function(rho = NULL, theta = NULL, df = NULL) {
+  if (is.null(df)) {
+    df <- data.frame(rho = rho, theta = theta)
+  }
+  stopifnot(c("rho", "theta") %in% names(df))
+  idx <- df$theta ==0
+  df <- df %>%
+    mutate(yintercept = ifelse(idx, NA, rho/sin(theta)),
+           slope = ifelse(idx, NA, -cos(theta)/sin(theta)),
+           xintercept = ifelse(idx, rho, rho/cos(theta)))
+  df
+}
+
+
+
+#' Use Hough transformation to identify groove locations.
+#' Choose strong edges based on whether scores exceed the 99.75% percentile of scores and if the angle of line is less than
+#' Pi/4.
+#'
+#'
+#' @param land dataframe of surface measurements in microns in the x, y, and x direction
+#' @param return_plot return plot of grooves
+#'
+#' @importFrom x3ptools df_to_x3p
+#' @importFrom imager as.cimg
+#' @importFrom imager imgradient
+#' @importFrom imager hough_line
+#' @importFrom asserthat assert_that
+#' @importFrom asserthat has_name
+#' @export
+
+
+get_grooves_hough <- function(land, return_plot=F){
+  assert_that(has_name(land, "x"), has_name(land, "y"), has_name(land, "value"),
+              is.numeric(land$x), is.numeric(land$y), is.numeric(land$value))
+  # Convert to cimage
+  land.x3p <- df_to_x3p(land)
+  cimg <- as.cimg(land.x3p$surface.matrix)
+
+  # Create image gradient
+  grad.mag <- sqrt(imgradient(cimg, "x")^2 + imgradient(cimg, "y")^2)
+
+  strong <- grad.mag > quantile(grad.mag,.99, na.rm=TRUE)
+
+  # create the hough transform
+  hough.df <- hough_line(strong, ntheta = 800, data.frame = TRUE)
+
+
+  # Find only the good vertical segments
+  segments <- rho_to_ab(df = hough.df)
+
+  # Calculate the intercept of where each Hough line
+
+  segments <- segments %>%
+    mutate(pixset.intercept = ifelse(is.na(yintercept), xintercept, (width(strong) - yintercept)/slope),
+           xaverage = ifelse(is.na(yintercept), xintercept, (((0-height(strong))/slope) + ((rho - height(strong))/slope)/2)))
+
+  good_vertical_segs <- segments %>%
+    filter(score > quantile(score, 0.9975) & theta < pi/4) %>%
+    extract2("xaverage")
+
+  lthird <- width(strong.phnx.l1)/6
+  uthird <- 5*width(strong.phnx.l1)/6
+
+  # Find hough line index where
+  closelthird <- good_vertical_segs[which.min(abs(good_vertical_segs - lthird))]
+  closeuthird <- good_vertical_segs[which.min(abs(good_vertical_segs - uthird))]
+
+  groove <- c(closelthird, closeuthird)
+
+  if(return_plot){
+    return(
+      list(
+        groove,
+        plot = grooves_plot(land = land, grooves = groove)
+      )
+    )
+  }
+  else{
+    return(list(groove = groove))
+  }
+
 }
 
 #' Check grooves for correctness
