@@ -29,7 +29,8 @@ Imports:
     tidyr (>= 0.8.2),
     x3ptools (>= 0.0.2),
     zoo (>= 1.8),
-    bulletcp (>= 0.1.0)
+    bulletcp (>= 0.1.0),
+    imager (>= 0.41.1)
 Remotes: 
     heike/x3ptools,
     nategarton13/bulletcp,
