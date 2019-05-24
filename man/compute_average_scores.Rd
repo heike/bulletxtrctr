@@ -4,7 +4,7 @@
 \alias{compute_average_scores}
 \title{Get average scores for bullet to bullet comparisons}
 \usage{
-compute_average_scores(land1, land2, score)
+compute_average_scores(land1, land2, score, addNA = FALSE)
 }
 \arguments{
 \item{land1}{(numeric) vector with land ids of bullet 1}
@@ -12,6 +12,8 @@ compute_average_scores(land1, land2, score)
 \item{land2}{(numeric) vector with land ids of bullet 2}
 
 \item{score}{numeric vector of scores to be summarized into a single number}
+
+\item{addNA}{logical value. In case of missing lands, are scores set to 0 (addNA = FALSE) or set to NA (addNA = TRUE)}
 }
 \value{
 numeric vector of average scores. Length is the same as the number of

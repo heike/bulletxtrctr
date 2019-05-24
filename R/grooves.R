@@ -24,7 +24,7 @@ grooves_plot <- function(land, grooves) {
 #' @param ccdata data frame of the crosscut. Data frame needs location x and
 #'          measured values as `value`. If multiple crosscuts are to be
 #'          considered, include a variable y and use as a key.
-#' @param method method to use for identifying grooves. One of "quadratic", "rollapply", "middle", "lassobasic", "lassofull", "bcp". Defaults to "rollapply"
+#' @param method method to use for identifying grooves. One of "quadratic", "rollapply", "middle", "logisticlegacy", "lassobasic", "lassofull", "bcp". Defaults to "rollapply"
 #' @param smoothfactor The smoothing window to use - XXX the smoothing window
 #'          seems to depend on the resolution at which the data has been
 #'          collected.
