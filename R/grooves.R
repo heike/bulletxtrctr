@@ -793,8 +793,8 @@ get_grooves_hough <- function(land, return_plot=F){
     filter(score > quantile(score, 0.9975) & theta < pi/4) %>%
     extract2("xaverage")
 
-  lthird <- width(strong.phnx.l1)/6
-  uthird <- 5*width(strong.phnx.l1)/6
+  lthird <- width(strong)/6
+  uthird <- 5*width(strong)/6
 
   # Find hough line index where
   closelthird <- good_vertical_segs[which.min(abs(good_vertical_segs - lthird))]
