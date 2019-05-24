@@ -20,7 +20,9 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
       grooves_lassobasic = purrr::map(ccdata, cc_locate_grooves,
                                       method = "lassobasic", return_plot = F),
       grooves_bcp = purrr::map(ccdata, cc_locate_grooves,
-                               method = "bcp", return_plot = F))
+                               method = "bcp", return_plot = F),
+      grooves_hough = purrr::map(ccdata, cc_locate_grooves,
+                                 method = "hough", return_plot = F))
 }
 
 # ccdata with no grooves - perfect parabola
@@ -74,6 +76,20 @@ test_that("grooves works as expected", {
   expect_equal(names(tmp2), c("groove", "plot"))
   expect_s3_class(tmp2$plot, "ggplot")
 
+  ## Lasso - full
+  tmp2 <- cc_locate_grooves(testb1$ccdata[[1]], method = "lassofull",
+                            return_plot = T)
+  expect_length(tmp2, 2)
+  expect_equal(names(tmp2), c("groove", "plot"))
+  expect_s3_class(tmp2$plot, "ggplot")
+
+  ## Hough
+  tmp2 <- cc_locate_grooves(testb1$ccdata[[1]], method = "hough",
+                            return_plot = T)
+  expect_length(tmp2, 2)
+  expect_equal(names(tmp2), c("groove", "plot"))
+  expect_s3_class(tmp2$plot, "ggplot")
+
   # Test that plots aren't generated when return_plot is left to the default value (F)
   ## Rollapply
   expect_length(tmp, 1)
@@ -106,6 +122,11 @@ test_that("grooves works as expected", {
   expect_length(testb1$grooves_lassobasic[[1]], 1)
   expect_length(testb1$grooves_lassobasic[[1]]$groove, 2)
   expect_is(testb1$grooves_lassobasic[[1]]$groove, "numeric")
+
+  ## Hough
+  expect_length(testb1$grooves_hough[[1]], 1)
+  expect_length(testb1$grooves_hough[[1]]$groove, 2)
+  expect_is(testb1$grooves_hough[[1]]$groove, "numeric")
 
 
   # Test other conditions
@@ -161,5 +182,7 @@ test_that("grooves works as expected", {
                    testb1$grooves_lassobasic[[1]]$groove)
   expect_identical(b1_l2_x3p$grooves_bcp[[1]]$groove,
                    testb1$grooves_bcp[[1]]$groove)
+  expect_identical(b1_l2_x3p$grooves_hough[[1]]$groove,
+                   testb1$grooves_hough[[1]]$groove)
 })
 
