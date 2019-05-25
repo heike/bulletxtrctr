@@ -6,7 +6,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert x3p header information to microns from meters — x3pheader_to_microns • bulletxtrctr</title>
+<title>Use Hough transformation to identify groove locations.
+Choose strong edges based on whether scores exceed the 99.75<!-- % percentile of scores and if the angle of line is less than -->
+Pi/4. — get_grooves_hough • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +32,13 @@
 
 
 
-<meta property="og:title" content="Convert x3p header information to microns from meters — x3pheader_to_microns" />
+<meta property="og:title" content="Use Hough transformation to identify groove locations.
+Choose strong edges based on whether scores exceed the 99.75<!-- % percentile of scores and if the angle of line is less than -->
+Pi/4. — get_grooves_hough" />
 
-<meta property="og:description" content="Convert x3p header information to microns from meters" />
+<meta property="og:description" content="Use Hough transformation to identify groove locations.
+Choose strong edges based on whether scores exceed the 99.75
+Pi/4." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,31 +112,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert x3p header information to microns from meters</h1>
+    <h1>Use Hough transformation to identify groove locations.
+Choose strong edges based on whether scores exceed the 99.75<!-- % percentile of scores and if the angle of line is less than -->
+Pi/4.</h1>
     
-    <div class="hidden name"><code>x3pheader_to_microns.Rd</code></div>
+    <div class="hidden name"><code>get_grooves_hough.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Convert x3p header information to microns from meters</p>
+    <p>Use Hough transformation to identify groove locations.
+Choose strong edges based on whether scores exceed the 99.75<!-- % percentile of scores and if the angle of line is less than -->
+Pi/4.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>x3pheader_to_microns</span>(<span class='no'>x3p</span>)</pre>
+    <pre class="usage"><span class='fu'>get_grooves_hough</span>(<span class='no'>land</span>, <span class='kw'>return_plot</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x3p</th>
-      <td><p>x3p data read in using read_x3p or read_bullet</p></td>
+      <th>land</th>
+      <td><p>dataframe of surface measurements in microns in the x, y, and x direction</p></td>
+    </tr>
+    <tr>
+      <th>return_plot</th>
+      <td><p>return plot of grooves</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>x3p with header information in microns</p>
     
 
   </div>
@@ -138,9 +148,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

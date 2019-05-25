@@ -759,8 +759,8 @@ rho_to_ab <- function(rho = NULL, theta = NULL, df = NULL) {
 #' @importFrom imager as.cimg
 #' @importFrom imager imgradient
 #' @importFrom imager hough_line
-#' @importFrom asserthat assert_that
-#' @importFrom asserthat has_name
+#' @importFrom assertthat assert_that
+#' @importFrom assertthat has_name
 #' @export
 
 

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert x3p header information to microns from meters — x3pheader_to_microns • bulletxtrctr</title>
+<title>Re-parameterize the Hough transform output for pixel identification — rho_to_ab • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Convert x3p header information to microns from meters — x3pheader_to_microns" />
+<meta property="og:title" content="Re-parameterize the Hough transform output for pixel identification — rho_to_ab" />
 
-<meta property="og:description" content="Convert x3p header information to microns from meters" />
+<meta property="og:description" content="Re-parameterize the Hough transform output for pixel identification" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,31 +106,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert x3p header information to microns from meters</h1>
+    <h1>Re-parameterize the Hough transform output for pixel identification</h1>
     
-    <div class="hidden name"><code>x3pheader_to_microns.Rd</code></div>
+    <div class="hidden name"><code>rho_to_ab.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Convert x3p header information to microns from meters</p>
+    <p>Re-parameterize the Hough transform output for pixel identification</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>x3pheader_to_microns</span>(<span class='no'>x3p</span>)</pre>
+    <pre class="usage"><span class='fu'>rho_to_ab</span>(<span class='kw'>rho</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>theta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>df</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x3p</th>
-      <td><p>x3p data read in using read_x3p or read_bullet</p></td>
+      <th>rho</th>
+      <td><p>Numeric vector containing the shortest distance from the line to the origin</p></td>
+    </tr>
+    <tr>
+      <th>theta</th>
+      <td><p>Numeric vector containing the angle of the line from the positive x axis</p></td>
+    </tr>
+    <tr>
+      <th>df</th>
+      <td><p>Data frame containing output from a Hough transformation</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>x3p with header information in microns</p>
     
 
   </div>
@@ -138,9 +142,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
