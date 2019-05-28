@@ -740,7 +740,7 @@ rho_to_ab <- function(rho = NULL, theta = NULL, df = NULL) {
   idx <- df$theta ==0
   df <- df %>%
     mutate(yintercept = ifelse(idx, NA, rho/sin(theta)),
-           slope = ifelse(idx, NA, -cos(theta)/sin(theta)),
+           slope = -cos(theta)/sin(theta),
            xintercept = ifelse(idx, rho, rho/cos(theta)))
   df
 }
@@ -769,15 +769,30 @@ get_grooves_hough <- function(land, return_plot=F){
               is.numeric(land$x), is.numeric(land$y), is.numeric(land$value))
   # Convert to cimage
   land.x3p <- df_to_x3p(land)
-  cimg <- as.cimg(land.x3p$surface.matrix)
+
+  if(width(land.x3p$surface.matrix) < height(land.x3p$surface.matrix)){
+    cimg <- as.cimg(t(land.x3p$surface.matrix))
+  }
+  else{
+    cimg <- as.cimg(land.x3p$surface.matrix)
+  }
 
   # Create image gradient
-  grad.mag <- sqrt(imgradient(cimg, "x")^2 + imgradient(cimg, "y")^2)
+
+  dx <- imgradient(cimg, "x")
+  dy <- imgradient(cimg, "y")
+
+  grad.mag <- sqrt(dx^2 + dy^2)
 
   strong <- grad.mag > quantile(grad.mag,.99, na.rm=TRUE)
 
   # create the hough transform
   hough.df <- hough_line(strong, ntheta = 800, data.frame = TRUE)
+
+  # Subset based on score and angle rotation
+
+  hough.df <- hough.df %>%
+    filter(score > quantile(score, .999) & (theta < pi/4))
 
 
   # Find only the good vertical segments
@@ -786,11 +801,10 @@ get_grooves_hough <- function(land, return_plot=F){
   # Calculate the intercept of where each Hough line
 
   segments <- segments %>%
-    mutate(pixset.intercept = ifelse(is.na(yintercept), xintercept, (width(strong) - yintercept)/slope),
-           xaverage = ifelse(is.na(yintercept), xintercept, (((0-height(strong))/slope) + ((rho - height(strong))/slope)/2)))
+    mutate(pixset.intercept = ifelse(theta==0, xintercept, (height(strong) - yintercept)/slope),
+           xaverage = ifelse(theta==0, xintercept, ((0-yintercept)/slope + (height(strong) - yintercept)/slope)/2))
 
   good_vertical_segs <- segments %>%
-    filter(score > quantile(score, 0.9975) & theta < pi/4) %>%
     extract2("xaverage")
 
   lthird <- width(strong)/6
