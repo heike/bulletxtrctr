@@ -24,7 +24,7 @@ grooves_plot <- function(land, grooves) {
 #' @param ccdata data frame of the crosscut. Data frame needs location x and
 #'          measured values as `value`. If multiple crosscuts are to be
 #'          considered, include a variable y and use as a key.
-#' @param method method to use for identifying grooves. Defaults to "rollapply"
+#' @param method method to use for identifying grooves. One of "quadratic", "rollapply", "middle", "logisticlegacy", "lassobasic", "lassofull", "bcp". Defaults to "rollapply"
 #' @param smoothfactor The smoothing window to use - XXX the smoothing window
 #'          seems to depend on the resolution at which the data has been
 #'          collected.
@@ -759,8 +759,8 @@ rho_to_ab <- function(rho = NULL, theta = NULL, df = NULL) {
 #' @importFrom imager as.cimg
 #' @importFrom imager imgradient
 #' @importFrom imager hough_line
-#' @importFrom asserthat assert_that
-#' @importFrom asserthat has_name
+#' @importFrom assertthat assert_that
+#' @importFrom assertthat has_name
 #' @export
 
 
@@ -778,9 +778,15 @@ get_grooves_hough <- function(land, return_plot=F){
     # cimg <- as.cimg(t(land.x3p$surface.matrix))
     warning("This scan seems to not be rotated correctly. Proceed with caution. ")
   }
+
   # else{
   cimg <- as.cimg(land.x3p$surface.matrix)
   # }
+
+ # else{
+    cimg <- as.cimg(land.x3p$surface.matrix)
+ # }
+
 
   # Create image gradient
 

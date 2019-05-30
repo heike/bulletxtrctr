@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert x3p header information to microns from meters — x3pheader_to_microns • bulletxtrctr</title>
+<title>Get land to land prediction based on bullet to bullet comparisons — max_u • bulletxtrctr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,11 @@
 
 
 
-<meta property="og:title" content="Convert x3p header information to microns from meters — x3pheader_to_microns" />
+<meta property="og:title" content="Get land to land prediction based on bullet to bullet comparisons — max_u" />
 
-<meta property="og:description" content="Convert x3p header information to microns from meters" />
+<meta property="og:description" content="The combination of `land1` and `land2` are a key to the scores,
+i.e. if a bullet has six lands, each of the input vectors should have
+length 36." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,31 +108,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert x3p header information to microns from meters</h1>
+    <h1>Get land to land prediction based on bullet to bullet comparisons</h1>
     
-    <div class="hidden name"><code>x3pheader_to_microns.Rd</code></div>
+    <div class="hidden name"><code>max_u.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Convert x3p header information to microns from meters</p>
+    <p>The combination of `land1` and `land2` are a key to the scores,
+i.e. if a bullet has six lands, each of the input vectors should have
+length 36.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>x3pheader_to_microns</span>(<span class='no'>x3p</span>)</pre>
+    <pre class="usage"><span class='fu'>max_u</span>(<span class='no'>land1</span>, <span class='no'>land2</span>, <span class='no'>scores</span>, <span class='kw'>addNA</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x3p</th>
-      <td><p>x3p data read in using read_x3p or read_bullet</p></td>
+      <th>land1</th>
+      <td><p>(numeric) vector with land ids of bullet 1</p></td>
+    </tr>
+    <tr>
+      <th>land2</th>
+      <td><p>(numeric) vector with land ids of bullet 2</p></td>
+    </tr>
+    <tr>
+      <th>scores</th>
+      <td><p>numeric vector of scores to be summarized into a single number</p></td>
+    </tr>
+    <tr>
+      <th>addNA</th>
+      <td><p>how are missing values treated? addNA = TRUE leaves missing values, addNA=FALSE imputes with 0.</p></td>
+    </tr>
+    <tr>
+      <th>difference</th>
+      <td><p>numeric value describing the minimal difference between scores from same source versus different sources.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>numeric value describing the significance level for the bootstrap</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>x3p with header information in microns</p>
+    <p>numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.</p>
     
 
   </div>

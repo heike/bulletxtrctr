@@ -19,7 +19,6 @@ Description: Analyze bullet lands in x3p format. We provide a
     This is an update and re-factoring of the bulletr package.
 Imports:
     assertthat (>= 0.2.0),
-    dplyr (>= 0.7.8),
     ggplot2 (>= 3.1.0),
     locfit (>= 1.5.1),
     MASS (>= 7.3.1),
@@ -29,7 +28,9 @@ Imports:
     tidyr (>= 0.8.2),
     x3ptools (>= 0.0.2),
     zoo (>= 1.8),
-    bulletcp (>= 0.1.0)
+    bulletcp (>= 0.1.0),
+    imager (>= 0.41.1),
+    dplyr (>= 0.7.8)
 Remotes: 
     heike/x3ptools,
     nategarton13/bulletcp,

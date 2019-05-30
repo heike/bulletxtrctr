@@ -6,6 +6,7 @@
 #' @param land1 (numeric) vector with land ids of bullet 1
 #' @param land2 (numeric) vector with land ids of bullet 2
 #' @param score numeric vector of scores to be summarized into a single number
+#' @param addNA logical value. In case of missing lands, are scores set to 0 (addNA = FALSE) or set to NA (addNA = TRUE)
 #' @export
 #' @importFrom readr parse_number
 #' @importFrom stats xtabs
@@ -64,7 +65,7 @@
 #'                                                   d$rfscore)))
 #'   )
 #' }
-compute_average_scores <- function(land1, land2, score) {
+compute_average_scores <- function(land1, land2, score, addNA=FALSE) {
   if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
@@ -81,8 +82,8 @@ compute_average_scores <- function(land1, land2, score) {
   )
   # get averages, just in case
   matrix <- xtabs(score ~ land1 + land2,
-    data = fullframe
-  ) / xtabs(~land1 + land2, data = fullframe)
+    data = fullframe, addNA = addNA
+  ) / xtabs(~land1 + land2, data = fullframe, addNA = addNA)
 
   matrix <- cbind(matrix, matrix)
 
@@ -111,6 +112,7 @@ bootstrap_k <- function(scores, k, K, value) {
   sum(res >= value)/K
 }
 
+
 #' Get land to land prediction based on bullet to bullet comparisons
 #'
 #' The combination of `land1` and `land2` are a key to the scores,
@@ -121,12 +123,13 @@ bootstrap_k <- function(scores, k, K, value) {
 #' @param scores numeric vector of scores to be summarized into a single number
 #' @param difference numeric value describing the minimal difference between scores from same source versus different sources.
 #' @param alpha numeric value describing the significance level for the bootstrap
+#' @param addNA how are missing values treated? addNA = TRUE leaves missing values, addNA=FALSE imputes with 0.
 #' @export
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
-bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.05) {
+bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.05, addNA = FALSE) {
   if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
-  avgs <- compute_average_scores(land2, land1, scores)
+  avgs <- compute_average_scores(land2, land1, scores, addNA)
 
     p <- max(c(land1, land2))
     boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
@@ -155,3 +158,60 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
       return(rep(FALSE, length=length(land1)))
     }
   }
+
+
+
+#' Get land to land prediction based on bullet to bullet comparisons
+#'
+#' The combination of `land1` and `land2` are a key to the scores,
+#' i.e. if a bullet has six lands, each of the input vectors should have
+#' length 36.
+#' @param land1 (numeric) vector with land ids of bullet 1
+#' @param land2 (numeric) vector with land ids of bullet 2
+#' @param scores numeric vector of scores to be summarized into a single number
+#' @param difference numeric value describing the minimal difference between scores from same source versus different sources.
+#' @param alpha numeric value describing the significance level for the bootstrap
+#' @param addNA how are missing values treated? addNA = TRUE leaves missing values, addNA=FALSE imputes with 0.
+#' @export
+#' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
+max_u <- function(land1, land2, scores, addNA = FALSE) {
+  if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
+  if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
+  assert_that(is.numeric(land1), is.numeric(land2), is.numeric(scores))
+#browser()
+
+  maxland <- max(land1, land2)
+  fullframe <- data.frame(expand.grid(land1 = 1:maxland, land2 = 1:maxland))
+  bcompare <- data.frame(land1, land2, scores)
+
+  fullframe <- fullframe %>% left_join(bcompare, by = c("land1", "land2"))
+
+  fullframe <- fullframe %>% mutate(
+    land1 = factor(land1, levels = 1:maxland),
+    land2 = factor(land2, levels = 1:maxland)
+  )
+  # get averages, just in case
+  matrix <- xtabs(scores ~ land1 + land2,
+                  data = fullframe, addNA = addNA
+  ) / xtabs(~land1 + land2, data = fullframe, addNA = addNA)
+
+  matrix <- cbind(matrix, matrix)
+
+  wts <- 1:maxland %>% sapply(FUN = function(i) {
+    if (i == 1) {
+      mm <- matrix[1:maxland, 1:maxland]
+    } else {
+      i <- i - 1
+      mm <- (matrix[, -(1:i)])[1:maxland, 1:maxland]
+    }
+    u <- na.omit(diag(mm))
+    diag(mm) <- NA
+    notu <- na.omit(as.vector(mm))
+    list(wilcox.test(u, notu, alternative="greater"))
+  })
+  wts %>% purrr::map_dfr(
+    .f = function(x) {
+      data.frame(W = x$statistic, pval=x$p.value)
+    }
+  )
+}
