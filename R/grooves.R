@@ -770,12 +770,17 @@ get_grooves_hough <- function(land, return_plot=F){
   # Convert to cimage
   land.x3p <- df_to_x3p(land)
 
+  # HH: this if condition distinguishes between lands based on the aspect ratio.
+  # please assume that we have lands that are wider than high.
+  # If they are not, spit out a warning rather than different code.
+  # It has bitten us badly into rear elements before to try to think for the user.
   if(width(land.x3p$surface.matrix) < height(land.x3p$surface.matrix)){
-    cimg <- as.cimg(t(land.x3p$surface.matrix))
+    # cimg <- as.cimg(t(land.x3p$surface.matrix))
+    warning("This scan seems to not be rotated correctly. Proceed with caution. ")
   }
-  else{
-    cimg <- as.cimg(land.x3p$surface.matrix)
-  }
+  # else{
+  cimg <- as.cimg(land.x3p$surface.matrix)
+  # }
 
   # Create image gradient
 
@@ -815,6 +820,8 @@ get_grooves_hough <- function(land, return_plot=F){
   closeuthird <- good_vertical_segs[which.min(abs(good_vertical_segs - uthird))]
 
   groove <- c(closelthird, closeuthird)
+  # summarize the land before visualizing
+  land <- summarize(group_by(land, x), value = median(value, na.rm=TRUE))
 
   if(return_plot){
     return(
