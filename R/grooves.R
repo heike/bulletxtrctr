@@ -846,12 +846,11 @@ get_grooves_hough <- function(land, return_plot=F){
 #' @param land dataframe of surface measurements in microns in the x, y, and x direction
 #' @param return_plot return plot of grooves
 #'
-#' @importFrom bulletxtrctr get_grooves_hough
 #' @importFrom purrr safely
 #' @export
 
 
-safely_get_grooves_hough <- safely(get_grooves_hough)
+safely_get_grooves_hough <- purrr::safely(get_grooves_hough)
 
 
 #' Check grooves for correctness
