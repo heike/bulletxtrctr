@@ -166,7 +166,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   }
 
   if(method == "hough"){
-    grooves <- get_grooves_hough(land = land, return_plot = return_plot)
+    grooves <- safely_get_grooves_hough(land = land, return_plot = return_plot)
   }
 
   return(grooves)
@@ -763,7 +763,6 @@ rho_to_ab <- function(rho = NULL, theta = NULL, df = NULL) {
 #' @importFrom assertthat has_name
 #' @export
 
-
 get_grooves_hough <- function(land, return_plot=F){
   assert_that(has_name(land, "x"), has_name(land, "y"), has_name(land, "value"),
               is.numeric(land$x), is.numeric(land$y), is.numeric(land$value))
@@ -783,11 +782,6 @@ get_grooves_hough <- function(land, return_plot=F){
   cimg <- as.cimg(land.x3p$surface.matrix)
   # }
 
- # else{
-    cimg <- as.cimg(land.x3p$surface.matrix)
- # }
-
-
   # Create image gradient
 
   dx <- imgradient(cimg, "x")
@@ -796,15 +790,18 @@ get_grooves_hough <- function(land, return_plot=F){
   grad.mag <- sqrt(dx^2 + dy^2)
 
   strong <- grad.mag > quantile(grad.mag,.99, na.rm=TRUE)
-
   # create the hough transform
-  hough.df <- hough_line(strong, ntheta = 800, data.frame = TRUE)
+  hough.df <- hough_line(strong, data.frame = TRUE)
 
   # Subset based on score and angle rotation
 
   hough.df <- hough.df %>%
-    filter(score > quantile(score, .999) & (theta < pi/4))
+    mutate(theta = ifelse(theta <= pi, theta, theta - 2*pi)) %>%
+    filter(score > quantile(score, .999),
+           theta > (-pi/4),
+           theta < (pi/4))
 
+  summary.save <- summary(hough.df)
 
   # Find only the good vertical segments
   segments <- rho_to_ab(df = hough.df)
@@ -826,8 +823,9 @@ get_grooves_hough <- function(land, return_plot=F){
   closeuthird <- good_vertical_segs[which.min(abs(good_vertical_segs - uthird))]
 
   groove <- c(closelthird, closeuthird)
+
   # summarize the land before visualizing
-  land <- summarize(group_by(land, x), value = median(value, na.rm=TRUE))
+  land.summary <- summarize(group_by(land, x), value = median(value, na.rm=TRUE))
 
   if(return_plot){
     return(
@@ -842,6 +840,19 @@ get_grooves_hough <- function(land, return_plot=F){
   }
 
 }
+
+#' Return a list of errors and results from get_groove_hough
+#'
+#' @param land dataframe of surface measurements in microns in the x, y, and x direction
+#' @param return_plot return plot of grooves
+#'
+#' @importFrom bulletxtrctr get_grooves_hough
+#' @importFrom purrr safely
+#' @export
+
+
+safely_get_grooves_hough <- safely(get_grooves_hough)
+
 
 #' Check grooves for correctness
 #'
