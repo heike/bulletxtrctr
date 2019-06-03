@@ -728,7 +728,6 @@ get_grooves_rollapply <- function(x, value, smoothfactor = 15, adjust = 10,
 #' @param rho Numeric vector containing the shortest distance from the line to the origin
 #' @param theta Numeric vector containing the angle of the line from the positive x axis
 #' @param df Data frame containing output from a Hough transformation
-#' @importFrom plyr mutate
 #' @export
 
 

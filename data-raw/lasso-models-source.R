@@ -2,7 +2,6 @@
 ## It is here for reference as to how the model objects lasso_simple and lasso_interactions were generated.
 
 #library(tidyr)
-#library(plyr)
 #library(dplyr)
 #library(purrr)
 #library(ggplot2)
