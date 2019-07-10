@@ -104,7 +104,7 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
   first_cc <- land_cc(y, land = x3p_df)
 
   # This loop only entered when there is too much missingness - too hard to test
-  while ((dim(first_cc)[1] < x3pdat$header.info$sizeX * percent_missing / 100) &
+  while ((dim(first_cc)[1] < x3pdat$header.info$sizeX * (100- percent_missing) / 100) &
     (y < x3pdat$header.info$sizeY)) {
     y <- y + distance
     first_cc <- land_cc(y, land = x3p_df)
