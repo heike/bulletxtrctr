@@ -8,6 +8,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
 
   peakstest <- sig_get_peaks(match$alignment$lands$sig1)
   peakstest2 <- sig_get_peaks(match$alignment$lands$sig2)
+  peakstest3 <- sig_get_peaks(match$alignment$lands$sig1, plot = F)
   matchestest <- striation_identify_matches(peakstest$lines, peakstest2$lines)
 }
 
@@ -32,6 +33,7 @@ test_that("peaks works as expected", {
   expect_equal(lapply(peakstest$lines, mode) %>% as.character(),
                rep("numeric", 5))
   expect_s3_class(peakstest$plot, "ggplot")
+  expect_null(peakstest3$plot)
   expect_equal(names(peakstest$dframe), c("x", "smoothed"))
   expect_equal(lapply(peakstest$dframe, mode) %>% as.character(),
                c("numeric", "numeric"))
