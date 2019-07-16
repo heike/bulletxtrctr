@@ -74,10 +74,12 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
       loess = purrr::map(ccdata, cc_fit_loess, span = .75),
       gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600)
     ) %>%
+    dplyr::mutate(ccdata_hough = purrr::map(b1_l2_x3p$x3p,
+                                            x3ptools::x3p_to_df)) %>%
     dplyr::mutate(
       grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T),
-      grooves_mid = purrr::map(ccdata, cc_locate_grooves, method = "middle",
-                               return_plot = T),
+      grooves_mid = purrr::map(ccdata, cc_locate_grooves,
+                               method = "middle", return_plot = T),
       grooves_quad = purrr::map(ccdata, cc_locate_grooves,
                                 method = "quadratic", return_plot = F),
       grooves_log = purrr::map(ccdata, cc_locate_grooves,
@@ -86,8 +88,10 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
                                      method = "lassofull", return_plot = F),
       grooves_lassobasic = purrr::map(ccdata, cc_locate_grooves,
                                       method = "lassobasic", return_plot = F),
-      grooves_bcp = purrr::map(ccdata, cc_locate_grooves, method = "bcp",
-                               return_plot = F)) %>%
+      grooves_bcp = purrr::map(ccdata, cc_locate_grooves,
+                               method = "bcp", return_plot = F),
+      grooves_hough = purrr::map(ccdata_hough, cc_locate_grooves,
+                                 method = "hough", return_plot = F)) %>%
     dplyr::mutate(
       sigs = purrr::map2(
         .x = ccdata, .y = grooves,

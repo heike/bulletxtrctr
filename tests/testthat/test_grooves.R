@@ -7,6 +7,8 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
   set.seed(3402953)
   testb1 <- b1_l2_x3p %>%
     dplyr::select(-grooves, -grooves_mid) %>%
+    dplyr::mutate(ccdata_hough = purrr::map(b1_l2_x3p$x3p,
+                                            x3ptools::x3p_to_df)) %>%
     dplyr::mutate(
       grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T),
       grooves_mid = purrr::map(ccdata, cc_locate_grooves,
@@ -21,7 +23,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
                                       method = "lassobasic", return_plot = F),
       grooves_bcp = purrr::map(ccdata, cc_locate_grooves,
                                method = "bcp", return_plot = F),
-      grooves_hough = purrr::map(ccdata, cc_locate_grooves,
+      grooves_hough = purrr::map(ccdata_hough, cc_locate_grooves,
                                  method = "hough", return_plot = F))
 }
 
