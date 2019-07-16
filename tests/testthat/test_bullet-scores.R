@@ -5,7 +5,7 @@ if (requireNamespace("here") & requireNamespace("purrr") &
     requireNamespace("randomForest")) {
   skipall <- F
   load(here::here("tests/rf_features.Rdata"))
-  test_rf_features <- predict(bulletr::rtrees, newdata = rf_features,
+  test_rf_features <- predict(bulletxtrctr::rtrees, newdata = rf_features,
                               type = "prob")[, 2]
 }
 
