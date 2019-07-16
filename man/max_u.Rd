@@ -14,10 +14,6 @@ max_u(land1, land2, scores, addNA = FALSE)
 \item{scores}{numeric vector of scores to be summarized into a single number}
 
 \item{addNA}{how are missing values treated? addNA = TRUE leaves missing values, addNA=FALSE imputes with 0.}
-
-\item{difference}{numeric value describing the minimal difference between scores from same source versus different sources.}
-
-\item{alpha}{numeric value describing the significance level for the bootstrap}
 }
 \value{
 numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
