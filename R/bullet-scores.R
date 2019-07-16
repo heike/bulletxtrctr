@@ -169,10 +169,11 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
 #' @param land1 (numeric) vector with land ids of bullet 1
 #' @param land2 (numeric) vector with land ids of bullet 2
 #' @param scores numeric vector of scores to be summarized into a single number
-#' @param difference numeric value describing the minimal difference between scores from same source versus different sources.
-#' @param alpha numeric value describing the significance level for the bootstrap
 #' @param addNA how are missing values treated? addNA = TRUE leaves missing values, addNA=FALSE imputes with 0.
 #' @export
+#' @importFrom stats wilcox.test
+#' @importFrom stats xtabs
+#' @importFrom readr parse_number
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
 max_u <- function(land1, land2, scores, addNA = FALSE) {
   if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
