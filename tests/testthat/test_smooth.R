@@ -7,7 +7,7 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
 }
 
 set.seed(3240583)
-tmp <- dplyr::data_frame(
+tmp <- tibble::tibble(
   x = seq(-sqrt(5), sqrt(5), .03) %>% jitter(),
   y = rnorm(length(x), x^2, .1)
 )
