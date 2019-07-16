@@ -136,18 +136,19 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   }
 
   if (method == "bcp") {
+    requireNamespace("bulletcp", quietly = T)
     bcp_out <- bulletcp::get_grooves_bcp(x = land$x, value = land$value, adjust = adjust, ...)
     if (return_plot == T) {
       grooves <- list(
         groove = bcp_out$groove,
-        plot = grooves_plot(land = land, grooves = bcp_out$groove)
+        plot = NA #grooves_plot(land = land, grooves = bcp_out$groove)
       )
     } else {
       grooves <- bcp_out
     }
   }
 
-  if(method == "hough"){
+  if (method == "hough"){
     qu <- list(...)$qu
     if (is.null(qu)) qu <- 0.999
     grooves <- get_grooves_hough(land = land, qu = qu, adjust = adjust, return_plot = return_plot)
