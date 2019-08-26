@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_bullet.R
 \name{read_bullet}
 \alias{read_bullet}
-\title{Reading all x3p scans from a folder}
+\title{Reading all x3p scans belonging to a single bullet from a folder}
 \usage{
 read_bullet(folder = NULL, ext = ".x3p$", urllist = NULL,
   size = NA)

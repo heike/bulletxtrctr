@@ -170,6 +170,7 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
 #' @param land2 (numeric) vector with land ids of bullet 2
 #' @param scores numeric vector of scores to be summarized into a single number
 #' @param addNA how are missing values treated? addNA = TRUE leaves missing values, addNA=FALSE imputes with 0.
+#' @importFrom stats wilcox.test
 #' @export
 #' @importFrom stats wilcox.test
 #' @importFrom stats xtabs

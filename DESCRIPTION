@@ -31,7 +31,6 @@ Imports:
 Remotes: 
     heike/grooveFinder,
     heike/x3ptools,
-    nategarton13/bulletcp,
     csafe-isu/nbtrd
 URL: https://heike.github.io/bulletxtrctr/
 BugReports: https://github.com/heike/bulletxtrctr/issues
