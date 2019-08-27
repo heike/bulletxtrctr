@@ -1,5 +1,3 @@
-
-
 #' Find the grooves of a bullet land
 #'
 #' @param ccdata data frame of the crosscut. Data frame needs location x and
