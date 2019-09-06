@@ -60,13 +60,13 @@ read_bullet <- function(folder = NULL, ext = ".x3p$", urllist = NULL, size = NA)
 #' @importFrom tidyr separate
 #' @importFrom purrr map2
 #' @return data frame of x3p files with appropriate meta information
-read_dir <- function(path, extension="x3p", hierarchy=c("land", "bullet", "barrel", "set")) {
+read_dir <- function(path, extension = "x3p", hierarchy = c("land", "bullet", "barrel", "set")) {
   files <- NULL # to make R CMD CHECK happy
   get_meta_dir <- function(path, extension) {
     files <- dir(path, pattern = extension, recursive = TRUE)
     if (length(files) == 0) stop(sprintf("No files found at %s", path))
     meta <- data.frame(files = files, path = path, stringsAsFactors = FALSE)
-    depth <- sapply(strsplit(files, split="/"), FUN= length)
+    depth <- sapply(strsplit(files, split = "/"), FUN = length)
     meta$depth <- depth
     meta
   }
@@ -84,13 +84,13 @@ read_dir <- function(path, extension="x3p", hierarchy=c("land", "bullet", "barre
 
     cat("we should add some levels here")
   }
-  meta <- separate(meta, files, sep="/", into=hierarchy[depth:1], remove = FALSE)
+  meta <- separate(meta, files, sep = "/", into = hierarchy[depth:1], remove = FALSE)
 
   if (nrow(meta) > 100) {
     cat()
   }
   meta <- meta %>% mutate(
-    x3p = purrr::map2(.x = path, .y = files, .f = function(x,y) read_x3p(file.path(x, y)))
+    x3p = purrr::map2(.x = path, .y = files, .f = function(x, y) read_x3p(file.path(x, y)))
   )
   meta
 }

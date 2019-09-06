@@ -96,9 +96,9 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE, 
     p <- qplot(data = dframe, x = x, y = smoothed, geom = "line") + theme_bw()
     if (window) {
       p <- p + geom_rect(aes(xmin = xmin, xmax = xmax),
-                         ymin = -6, ymax = 6,
-                         data = lines, colour = "grey60", alpha = 0.2,
-                         inherit.aes = FALSE
+        ymin = -6, ymax = 6,
+        data = lines, colour = "grey60", alpha = 0.2,
+        inherit.aes = FALSE
       )
     }
     if (striae) p <- p + geom_vline(xintercept = peaks, colour = "red")
@@ -115,8 +115,6 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE, 
       lines = lines, plot = NULL, dframe = dframe
     ))
   }
-
-
 }
 
 
@@ -191,7 +189,8 @@ striation_identify_matches <- function(striae1, striae2) {
     if (length(unique(land)) != 2) return(FALSE)
     return(length(unique(type)) == 1)
   }
-  groups <- ml %>% dplyr::group_by(group) %>%
+  groups <- ml %>%
+    dplyr::group_by(group) %>%
     dplyr::summarise(
       match = isMatch(type, land),
       size = n(),

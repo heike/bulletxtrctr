@@ -65,7 +65,7 @@
 #'                                                   d$rfscore)))
 #'   )
 #' }
-compute_average_scores <- function(land1, land2, score, addNA=FALSE) {
+compute_average_scores <- function(land1, land2, score, addNA = FALSE) {
   if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
@@ -109,7 +109,7 @@ bootstrap_k <- function(scores, k, K, value) {
   res <- replicate(K, {
     mean(sample(scores, size = k, replace = TRUE), na.rm = TRUE)
   })
-  sum(res >= value)/K
+  sum(res >= value) / K
 }
 
 
@@ -131,33 +131,32 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   avgs <- compute_average_scores(land2, land1, scores, addNA)
 
-    p <- max(c(land1, land2))
+  p <- max(c(land1, land2))
+  boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
+  if (!is.numeric(boot)) {
     boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
-    if (!is.numeric(boot)) {
-      boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
- #     print("boot is not numeric")
-#      browser()
-    }
+    #     print("boot is not numeric")
+    #      browser()
+  }
 
-    getdiff <- diff(sort(-avgs))[1]
-    if (!is.numeric(getdiff)) print("getdiff is not numeric") #browser()
-    if (getdiff > difference & boot) {
+  getdiff <- diff(sort(-avgs))[1]
+  if (!is.numeric(getdiff)) print("getdiff is not numeric") # browser()
+  if (getdiff > difference & boot) {
     # pick the maximum to determine the phase
     idx <- which.max(avgs)
     dd <- data.frame(
       land1,
       land2
     ) %>%
-        mutate_if(function(.) !is.numeric(.), parse_number)
-    dd$diff = (dd$land1 - dd$land2) %% p + 1
+      mutate_if(function(.) !is.numeric(.), parse_number)
+    dd$diff <- (dd$land1 - dd$land2) %% p + 1
 
 
     return(dd$diff == idx)
-    } else {
-
-      return(rep(FALSE, length=length(land1)))
-    }
+  } else {
+    return(rep(FALSE, length = length(land1)))
   }
+}
 
 
 
@@ -180,7 +179,7 @@ max_u <- function(land1, land2, scores, addNA = FALSE) {
   if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(scores))
-#browser()
+  # browser()
 
   maxland <- max(land1, land2)
   fullframe <- data.frame(expand.grid(land1 = 1:maxland, land2 = 1:maxland))
@@ -194,7 +193,7 @@ max_u <- function(land1, land2, scores, addNA = FALSE) {
   )
   # get averages, just in case
   matrix <- xtabs(scores ~ land1 + land2,
-                  data = fullframe, addNA = addNA
+    data = fullframe, addNA = addNA
   ) / xtabs(~land1 + land2, data = fullframe, addNA = addNA)
 
   matrix <- cbind(matrix, matrix)
@@ -209,11 +208,11 @@ max_u <- function(land1, land2, scores, addNA = FALSE) {
     u <- na.omit(diag(mm))
     diag(mm) <- NA
     notu <- na.omit(as.vector(mm))
-    list(wilcox.test(u, notu, alternative="greater"))
+    list(wilcox.test(u, notu, alternative = "greater"))
   })
   wts %>% purrr::map_dfr(
     .f = function(x) {
-      data.frame(W = x$statistic, pval=x$p.value)
+      data.frame(W = x$statistic, pval = x$p.value)
     }
   )
 }

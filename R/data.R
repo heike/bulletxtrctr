@@ -56,4 +56,3 @@
 #               "https://github.com/heike/bulletxtrctr/blob/master/extra/Hamby252_Barrel1_Bullet2_Land6.x3p?raw=true")
 # )
 # usethis::use_data(hamby252demo_github)
-

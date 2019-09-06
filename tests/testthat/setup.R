@@ -26,12 +26,12 @@ testthat::setup({
   # Download from github only if NBTRD is down
   if (!file.exists(hambyb1l2)) {
     download.file(hamby252demo_github[[1]][2],
-                  destfile = hambyb1l2, quiet = T
+      destfile = hambyb1l2, quiet = T
     )
   }
   if (!file.exists(hambyb2l4)) {
     download.file(hamby252demo_github[[2]][4],
-                  destfile = hambyb2l4, quiet = T
+      destfile = hambyb2l4, quiet = T
     )
   }
 })
@@ -67,31 +67,43 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
       })
     ) %>%
     dplyr::mutate(crosscut = x3p %>%
-                    purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-    dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut,
-                                       .f = x3p_crosscut)) %>%
+      purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
+    dplyr::mutate(ccdata = purrr::map2(
+      .x = x3p, .y = crosscut,
+      .f = x3p_crosscut
+    )) %>%
     dplyr::mutate(
       loess = purrr::map(ccdata, cc_fit_loess, span = .75),
       gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600)
     ) %>%
-    dplyr::mutate(ccdata_hough = purrr::map(b1_l2_x3p$x3p,
-                                            x3ptools::x3p_to_df)) %>%
+    dplyr::mutate(ccdata_hough = purrr::map(
+      b1_l2_x3p$x3p,
+      x3ptools::x3p_to_df
+    )) %>%
     dplyr::mutate(
       grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T),
       grooves_mid = purrr::map(ccdata, cc_locate_grooves,
-                               method = "middle", return_plot = T),
+        method = "middle", return_plot = T
+      ),
       grooves_quad = purrr::map(ccdata, cc_locate_grooves,
-                                method = "quadratic", return_plot = F),
+        method = "quadratic", return_plot = F
+      ),
       grooves_log = purrr::map(ccdata, cc_locate_grooves,
-                               method = "logisticlegacy", return_plot = F),
+        method = "logisticlegacy", return_plot = F
+      ),
       grooves_lassofull = purrr::map(ccdata, cc_locate_grooves,
-                                     method = "lassofull", return_plot = F),
+        method = "lassofull", return_plot = F
+      ),
       grooves_lassobasic = purrr::map(ccdata, cc_locate_grooves,
-                                      method = "lassobasic", return_plot = F),
+        method = "lassobasic", return_plot = F
+      ),
       grooves_bcp = purrr::map(ccdata, cc_locate_grooves,
-                               method = "bcp", return_plot = F),
+        method = "bcp", return_plot = F
+      ),
       grooves_hough = purrr::map(ccdata_hough, cc_locate_grooves,
-                                 method = "hough", return_plot = F)) %>%
+        method = "hough", return_plot = F
+      )
+    ) %>%
     dplyr::mutate(
       sigs = purrr::map2(
         .x = ccdata, .y = grooves,
@@ -111,7 +123,8 @@ if (!file.exists(here::here("tests/bullet1_crosscut_extra.Rdata"))) {
   b1_l2_df <- x3ptools::x3p_to_df(b1_l2)
   cc1 <- bulletxtrctr:::land_cc(50, b1_l2_df)
   save(b1_l2, b1_l2_df, cc1,
-       file = here::here("tests/bullet1_crosscut_extra.Rdata"))
+    file = here::here("tests/bullet1_crosscut_extra.Rdata")
+  )
 }
 
 if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
@@ -136,15 +149,18 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
       })
     ) %>%
     dplyr::mutate(crosscut = x3p %>%
-                    purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
-    dplyr::mutate(ccdata = purrr::map2(.x = x3p, .y = crosscut,
-                                       .f = x3p_crosscut)) %>%
+      purrr::map_dbl(.f = x3p_crosscut_optimize)) %>%
+    dplyr::mutate(ccdata = purrr::map2(
+      .x = x3p, .y = crosscut,
+      .f = x3p_crosscut
+    )) %>%
     dplyr::mutate(
       loess = purrr::map(ccdata, cc_fit_loess, span = .75),
       gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600)
     ) %>%
     dplyr::mutate(grooves = purrr::map(ccdata, cc_locate_grooves,
-                                       return_plot = T)) %>%
+      return_plot = T
+    )) %>%
     dplyr::mutate(grooves_mid = purrr::map(ccdata, cc_locate_grooves,
       method = "middle",
       return_plot = T
@@ -159,7 +175,8 @@ if (!file.exists(here::here("tests/bullets_signatures.Rdata"))) {
     )
 
   save(b1_l2_x3p, b2_l4_x3p,
-       file = here::here("tests/bullets_signatures.Rdata"))
+    file = here::here("tests/bullets_signatures.Rdata")
+  )
 }
 
 # test_align.R
@@ -176,8 +193,10 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
     sig1 = sig_get_peaks(alignment$lands$sig1),
     sig2 = sig_get_peaks(alignment$lands$sig2)
   )
-  matches <- bulletxtrctr:::striation_identify_matches(peaks$sig1$lines,
-                                                       peaks$sig2$lines)
+  matches <- bulletxtrctr:::striation_identify_matches(
+    peaks$sig1$lines,
+    peaks$sig2$lines
+  )
   maxcms <- sig_cms_max(alignment)
 
   features_legacy <- extract_features_all_legacy(maxcms, resolution = 1.5625)

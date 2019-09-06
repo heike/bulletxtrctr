@@ -173,7 +173,7 @@ extract_feature_cms2_per_mm <- function(striae, aligned, resolution) {
   # TODO: Rename function cms -> cms_all
   # This cms definition is consistent with Biasotti - it only counts peaks
 
-  extract_feature_cms2(striae)/extract_feature_length_mm(aligned, resolution)
+  extract_feature_cms2(striae) / extract_feature_length_mm(aligned, resolution)
 }
 
 
@@ -247,7 +247,7 @@ extract_feature_cms <- function(striae) {
 extract_feature_cms_per_mm <- function(striae, aligned, resolution) {
   cms <- extract_feature_cms(striae)
   length <- extract_feature_length_mm(aligned, resolution)
-  cms/length
+  cms / length
 }
 
 
@@ -347,7 +347,7 @@ extract_feature_non_cms <- function(striae) {
 #' extract_feature_non_cms(striae$lines)
 #' }
 extract_feature_non_cms_per_mm <- function(striae, aligned, resolution) {
-  extract_feature_non_cms(striae)/extract_feature_length_mm(aligned, resolution)
+  extract_feature_non_cms(striae) / extract_feature_length_mm(aligned, resolution)
 }
 
 #' Extract information for striation marks from two aligned signatures
@@ -436,7 +436,7 @@ extract_helper_feature_n_striae <- function(striae, type = "peak",
 #' extract_feature_mismatches(striae$lines)
 #' }
 extract_feature_matches_per_mm <- function(striae, aligned, resolution) {
-  extract_feature_matches(striae)/extract_feature_length_mm(aligned, resolution)
+  extract_feature_matches(striae) / extract_feature_length_mm(aligned, resolution)
 }
 
 #' Extract number of matching striation marks from two aligned signatures
@@ -535,7 +535,7 @@ extract_feature_mismatches <- function(striae) {
 #' extract_feature_mismatches(striae$lines)
 #' }
 extract_feature_mismatches_per_mm <- function(striae, aligned, resolution) {
-  extract_feature_mismatches(striae)/extract_feature_length_mm(aligned, resolution)
+  extract_feature_mismatches(striae) / extract_feature_length_mm(aligned, resolution)
 }
 
 #' Extract the combined height of aligned striae between two aligned signatures
@@ -723,7 +723,7 @@ extract_feature_lag <- function(aligned) {
 #' @export
 #' @family alignment-related-features
 extract_feature_lag_mm <- function(aligned, resolution) {
-  extract_feature_lag(aligned)*resolution/1000
+  extract_feature_lag(aligned) * resolution / 1000
 }
 
 
@@ -828,7 +828,7 @@ extract_feature_sd_D <- function(aligned) {
 #' extract_feature_length(alignment$lands)
 #' }
 extract_feature_length_mm <- function(aligned, resolution) {
-  extract_feature_length(aligned)*resolution/1000 # one millimiter is 1000 microns
+  extract_feature_length(aligned) * resolution / 1000 # one millimiter is 1000 microns
 }
 
 #' Extract length of two (aligned) signatures
@@ -877,7 +877,7 @@ extract_feature_length <- function(aligned) {
   # n1 <- length(na.trim(aligned[, 2]))
   # n2 <- length(na.trim(aligned[, 3]))
   # min(n1, n2)
-  n <- apply(aligned[,-1], 2, function(x) length(na.trim(x)))
+  n <- apply(aligned[, -1], 2, function(x) length(na.trim(x)))
   min(n)
 }
 
@@ -963,7 +963,7 @@ extract_feature_overlap <- function(aligned) {
 #'
 #' extract_features_all(alignment, striae)
 #' }
-extract_features_all <- function(aligned, striae, resolution, tmpfile=NULL, ...) {
+extract_features_all <- function(aligned, striae, resolution, tmpfile = NULL, ...) {
   feature <- value <- NULL
   assert_that(!is.null(aligned), !is.null(striae),
     msg = "aligned and striae must not be NULL"
@@ -996,14 +996,19 @@ extract_features_all <- function(aligned, striae, resolution, tmpfile=NULL, ...)
     value = values
   ) %>% spread(feature, value)
 
-  if (!is.null(tmpfile))
+  if (!is.null(tmpfile)) {
     if (file.exists(tmpfile)) {
-      write.table(dframe, file = tmpfile, sep=",", append = TRUE,
-                  col.names = FALSE, row.names=FALSE)
+      write.table(dframe,
+        file = tmpfile, sep = ",", append = TRUE,
+        col.names = FALSE, row.names = FALSE
+      )
     } else {
-      write.table(dframe, file = tmpfile, sep=",", append = FALSE,
-                  col.names = TRUE, row.names=FALSE)
+      write.table(dframe,
+        file = tmpfile, sep = ",", append = FALSE,
+        col.names = TRUE, row.names = FALSE
+      )
     }
+  }
 
   dframe
 }
@@ -1018,7 +1023,7 @@ extract_features_all <- function(aligned, striae, resolution, tmpfile=NULL, ...)
 #' @return data frame with variables ccf, rough_cor, D, sd_D, matches,
 #'           mismatches, cms, non_cms, and sum_peaks
 #' @export
-extract_features_all_legacy <- function(res, resolution, tmpfile=NULL) {
+extract_features_all_legacy <- function(res, resolution, tmpfile = NULL) {
   # browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 
@@ -1107,14 +1112,19 @@ extract_features_all_legacy <- function(res, resolution, tmpfile=NULL) {
       (1000 / g1_inc_x) / length(ys)
   )
 
-  if (!is.null(tmpfile))
+  if (!is.null(tmpfile)) {
     if (file.exists(tmpfile)) {
-      write.table(dframe, file = tmpfile, sep=",", append = TRUE,
-                  col.names = FALSE, row.names=FALSE)
+      write.table(dframe,
+        file = tmpfile, sep = ",", append = TRUE,
+        col.names = FALSE, row.names = FALSE
+      )
     } else {
-      write.table(dframe, file = tmpfile, sep=",", append = FALSE,
-                  col.names = TRUE, row.names=FALSE)
+      write.table(dframe,
+        file = tmpfile, sep = ",", append = FALSE,
+        col.names = TRUE, row.names = FALSE
+      )
     }
+  }
 
   dframe
 }

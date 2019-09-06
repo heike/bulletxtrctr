@@ -62,7 +62,8 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   check_ccdata(ccdata)
 
-  assert_that(method %in% c("quadratic", "rollapply", "middle", "logisticlegacy", "lassobasic", "lassofull", "bcp", "hough")) ## too strict
+  assert_that(method %in% c("quadratic", "rollapply", "middle", "logisticlegacy",
+                            "lassobasic", "lassofull", "bcp", "hough")) ## too strict
 
   # TODO: expand cc_locate_groove to accept user defined get_grooves_XXX function
   assert_that(
@@ -78,13 +79,13 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   }
   if (method == "lassobasic") {
     grooves <- get_grooves_lasso(
-      x = land$x, value = land$value, lasso_method = 'basic',
+      x = land$x, value = land$value, lasso_method = "basic",
       return_plot = return_plot, ...
     )
   }
   if (method == "lassofull") {
     grooves <- get_grooves_lasso(
-      x = land$x, value = land$value, lasso_method = 'full',
+      x = land$x, value = land$value, lasso_method = "full",
       return_plot = return_plot, ...
     )
   }
