@@ -134,17 +134,18 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   }
 
   if (method == "bcp") {
-    grooves <- get_grooves_bcp(
+    grooves <- grooveFinder::get_grooves_bcp(
       x = land$x, value = land$value,
       adjust = adjust,
       return_plot = return_plot
     )
   }
 
-  if (method == "hough"){
+  if (method == "hough") {
     qu <- list(...)$qu
     if (is.null(qu)) qu <- 0.999
-    grooves <- get_grooves_hough(land = land, qu = qu, adjust = adjust, return_plot = return_plot)
+    grooves <- get_grooves_hough(land = land, qu = qu, adjust = adjust,
+                                 return_plot = return_plot)
   }
 
   return(grooves)
