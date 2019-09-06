@@ -4,28 +4,37 @@ language: R
 sudo: false
 cache: packages
 
+addons:
+  apt:
+    update: true
+    packages:
+      - libglu1-mesa-dev
+      - freeglut3-dev
+      - mesa-common-dev
+
 env_vars:
   global:
     - RGL_USE_NULL=TRUE
 
 services:
   - xvfb
-  
+
 r_binary_packages:
   - rgl
-  
+
 r_packages:
   - covr
   - smoother
-  
+
 r_github_packages:
   - nategarton13/bulletcp
-  
+  - heike/grooveFinder
+
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3
-  
+
 after_success:
   - Rscript -e 'install.packages("randomForest")'
   - Rscript -e 'covr::codecov()'
