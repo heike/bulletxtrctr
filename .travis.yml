@@ -20,18 +20,31 @@ services:
 
 r_binary_packages:
   - rgl
-
-r_packages:
   - covr
-  - smoother
-
-cache: packages
+  - assertthat
+  - ggplot2
+  - purrr
+  - locfit
+  - zoo
+  - magrittr
+  - dplyr
+  - readr
+  - tidyr
+  - randomForest
 
 r_github_packages:
   - nategarton13/bulletcp
   - heike/grooveFinder
+  - heike/x3ptools
 
+r_packages:
+  - smoother
+
+cache:
+  packages: true
+  directories:
+    - /usr/local/lib/R/site-library
+    - /usr/lib/R
 
 after_success:
-  - Rscript -e 'install.packages("randomForest")'
   - Rscript -e 'covr::codecov()'
