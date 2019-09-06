@@ -2,7 +2,6 @@
 
 language: R
 sudo: false
-cache: packages
 
 addons:
   apt:
@@ -26,9 +25,12 @@ r_packages:
   - covr
   - smoother
 
+cache: packages
+
 r_github_packages:
   - nategarton13/bulletcp
   - heike/grooveFinder
+
 
 after_success:
   - Rscript -e 'install.packages("randomForest")'
