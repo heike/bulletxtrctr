@@ -143,9 +143,9 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   }
 
   if (method == "hough") {
-    qu <- list(...)$qu
-    if (is.null(qu)) qu <- 0.999
-    grooves <- get_grooves_hough(land = land, qu = qu, adjust = adjust,
+    norm.index <- list(...)$norm.index
+    if (is.null(norm.index)) norm.index <- 1
+    grooves <- get_grooves_hough(land = land, norm.index = norm.index, adjust = adjust,
                                  return_plot = return_plot)
   }
 
