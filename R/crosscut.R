@@ -15,9 +15,13 @@ land_cc <- function(y, land) {
   this_groove <- quantile(this_land$x, probs = c(0.15, 0.85))
   this_land_filtered <- subset(this_land, !is.na(value) &
     x > this_groove[1] & x < this_groove[2])
-  this_cc_df <- cc_fit_loess(this_land_filtered, span = 0.75)
-  # if (is.null(this_cc_df$raw_sig)) browser()
-  this_cc_df$resid <- this_cc_df$raw_sig # where are we still using resid?
+  if (nrow(this_land_filtered) > 5) {
+    this_cc_df <- cc_fit_loess(this_land_filtered, span = 0.75)
+    # if (is.null(this_cc_df$raw_sig)) browser()
+    this_cc_df$resid <- this_cc_df$raw_sig # where are we still using resid?
+  } else {
+    this_cc_df <- this_land_filtered
+  }
   this_cc_df
 }
 
