@@ -199,7 +199,8 @@ bullets <- bullets %>% mutate(
 ```
 
 ```{r, fig.width = 8, fig.height = 3.3}
-signatures <- bullets %>% select(source, sigs) %>% tidyr::unnest()
+signatures <- bullets %>% 
+  select(source, sigs) %>% tidyr::unnest(sigs)
 signatures %>% 
   filter(!is.na(sig),!is.na(raw_sig)) %>%
   ggplot(aes(x = x)) + 
@@ -326,7 +327,8 @@ comparisons %>%
 10. Get Score predictions for each land to land comparison
 
 ```{r, warning=FALSE}
-comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
+require(randomForest)
+comparisons$rfscore <- predict(rtrees, newdata = comparisons, type = "prob")[,2]
 
 comparisons %>% 
   ggplot(aes(x = landA, y = landB, fill = rfscore)) +
