@@ -108,7 +108,8 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
   first_cc <- land_cc(y, land = x3p_df)
 
   # This loop only entered when there is too much missingness - too hard to test
-  while ((dim(first_cc)[1] < x3pdat$header.info$sizeX * (100 - percent_missing) / 100) &
+  # 0.7 because land_cc is removing the most extreme 30% of the data
+  while ((dim(first_cc)[1] < 0.7*x3pdat$header.info$sizeX * (100 - percent_missing) / 100) &
     (y < x3pdat$header.info$sizeY)) {
     y <- y + distance
     first_cc <- land_cc(y, land = x3p_df)
@@ -185,7 +186,7 @@ switch_xy <- function(dataframe) {
 #' )
 #'
 #' x3p_crosscut_optimize(example_data$x3p[[1]])
-#' x3p_crosscut(example_data$x3p[[1]], 75) %>%
+  #' x3p_crosscut(example_data$x3p[[1]], 75) %>%
 #'   ggplot(aes(x = x, y = value)) + geom_line()
 #' }
 x3p_crosscut <- function(x3p, y = NULL, range = 1e-5) {
@@ -199,7 +200,14 @@ x3p_crosscut <- function(x3p, y = NULL, range = 1e-5) {
   picky <- ys[which.min(abs(y - ys))]
   x3p_df_fix <- x3p_df[x3p_df$y >= picky & x3p_df$y <= picky + range, ]
 
-  return(na.omit(x3p_df_fix))
+  df <- na.omit(x3p_df_fix)
+  # we only want to keep attributes "names" "class" and "row.names"
+
+  delete_attrs <- setdiff(names(attributes(df)), c("names", "class", "row.names"))
+  lapply(delete_attrs, function(x){
+    attr(df, x) <<- NULL
+  })
+  return(df)
 }
 
 #' Check object returned by x3p_crosscut_optimize
