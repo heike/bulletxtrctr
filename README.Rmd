@@ -71,8 +71,8 @@ We expect data to be recorded at the micron level.
 The scans posted give measurements in meters:
 
 ```{r}
-bullets$x3p[[1]]$header.info$incrementY
-bullets$x3p[[1]]$header.info$incrementX
+bullets$x3p[[1]] %>% x3p_get_scale()
+
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 ```
 
@@ -86,10 +86,17 @@ bullets <- bullets %>% mutate(
 
 
 ```{r}
-bullets$x3p[[1]]$header.info$incrementY
-bullets$x3p[[1]]$header.info$incrementX
+bullets$x3p[[1]] %>% x3p_get_scale()
+
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 ```
+
+Save resolution of the scans in a variable (we will be using this piece of information later:
+```{r}
+resolution <- bullets$x3p[[1]] %>% x3p_get_scale()
+resolution
+```
+
 
 
 We are working under the assumption that the scans are aligned such that the base of the bullet are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
@@ -123,6 +130,9 @@ image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```{r, echo=FALSE}
 knitr::include_graphics("man/figures/temp-after.png")
 ```
+
+
+
 
 
 3. Get the ideal cross sections
@@ -274,7 +284,7 @@ comparisons <- comparisons %>% mutate(
 ```{r}
 comparisons <- comparisons %>% mutate(
   cms_per_mm = purrr::map2(striae, aligned, .f = function(s, a) {
-    extract_feature_cms_per_mm(s$lines, a$lands, resolution=1.5625)
+    extract_feature_cms_per_mm(s$lines, a$lands, resolution=resolution)
   }),
   matches0 = striae %>% purrr::map_dbl(.f = function(s) {
     bulletxtrctr:::extract_helper_feature_n_striae(s$lines, type = "peak", match = TRUE)
@@ -300,11 +310,11 @@ comparisons <- comparisons %>% mutate(
 ```{r}
 
 comparisons <- comparisons %>% mutate(
-  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = 1.5625)
+  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = resolution)
 )
 
 comparisons <- comparisons %>% mutate(
-  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = 1.5625)
+  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = resolution)
 )
 
 comparisons <- comparisons %>% tidyr::unnest(legacy_features) 

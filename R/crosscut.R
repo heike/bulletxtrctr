@@ -104,16 +104,24 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
   }
 
   done <- FALSE
-  y <- min(ylimits)
+  # make sure the first y picked is above the missing value threshold.
+  rowMiss <- rev(apply(x3p$surface.matrix, function(x) sum(is.na(x)), MARGIN=2))
+  ys <- sort(unique(x3p_df$y))
+  idx <- which(rowMiss/x3pdat$header.info$sizeX*100 < percent_missing)
+  if (length(idx) == 0)
+    stop("Too many missing values, increase the value of allowed percent missing values from percent_missing = %d", percent_missing)
+
+ # y <- min(ylimits)
+  y <- ys[idx[1]]
   first_cc <- land_cc(y, land = x3p_df)
 
   # This loop only entered when there is too much missingness - too hard to test
   # 0.7 because land_cc is removing the most extreme 30% of the data
-  while ((dim(first_cc)[1] < 0.7*x3pdat$header.info$sizeX * (100 - percent_missing) / 100) &
-    (y < x3pdat$header.info$sizeY)) {
-    y <- y + distance
-    first_cc <- land_cc(y, land = x3p_df)
-  }
+#  while ((dim(first_cc)[1] < 0.7*x3pdat$header.info$sizeX * (100 - percent_missing) / 100) &
+#    (y < x3pdat$header.info$sizeY)) {
+#    y <- y + distance
+#    first_cc <- land_cc(y, land = x3p_df)
+#  }
 
   while (!done) {
     y <- y + distance
