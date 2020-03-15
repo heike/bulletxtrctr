@@ -4,10 +4,10 @@ Title: Automatic Matching of Bullet Striae
 Version: 0.2.0
 Author: Heike Hofmann, Susan Vanderplas, Ganesh Krishnan, Eric Hare
 Authors@R: c(
-    person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre")),
-    person("Susan", "Vanderplas", email = "srvander@iastate.edu", role = "aut"),
+    person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre"), comment=c(ORCID="0000-0001-6216-5183")),
+    person("Susan", "Vanderplas", email = "susan.vanderplas@unl.edu", role = "aut", comment=c(ORCID="0000-0001-6216-5183")),
     person("Ganesh", "Krishnan", role = "aut", email = "ganeshk@iastate.edu"),
-    person("Eric", "Hare", email = "eric@oaiti.org", role = "ctb"),
+    person("Eric", "Hare", email = "eric@oaiti.org", role = "ctb", comment=c(ORCID="0000-0002-4277-3146")),
     person("Kiegan", "Rice", email = "ricek@iastate.edu", role = "ctb"),
     person("Nate", "Garton", email = "nmgarton@iastate.edu", role = "ctb")
     )

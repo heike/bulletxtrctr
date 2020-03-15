@@ -317,12 +317,16 @@ comparisons <- comparisons %>% mutate(
   legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = resolution)
 )
 
-comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
+legacy <- comparisons %>% tidyr::unnest(legacy_features) 
 # scale features before using them in the random forest, legacy features can be used out of the box
+
+features <- comparisons %>% 
+  select(land1, land2, ccf0, bulletA, bulletB, landA, landB, features) %>%
+  tidyr::unnest(features) 
 
 
 # quick visualization:
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = ccf)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -338,9 +342,15 @@ comparisons %>%
 
 ```{r, warning=FALSE}
 require(randomForest)
-comparisons$rfscore <- predict(rtrees, newdata = comparisons, type = "prob")[,2]
+features <- features %>% mutate(
+  cms = cms_per_mm,
+  matches = matches_per_mm,
+  mismatches = mismatches_per_mm,
+  non_cms = non_cms_per_mm
+  )
+features$rfscore <- predict(rtrees, newdata = features, type = "prob")[,2]
 
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = rfscore)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -354,7 +364,7 @@ comparisons %>%
 11. Determine bullet-to-bullet scores
 
 ```{r}
-bullet_scores <- comparisons %>% group_by(bulletA, bulletB) %>% tidyr::nest()
+bullet_scores <- features %>% group_by(bulletA, bulletB) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
     .f = function(d) max(compute_average_scores(land1 = d$landA, land2 = d$landB, d$rfscore)))
@@ -374,20 +384,20 @@ bullet_scores <- bullet_scores %>% mutate(
       d
     })
 )
-comparisons <- bullet_scores %>% tidyr::unnest(data)
-comparisons %>% 
+features <- bullet_scores %>% tidyr::unnest(data)
+features %>% 
   ggplot(aes(x = landA, y = landB, 
              fill = rfscore, colour=samesource)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  scale_colour_manual(values = c("grey80", "darkorange")) +
+  scale_colour_manual(values = c("grey80", "darkorange"), limits=c(0,1)) +
   geom_tile(size = 1, 
-            data = comparisons %>% filter(samesource)) +
+            data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
   ylab("Land B") +
-  theme(aspect.ratio = 1)
+  theme(aspect.ratio = 1) 
 ```
 
 An interactive interface for doing comparisons is available https://oaiti.org/apps/bulletmatcher/

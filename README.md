@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-February 25, 2020
+March 14, 2020
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,7 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2020--02--25-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2020--03--14-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 
@@ -375,12 +375,16 @@ comparisons <- comparisons %>% mutate(
   legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = resolution)
 )
 
-comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
+legacy <- comparisons %>% tidyr::unnest(legacy_features) 
 # scale features before using them in the random forest, legacy features can be used out of the box
+
+features <- comparisons %>% 
+  select(land1, land2, ccf0, bulletA, bulletB, landA, landB, features) %>%
+  tidyr::unnest(features) 
 
 
 # quick visualization:
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = ccf)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -399,9 +403,15 @@ comparisons %>%
 
 ``` r
 require(randomForest)
-comparisons$rfscore <- predict(rtrees, newdata = comparisons, type = "prob")[,2]
+features <- features %>% mutate(
+  cms = cms_per_mm,
+  matches = matches_per_mm,
+  mismatches = mismatches_per_mm,
+  non_cms = non_cms_per_mm
+  )
+features$rfscore <- predict(rtrees, newdata = features, type = "prob")[,2]
 
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = rfscore)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -420,7 +430,7 @@ scores
 <!-- end list -->
 
 ``` r
-bullet_scores <- comparisons %>% group_by(bulletA, bulletB) %>% tidyr::nest()
+bullet_scores <- features %>% group_by(bulletA, bulletB) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
     .f = function(d) max(compute_average_scores(land1 = d$landA, land2 = d$landB, d$rfscore)))
@@ -432,10 +442,10 @@ bullet_scores %>% select(-data)
     ## # Groups:   bulletA, bulletB [4]
     ##   bulletA bulletB bullet_score
     ##   <chr>   <chr>          <dbl>
-    ## 1 1       1              0.984
-    ## 2 2       1              0.697
-    ## 3 1       2              0.697
-    ## 4 2       2              0.989
+    ## 1 1       1              0.964
+    ## 2 2       1              0.636
+    ## 3 1       2              0.636
+    ## 4 2       2              0.964
 
 12. Use bullet-to-bullet scores to predict land to land scores
 
@@ -451,20 +461,20 @@ bullet_scores <- bullet_scores %>% mutate(
       d
     })
 )
-comparisons <- bullet_scores %>% tidyr::unnest(data)
-comparisons %>% 
+features <- bullet_scores %>% tidyr::unnest(data)
+features %>% 
   ggplot(aes(x = landA, y = landB, 
              fill = rfscore, colour=samesource)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  scale_colour_manual(values = c("grey80", "darkorange")) +
+  scale_colour_manual(values = c("grey80", "darkorange"), limits=c(0,1)) +
   geom_tile(size = 1, 
-            data = comparisons %>% filter(samesource)) +
+            data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
   ylab("Land B") +
-  theme(aspect.ratio = 1)
+  theme(aspect.ratio = 1) 
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
