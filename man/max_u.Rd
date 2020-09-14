@@ -2,7 +2,7 @@
 % Please edit documentation in R/bullet-scores.R
 \name{max_u}
 \alias{max_u}
-\title{Get land to land prediction based on bullet to bullet comparisons}
+\title{Wilcox test of bullet to bullet similarity}
 \usage{
 max_u(land1, land2, scores, addNA = FALSE)
 }

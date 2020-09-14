@@ -4,8 +4,13 @@
 \alias{sig_get_peaks}
 \title{Identify the location and the depth of peaks and valleys in a signature}
 \usage{
-sig_get_peaks(sig, smoothfactor = 35, striae = TRUE, window = TRUE,
-  plot = TRUE)
+sig_get_peaks(
+  sig,
+  smoothfactor = 35,
+  striae = TRUE,
+  window = TRUE,
+  plot = TRUE
+)
 }
 \arguments{
 \item{sig}{numeric vector of smoothed signature, padded with NAs at front

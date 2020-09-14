@@ -4,7 +4,9 @@
 \name{rtrees}
 \alias{rtrees}
 \title{randomforest}
-\format{a random forest object fitted by the randomforest function from the package of the same name}
+\format{
+a random forest object fitted by the randomforest function from the package of the same name
+}
 \usage{
 rtrees
 }

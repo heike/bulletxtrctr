@@ -1024,7 +1024,7 @@ extract_features_all <- function(aligned, striae, resolution, tmpfile = NULL, ..
 #'           mismatches, cms, non_cms, and sum_peaks
 #' @export
 extract_features_all_legacy <- function(res, resolution, tmpfile = NULL) {
-  # browser()
+#   browser()
   avgl30 <- bullet <- l30 <- sig1 <- sig2 <- smoothavgl30 <- type <- x <- NULL
 
   lofX <- res$lands
@@ -1040,22 +1040,22 @@ extract_features_all_legacy <- function(res, resolution, tmpfile = NULL) {
   #   subLOFx1 <- subset(lofX, bullet==b12[1])
   #  subLOFx2 <- subset(lofX, bullet==b12[2])
 
-  ys <- dplyr::intersect(
-    round(subLOFx1$y, digits = 3),
-    round(subLOFx2$y, digits = 3)
-  )
+#  ys <- dplyr::intersect(
+#    round(subLOFx1$y, digits = 3),
+#    round(subLOFx2$y, digits = 3)
+#  )
+   ys <- na.omit(lofX)$x
 
-  idx1 <- which(round(subLOFx1$y, digits = 3) %in% ys)
-  idx2 <- which(round(subLOFx2$y, digits = 3) %in% ys)
+#  idx1 <- which(round(subLOFx1$y, digits = 3) %in% ys)
+#  idx2 <- which(round(subLOFx2$y, digits = 3) %in% ys)
 
   g1_inc_x <- resolution
 
-  sq <- function(x) x^2
+#  sq <- function(x) x^2
 
-  distr.dist <- ((subLOFx1$val[idx1] - subLOFx2$val[idx2]) * g1_inc_x / 1000) %>%
-    sq() %>%
-    mean(na.rm = TRUE)
-  distr.dist <- sqrt(distr.dist) # Fixed so pipe doesn't cause check() to freak
+  distr.dist <- sqrt(mean(((lofX$sig1 - lofX$sig2)*g1_inc_x/1000)^2, na.rm=TRUE))
+
+#  distr.dist <- sqrt(distr.dist) # Fixed so pipe doesn't cause check() to freak
   distr.sd <- sd(subLOFx1$val * g1_inc_x / 1000, na.rm = TRUE) +
     sd(subLOFx2$val * g1_inc_x / 1000, na.rm = TRUE)
 
@@ -1064,7 +1064,7 @@ extract_features_all_legacy <- function(res, resolution, tmpfile = NULL) {
   if (length(km) == 0) km <- c(length(knm) + 1, 0)
   if (length(knm) == 0) knm <- c(length(km) + 1, 0)
 
-  signature.length <- min(nrow(subLOFx1), nrow(subLOFx2))
+  signature.length <- min(nrow(na.omit(subLOFx1)), nrow(na.omit(subLOFx2)))
 
   doublesmoothed <- lofX %>%
     tidyr::gather(bullet, l30, sig1:sig2) %>%

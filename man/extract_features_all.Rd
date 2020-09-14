@@ -44,27 +44,29 @@ extract_features_all(alignment, striae)
 }
 }
 \seealso{
-Other alignment-related-features: \code{\link{extract_feature_D}},
-  \code{\link{extract_feature_ccf}},
-  \code{\link{extract_feature_lag_mm}},
-  \code{\link{extract_feature_lag}},
-  \code{\link{extract_feature_length_mm}},
-  \code{\link{extract_feature_length}},
-  \code{\link{extract_feature_overlap}}
+Other alignment-related-features: 
+\code{\link{extract_feature_D}()},
+\code{\link{extract_feature_ccf}()},
+\code{\link{extract_feature_lag_mm}()},
+\code{\link{extract_feature_lag}()},
+\code{\link{extract_feature_length_mm}()},
+\code{\link{extract_feature_length}()},
+\code{\link{extract_feature_overlap}()}
 
-Other striae-related-features: \code{\link{extract_feature_cms2_per_mm}},
-  \code{\link{extract_feature_cms2}},
-  \code{\link{extract_feature_cms}},
-  \code{\link{extract_feature_left_cms}},
-  \code{\link{extract_feature_matches_per_mm}},
-  \code{\link{extract_feature_matches}},
-  \code{\link{extract_feature_mismatches_per_mm}},
-  \code{\link{extract_feature_mismatches}},
-  \code{\link{extract_feature_non_cms_per_mm}},
-  \code{\link{extract_feature_non_cms}},
-  \code{\link{extract_feature_right_cms}},
-  \code{\link{extract_feature_sum_peaks}},
-  \code{\link{extract_helper_feature_n_striae}}
+Other striae-related-features: 
+\code{\link{extract_feature_cms2_per_mm}()},
+\code{\link{extract_feature_cms2}()},
+\code{\link{extract_feature_cms}()},
+\code{\link{extract_feature_left_cms}()},
+\code{\link{extract_feature_matches_per_mm}()},
+\code{\link{extract_feature_matches}()},
+\code{\link{extract_feature_mismatches_per_mm}()},
+\code{\link{extract_feature_mismatches}()},
+\code{\link{extract_feature_non_cms_per_mm}()},
+\code{\link{extract_feature_non_cms}()},
+\code{\link{extract_feature_right_cms}()},
+\code{\link{extract_feature_sum_peaks}()},
+\code{\link{extract_helper_feature_n_striae}()}
 }
 \concept{alignment-related-features}
 \concept{striae-related-features}

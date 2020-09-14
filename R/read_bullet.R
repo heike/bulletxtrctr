@@ -11,7 +11,7 @@
 #' @export
 #' @import assertthat
 #' @importFrom x3ptools read_x3p
-#' @importFrom dplyr as.tbl
+#' @importFrom dplyr as_tibble
 #' @examples
 #' \dontrun{
 #' dir.create("data")
@@ -45,7 +45,7 @@ read_bullet <- function(folder = NULL, ext = ".x3p$", urllist = NULL, size = NA)
   if (ext == ".x3p$" | ext == "x3p") {
     scans <- lapply(set, FUN = x3ptools::read_x3p, size = size)
   }
-  as.tbl(data.frame(source = set, x3p = I(scans), stringsAsFactors = F))
+  as_tibble(data.frame(source = set, x3p = I(scans), stringsAsFactors = F))
 }
 
 

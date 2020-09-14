@@ -4,8 +4,14 @@
 \alias{bullet_to_land_predict}
 \title{Get land to land prediction based on bullet to bullet comparisons}
 \usage{
-bullet_to_land_predict(land1, land2, scores, difference, alpha = 0.05,
-  addNA = FALSE)
+bullet_to_land_predict(
+  land1,
+  land2,
+  scores,
+  difference,
+  alpha = 0.05,
+  addNA = FALSE
+)
 }
 \arguments{
 \item{land1}{(numeric) vector with land ids of bullet 1}

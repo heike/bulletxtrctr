@@ -4,7 +4,9 @@
 \name{br411}
 \alias{br411}
 \title{3d topological surface measurements for one land of a bullet from the Hamby study}
-\format{a list}
+\format{
+a list
+}
 \usage{
 br411
 }

@@ -4,8 +4,11 @@
 \alias{read_dir}
 \title{Reading all x3p scans belonging to a folder}
 \usage{
-read_dir(path, extension = "x3p", hierarchy = c("land", "bullet",
-  "barrel", "set"))
+read_dir(
+  path,
+  extension = "x3p",
+  hierarchy = c("land", "bullet", "barrel", "set")
+)
 }
 \arguments{
 \item{path}{character describing the path to a folder}

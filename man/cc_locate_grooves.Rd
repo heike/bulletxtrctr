@@ -4,9 +4,18 @@
 \alias{cc_locate_grooves}
 \title{Find the grooves of a bullet land}
 \usage{
-cc_locate_grooves(ccdata, method = "rollapply", smoothfactor = 15,
-  adjust = 10, groove_cutoff = 400, mean_left = NULL,
-  mean_right = NULL, mean_window = 100, return_plot = F, ...)
+cc_locate_grooves(
+  ccdata,
+  method = "rollapply",
+  smoothfactor = 15,
+  adjust = 10,
+  groove_cutoff = 400,
+  mean_left = NULL,
+  mean_right = NULL,
+  mean_window = 100,
+  return_plot = F,
+  ...
+)
 }
 \arguments{
 \item{ccdata}{data frame of the crosscut. Data frame needs location x and

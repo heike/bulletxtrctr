@@ -160,7 +160,7 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
 
 
 
-#' Get land to land prediction based on bullet to bullet comparisons
+#' Wilcox test of bullet to bullet similarity
 #'
 #' The combination of `land1` and `land2` are a key to the scores,
 #' i.e. if a bullet has six lands, each of the input vectors should have
@@ -216,3 +216,5 @@ max_u <- function(land1, land2, scores, addNA = FALSE) {
     }
   )
 }
+
+
