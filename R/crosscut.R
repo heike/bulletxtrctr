@@ -107,6 +107,7 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
   # make sure the first y picked is above the missing value threshold.
   rowMiss <- rev(apply(x3p$surface.matrix, function(x) sum(is.na(x)), MARGIN=2))
   ys <- sort(unique(x3p_df$y))
+  ys <- ys[ys > ylimits[1]] # respect the lower limit
   idx <- which(rowMiss/x3pdat$header.info$sizeX*100 < percent_missing)
   if (length(idx) == 0)
     stop("Too many missing values, increase the value of allowed percent missing values from percent_missing = %d", percent_missing)
