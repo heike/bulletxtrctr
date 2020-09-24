@@ -27,7 +27,8 @@ Imports:
     dplyr (>= 0.7.8),
     zoo,
     smoother,
-    purrr
+    purrr,
+    shiny
 Remotes: 
     heike/grooveFinder,
     heike/x3ptools,
