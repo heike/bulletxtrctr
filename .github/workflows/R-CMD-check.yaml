@@ -56,17 +56,18 @@ jobs:
       - name: Install XQuartz on macOS
         if: runner.os == 'macOS'
         run: brew cask install xquartz
-          
+
       - name: Install R package deps on Linux/macOS
         if: runner.os != 'Windows'
-        run: | 
+        run: |
           Rscript -e 'remotes::install_cran(c("rgl", "rmarkdown", "assertthat", "covr", "testthat", "purrr", "magrittr", "dplyr", "readr", "zoo", "png"))'
           export DISPLAY=:99
-          
+
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          remotes::install_github("heike/grooveFinder")
         shell: Rscript {0}
 
       - name: Cache R packages
