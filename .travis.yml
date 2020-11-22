@@ -10,6 +10,17 @@ addons:
       - libglu1-mesa-dev
       - freeglut3-dev
       - mesa-common-dev
+      - libtiff-dev
+      - libpng-dev
+      - libjpeg-dev
+      - libfftw3-dev
+      - libmagick++-dev
+      - librsvg2-dev
+      - libwebp-dev
+      - libpoppler-cpp-dev
+      - libleptonica-dev
+      - cargo
+      - gsfonts
 
 env_vars:
   global:
@@ -20,7 +31,6 @@ services:
 
 r_binary_packages:
   - rgl
-  - imager
   - covr
   - assertthat
   - ggplot2
@@ -40,6 +50,7 @@ r_github_packages:
 
 r_packages:
   - smoother
+  - imager
 
 cache:
   packages: true
