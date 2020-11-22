@@ -68,8 +68,8 @@ jobs:
           brew unlink libpng
           brew reinstall libpng
           brew install imagemagick ffmpeg
-          R CMD INSTALL --with-libpng-prefix=/usr/X11/lib/ rgl
-          R CMD INSTALL --with-libpng-prefix=/usr/X11/lib/ imager
+          R CMD INSTALL -l /usr/X11/lib/ rgl
+          R CMD INSTALL -l /usr/X11/lib/ imager
 
       - name: Install R package deps on Linux/macOS
         if: runner.os != 'Windows'
@@ -91,6 +91,15 @@ jobs:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
+      - name: Does rgl load?
+        run: |
+          options(width = 100)
+          library(rgl)
+          library(x3ptools)
+          library(grooveFinder)
+          library(bulletxtrctr)
+        shell: Rscript {0}
 
       - name: Session info
         run: |
