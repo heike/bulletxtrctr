@@ -18,8 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '3.6'}
-          - {os: windows-latest, r: 'release'}
+#          - {os: windows-latest, r: '3.6'}
+#          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
           - {os: macOS-latest,   r: 'release'}
 
@@ -27,6 +27,8 @@ jobs:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      RGL_USE_NULL: true
+      _RGL_USE_NULL_: true
 
     steps:
       - uses: actions/checkout@v2
@@ -45,7 +47,7 @@ jobs:
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
-      - name: Install system dependencies
+      - name: Install dependencies on Linux
         if: runner.os == 'Linux'
         run: |
           while read -r cmd
@@ -53,18 +55,26 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "16.04"), sep = "\n")')
           sudo apt install libfftw3-dev libglpk-dev ffmpeg imagemagick
+          Rscript -e 'remotes::install_cran(c("rgl", "png", "imager"))'
 
       - name: Install dependencies on macOS
         if: runner.os == 'macOS'
         run: |
-          /usr/local/bin/brew cask install xquartz
-          /usr/local/bin/brew install imagemagick ffmpeg
-
+          brew cask install xquartz
+          brew unlink libtiff
+          brew reinstall libtiff
+          brew unlink libjpeg
+          brew reinstall libjpeg
+          brew unlink libpng
+          brew reinstall libpng
+          brew install imagemagick ffmpeg
+          R CMD INSTALL --with-libpng-prefix=/usr/X11/lib/ rgl
+          R CMD INSTALL --with-libpng-prefix=/usr/X11/lib/ imager
 
       - name: Install R package deps on Linux/macOS
         if: runner.os != 'Windows'
         run: |
-          Rscript -e 'remotes::install_cran(c("rgl", "png", "imager"))'
+#          Rscript -e 'remotes::install_cran(c("rgl", "png", "imager"))'
           Rscript -e 'remotes::install_github("heike/grooveFinder")'
           export DISPLAY=:99
 
