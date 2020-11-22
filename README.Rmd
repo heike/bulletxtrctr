@@ -10,6 +10,7 @@ output: github_document
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
 [![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
+[![Github Actions Status](https://github.com/heike/bulletxtrctr/workflows/R-CMD-check/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
 
