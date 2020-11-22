@@ -52,6 +52,7 @@ jobs:
           do
             eval sudo $cmd
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "16.04"), sep = "\n")')
+          sudo apt install libfftw3* libglpk-dev
 
       - name: Install XQuartz on macOS
         if: runner.os == 'macOS'
