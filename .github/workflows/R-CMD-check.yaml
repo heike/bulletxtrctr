@@ -68,13 +68,11 @@ jobs:
           brew unlink libpng
           brew reinstall libpng
           brew install imagemagick ffmpeg
-          R CMD INSTALL -l /usr/X11/lib/ rgl
-          R CMD INSTALL -l /usr/X11/lib/ imager
 
       - name: Install R package deps on Linux/macOS
         if: runner.os != 'Windows'
         run: |
-#          Rscript -e 'remotes::install_cran(c("rgl", "png", "imager"))'
+          Rscript -e 'remotes::install_cran(c("rgl", "png", "imager"), type = "source")'
           Rscript -e 'remotes::install_github("heike/grooveFinder")'
           export DISPLAY=:99
 
