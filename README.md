@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-March 14, 2020
+November 22, 2020
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,9 +12,11 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2020--03--14-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2020--11--22-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
+[![Github Actions
+Status](https://github.com/heike/bulletxtrctr/workflows/R-CMD-check/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
 
@@ -296,8 +298,7 @@ comparisons <- comparisons %>% mutate(
 )
 ```
 
-Aligned signatures of two matching
-lands:
+Aligned signatures of two matching lands:
 
 ``` r
 subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>% 
@@ -308,7 +309,7 @@ subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>%
   scale_color_brewer(palette = "Dark2")
 ```
 
-    ## Warning: Removed 37 row(s) containing missing values (geom_path).
+    ## Warning: Removed 36 row(s) containing missing values (geom_path).
 
 ![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
@@ -403,6 +404,7 @@ features %>%
 
 ``` r
 require(randomForest)
+# use the scaled features, but the unscaled names ...
 features <- features %>% mutate(
   cms = cms_per_mm,
   matches = matches_per_mm,
@@ -424,8 +426,7 @@ features %>%
 
 ![](README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
-11. Determine bullet-to-bullet
-scores
+11. Determine bullet-to-bullet scores
 
 <!-- end list -->
 
@@ -442,10 +443,10 @@ bullet_scores %>% select(-data)
     ## # Groups:   bulletA, bulletB [4]
     ##   bulletA bulletB bullet_score
     ##   <chr>   <chr>          <dbl>
-    ## 1 1       1              0.964
-    ## 2 2       1              0.636
-    ## 3 1       2              0.636
-    ## 4 2       2              0.964
+    ## 1 1       1              0.977
+    ## 2 2       1              0.648
+    ## 3 1       2              0.648
+    ## 4 2       2              0.977
 
 12. Use bullet-to-bullet scores to predict land to land scores
 
@@ -476,6 +477,9 @@ features %>%
   ylab("Land B") +
   theme(aspect.ratio = 1) 
 ```
+
+    ## Warning: Continuous limits supplied to discrete scale.
+    ## Did you mean `limits = factor(...)` or `scale_*_continuous()`?
 
 ![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
