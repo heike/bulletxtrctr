@@ -20,6 +20,7 @@ services:
 
 r_binary_packages:
   - rgl
+  - imager
   - covr
   - assertthat
   - ggplot2
