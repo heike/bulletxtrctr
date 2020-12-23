@@ -42,8 +42,9 @@ read_bullet <- function(folder = NULL, ext = ".x3p$", urllist = NULL, size = NA)
   }
   if (length(set) == 0) stop("No files found. Check path/URL.")
 
+  read_x3p_try <- function(...) try(x3ptools::read_x3p(...))
   if (ext == ".x3p$" | ext == "x3p") {
-    scans <- lapply(set, FUN = x3ptools::read_x3p, size = size)
+    scans <- lapply(set, FUN = read_x3p_try, size = size)
   }
   as_tibble(data.frame(source = set, x3p = I(scans), stringsAsFactors = F))
 }
