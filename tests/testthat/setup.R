@@ -76,10 +76,10 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
       loess = purrr::map(ccdata, cc_fit_loess, span = .75),
       gauss = purrr::map(ccdata, cc_fit_gaussian, span = 600)
     ) %>%
-    dplyr::mutate(ccdata_hough = purrr::map(
-      b1_l2_x3p$x3p,
-      x3ptools::x3p_to_df
-    )) %>%
+    # dplyr::mutate(ccdata_hough = purrr::map(
+    #   b1_l2_x3p$x3p,
+    #   x3ptools::x3p_to_df
+    # )) %>%
     dplyr::mutate(
       grooves = purrr::map(ccdata, cc_locate_grooves, return_plot = T),
       grooves_mid = purrr::map(ccdata, cc_locate_grooves,
@@ -99,10 +99,10 @@ if (!file.exists(here::here("tests/bullet1_only.Rdata"))) {
       ),
       grooves_bcp = purrr::map(ccdata, cc_locate_grooves,
         method = "bcp", return_plot = F
-      ),
-      grooves_hough = purrr::map(ccdata_hough, cc_locate_grooves,
-        method = "hough", return_plot = F
-      )
+      )#,
+      # grooves_hough = purrr::map(ccdata_hough, cc_locate_grooves,
+      #   method = "hough", return_plot = F
+      # )
     ) %>%
     dplyr::mutate(
       sigs = purrr::map2(
@@ -229,7 +229,7 @@ if (!file.exists(here::here("tests/rf_features.Rdata"))) {
 if (!file.exists(here::here("tests/smooth.Rdata"))) {
   message("Generating smooth.R data file for testing correctness")
   set.seed(3240583)
-  tmp <- dplyr::data_frame(
+  tmp <- tibble::tibble(
     x = seq(-sqrt(5), sqrt(5), .03) %>% jitter(),
     y = rnorm(length(x), x^2, .1)
   )
@@ -238,3 +238,4 @@ if (!file.exists(here::here("tests/smooth.Rdata"))) {
   sigsmoothres <- raw_sig_smooth(tmp$y, .5, c(-5, 5))
   save(sigsmoothres, smoothres, file = here::here("tests/smooth.Rdata"))
 }
+
