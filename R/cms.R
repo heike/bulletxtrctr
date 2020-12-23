@@ -34,8 +34,8 @@ sig_cms_max <- function(aligned, span = 35) {
 
   sigX <- aligned$lands
 
-  peaks1 <- sig_get_peaks(sigX$sig1, smoothfactor = span)
-  peaks2 <- sig_get_peaks(sigX$sig2, smoothfactor = span)
+  peaks1 <- sig_get_peaks(sigX$sig1, smoothfactor = span/2)
+  peaks2 <- sig_get_peaks(sigX$sig2, smoothfactor = span/2)
 
   assert_that(has_name(peaks1, "lines"), has_name(peaks2, "lines"))
 

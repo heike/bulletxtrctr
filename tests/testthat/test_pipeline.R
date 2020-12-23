@@ -16,12 +16,12 @@ testthat::setup({
   hambyb2l4 <- here::here("tests/Bullet2/Hamby252_Barrel1_Bullet2_Land4.x3p")
   if (!file.exists(hambyb1l2)) {
     download.file(hamby252demo[[1]][2],
-                  destfile = hambyb1l2, quiet = T
+      destfile = hambyb1l2, quiet = T
     )
   }
   if (!file.exists(hambyb2l4)) {
     download.file(hamby252demo[[2]][4],
-                  destfile = hambyb2l4, quiet = T
+      destfile = hambyb2l4, quiet = T
     )
   }
 })
@@ -33,7 +33,7 @@ testthat::setup({
 # })
 
 cleanfun <- function(x) x %>%
-    x3ptools::x3p_scale_unit(scale_by=10^6) %>%
+    x3ptools::x3p_scale_unit(scale_by = 10^6) %>%
     x3ptools::rotate_x3p(angle = -90) %>%
     x3ptools::y_flip_x3p()
 

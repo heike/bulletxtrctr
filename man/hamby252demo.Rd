@@ -4,7 +4,9 @@
 \name{hamby252demo}
 \alias{hamby252demo}
 \title{hamby252demo}
-\format{a list containing lists of links for the 6 lands of bullet 1 and 2}
+\format{
+a list containing lists of links for the 6 lands of bullet 1 and 2
+}
 \usage{
 hamby252demo
 }

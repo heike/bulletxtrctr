@@ -8,11 +8,13 @@
 
 <title>Fit a loess curve to a bullet data frame — cc_fit_loess • bulletxtrctr</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -30,14 +32,15 @@
 
 
 
-<meta property="og:title" content="Fit a loess curve to a bullet data frame — cc_fit_loess" />
 
+<meta property="og:title" content="Fit a loess curve to a bullet data frame — cc_fit_loess" />
 <meta property="og:description" content="A loess regression is fit to the surface measurements and residuals are
 calculated.
 The most extreme 0.25
 The result is called the raw signature of the bullet land.
 Adapted from `fit_loess` in `bulletr`" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -95,7 +98,6 @@ Adapted from `fit_loess` in `bulletr`" />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -116,17 +118,15 @@ Adapted from `fit_loess` in `bulletr`" />
     </div>
 
     <div class="ref-description">
-    
     <p>A loess regression is fit to the surface measurements and residuals are
 calculated.
 The most extreme 0.25<!-- % of residuals are filtered from further consideration. -->
 The result is called the raw signature of the bullet land.
 Adapted from `fit_loess` in `bulletr`</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>cc_fit_loess</span>(<span class='no'>ccdata</span>, <span class='kw'>span</span> <span class='kw'>=</span> <span class='fl'>0.75</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -140,13 +140,12 @@ removed ahead of time</p></td>
       <td><p>The span to use for the loess regression</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a list of a data frame of the original bullet measurements extended
           by loess fit, residuals, and standard errors and two plots: a plot
           of the fit, and a plot of the bullet's land signature.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
@@ -154,28 +153,26 @@ removed ahead of time</p></td>
   <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>6</span>, <span class='fl'>.001</span>),
   <span class='kw'>value</span> <span class='kw'>=</span> <span class='fl'>10</span> - (<span class='fl'>3</span> - <span class='no'>x</span>)^<span class='fl'>2</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x</span>), <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>.25</span>)
 )
-<span class='fu'>cc_fit_loess</span>(<span class='kw'>ccdata</span> <span class='kw'>=</span> <span class='no'>ccdata</span>)</div><div class='output co'>#&gt; # A tibble: 6,001 x 7
+<span class='fu'>cc_fit_loess</span>(<span class='kw'>ccdata</span> <span class='kw'>=</span> <span class='no'>ccdata</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6,001 x 7</span><span>
 #&gt;        x value fitted  raw_sig     se abs_resid chop 
-#&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
-#&gt;  1 0     0.462   1.01 -0.549   0.0123   0.549   FALSE
-#&gt;  2 0.001 0.788   1.02 -0.228   0.0123   0.228   FALSE
-#&gt;  3 0.002 0.997   1.02 -0.0259  0.0123   0.0259  FALSE
-#&gt;  4 0.003 0.567   1.03 -0.462   0.0123   0.462   FALSE
-#&gt;  5 0.004 1.30    1.03  0.270   0.0122   0.270   FALSE
-#&gt;  6 0.005 0.764   1.04 -0.277   0.0122   0.277   FALSE
-#&gt;  7 0.006 0.824   1.05 -0.222   0.0122   0.222   FALSE
-#&gt;  8 0.007 0.842   1.05 -0.211   0.0122   0.211   FALSE
-#&gt;  9 0.008 1.06    1.06 -0.00254 0.0122   0.00254 FALSE
-#&gt; 10 0.009 0.733   1.06 -0.331   0.0122   0.331   FALSE
-#&gt; # … with 5,991 more rows</div></pre>
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span> 0     0.462   1.01 -</span><span style='color: #BB0000;'>0.549</span><span>   0.012</span><span style='text-decoration: underline;'>3</span><span>   0.549   FALSE
+#&gt; </span><span style='color: #555555;'> 2</span><span> 0.001 0.788   1.02 -</span><span style='color: #BB0000;'>0.228</span><span>   0.012</span><span style='text-decoration: underline;'>3</span><span>   0.228   FALSE
+#&gt; </span><span style='color: #555555;'> 3</span><span> 0.002 0.997   1.02 -</span><span style='color: #BB0000;'>0.025</span><span style='color: #BB0000;text-decoration: underline;'>9</span><span>  0.012</span><span style='text-decoration: underline;'>3</span><span>   0.025</span><span style='text-decoration: underline;'>9</span><span>  FALSE
+#&gt; </span><span style='color: #555555;'> 4</span><span> 0.003 0.567   1.03 -</span><span style='color: #BB0000;'>0.462</span><span>   0.012</span><span style='text-decoration: underline;'>3</span><span>   0.462   FALSE
+#&gt; </span><span style='color: #555555;'> 5</span><span> 0.004 1.30    1.03  0.270   0.012</span><span style='text-decoration: underline;'>2</span><span>   0.270   FALSE
+#&gt; </span><span style='color: #555555;'> 6</span><span> 0.005 0.764   1.04 -</span><span style='color: #BB0000;'>0.277</span><span>   0.012</span><span style='text-decoration: underline;'>2</span><span>   0.277   FALSE
+#&gt; </span><span style='color: #555555;'> 7</span><span> 0.006 0.824   1.05 -</span><span style='color: #BB0000;'>0.222</span><span>   0.012</span><span style='text-decoration: underline;'>2</span><span>   0.222   FALSE
+#&gt; </span><span style='color: #555555;'> 8</span><span> 0.007 0.842   1.05 -</span><span style='color: #BB0000;'>0.211</span><span>   0.012</span><span style='text-decoration: underline;'>2</span><span>   0.211   FALSE
+#&gt; </span><span style='color: #555555;'> 9</span><span> 0.008 1.06    1.06 -</span><span style='color: #BB0000;'>0.002</span><span style='color: #BB0000;text-decoration: underline;'>54</span><span> 0.012</span><span style='text-decoration: underline;'>2</span><span>   0.002</span><span style='text-decoration: underline;'>54</span><span> FALSE
+#&gt; </span><span style='color: #555555;'>10</span><span> 0.009 0.733   1.06 -</span><span style='color: #BB0000;'>0.331</span><span>   0.012</span><span style='text-decoration: underline;'>2</span><span>   0.331   FALSE
+#&gt; </span><span style='color: #555555;'># … with 5,991 more rows</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

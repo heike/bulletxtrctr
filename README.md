@@ -1,7 +1,7 @@
 bulletxtrctr
 ================
 Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-June 03, 2019
+November 22, 2020
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -12,9 +12,11 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Travis-CI Build
 Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2019--06--03-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2020--11--22-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
+[![Github Actions
+Status](https://github.com/heike/bulletxtrctr/workflows/R-CMD-check/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
 
@@ -94,13 +96,7 @@ We expect data to be recorded at the micron level. The scans posted give
 measurements in meters:
 
 ``` r
-bullets$x3p[[1]]$header.info$incrementY
-```
-
-    ## [1] 1.5625e-06
-
-``` r
-bullets$x3p[[1]]$header.info$incrementX
+bullets$x3p[[1]] %>% x3p_get_scale()
 ```
 
     ## [1] 1.5625e-06
@@ -121,13 +117,7 @@ bullets <- bullets %>% mutate(
 ```
 
 ``` r
-bullets$x3p[[1]]$header.info$incrementY
-```
-
-    ## [1] 1.5625
-
-``` r
-bullets$x3p[[1]]$header.info$incrementX
+bullets$x3p[[1]] %>% x3p_get_scale()
 ```
 
     ## [1] 1.5625
@@ -138,6 +128,16 @@ summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
     ##   1.513 117.626 166.723 155.933 199.429 216.341   24829
+
+Save resolution of the scans in a variable (we will be using this piece
+of information later:
+
+``` r
+resolution <- bullets$x3p[[1]] %>% x3p_get_scale()
+resolution
+```
+
+    ## [1] 1.5625
 
 We are working under the assumption that the scans are aligned such that
 the base of the bullet are at the bottom (y = 0) of the image, and the
@@ -150,7 +150,7 @@ recommended) the twist will be visible in the image.
 image_x3p(bullets$x3p[[1]], file = "man/figures/temp-before.png")
 ```
 
-![](man/figures/temp-before.png)<!-- -->
+<img src="man/figures/temp-before.png" width="750" />
 
 The raw scan needs to be flipped such that the heel is along the bottom
 of the image rather than along the left hand side.
@@ -171,7 +171,7 @@ right slant of striae and grooves:
 image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```
 
-![](man/figures/temp-after.png)<!-- -->
+<img src="man/figures/temp-after.png" width="750" />
 
 3.  Get the ideal cross sections
 
@@ -199,7 +199,7 @@ crosscuts %>%
   theme_bw()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Note the rather strange cross cut for land 6 in bullet 1. We can look at
 the scan - and find quite pronounced tank rash. However, the extraction
@@ -215,7 +215,7 @@ filter(bullets, land==6, bullet==1)$x3p[[1]] %>%
   image_x3p(file="man/figures/bullet1-land6.png")
 ```
 
-![](man/figures/bullet1-land6.png)<!-- -->
+<img src="man/figures/bullet1-land6.png" width="750" />
 
 4.  Get the groove locations
 
@@ -244,7 +244,7 @@ gridExtra::grid.arrange(
 )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 5.  Extract signatures
 
@@ -262,7 +262,8 @@ bullets <- bullets %>% mutate(
 ```
 
 ``` r
-signatures <- bullets %>% select(source, sigs) %>% tidyr::unnest()
+signatures <- bullets %>% 
+  select(source, sigs) %>% tidyr::unnest(sigs)
 signatures %>% 
   filter(!is.na(sig),!is.na(raw_sig)) %>%
   ggplot(aes(x = x)) + 
@@ -273,7 +274,7 @@ signatures %>%
   theme_bw()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 8.  Align signatures and extract features
 
@@ -297,8 +298,7 @@ comparisons <- comparisons %>% mutate(
 )
 ```
 
-Aligned signatures of two matching
-lands:
+Aligned signatures of two matching lands:
 
 ``` r
 subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>% 
@@ -309,9 +309,9 @@ subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>%
   scale_color_brewer(palette = "Dark2")
 ```
 
-    ## Warning: Removed 37 rows containing missing values (geom_path).
+    ## Warning: Removed 36 row(s) containing missing values (geom_path).
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 Some features are based on aligned signatures:
 
@@ -342,7 +342,7 @@ comparisons <- comparisons %>% mutate(
 ``` r
 comparisons <- comparisons %>% mutate(
   cms_per_mm = purrr::map2(striae, aligned, .f = function(s, a) {
-    extract_feature_cms_per_mm(s$lines, a$lands, resolution=1.5625)
+    extract_feature_cms_per_mm(s$lines, a$lands, resolution=resolution)
   }),
   matches0 = striae %>% purrr::map_dbl(.f = function(s) {
     bulletxtrctr:::extract_helper_feature_n_striae(s$lines, type = "peak", match = TRUE)
@@ -369,19 +369,23 @@ comparisons <- comparisons %>% mutate(
 
 ``` r
 comparisons <- comparisons %>% mutate(
-  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = 1.5625)
+  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = resolution)
 )
 
 comparisons <- comparisons %>% mutate(
-  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = 1.5625)
+  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = resolution)
 )
 
-comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
+legacy <- comparisons %>% tidyr::unnest(legacy_features) 
 # scale features before using them in the random forest, legacy features can be used out of the box
+
+features <- comparisons %>% 
+  select(land1, land2, ccf0, bulletA, bulletB, landA, landB, features) %>%
+  tidyr::unnest(features) 
 
 
 # quick visualization:
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = ccf)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -392,17 +396,24 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
-10. Get Score predictions for each land to land
-comparison
+10. Get Score predictions for each land to land comparison
 
 <!-- end list -->
 
 ``` r
-comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
+require(randomForest)
+# use the scaled features, but the unscaled names ...
+features <- features %>% mutate(
+  cms = cms_per_mm,
+  matches = matches_per_mm,
+  mismatches = mismatches_per_mm,
+  non_cms = non_cms_per_mm
+  )
+features$rfscore <- predict(rtrees, newdata = features, type = "prob")[,2]
 
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = rfscore)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -413,15 +424,14 @@ comparisons %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
-11. Determine bullet-to-bullet
-scores
+11. Determine bullet-to-bullet scores
 
 <!-- end list -->
 
 ``` r
-bullet_scores <- comparisons %>% group_by(bulletA, bulletB) %>% tidyr::nest()
+bullet_scores <- features %>% group_by(bulletA, bulletB) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
     .f = function(d) max(compute_average_scores(land1 = d$landA, land2 = d$landB, d$rfscore)))
@@ -430,12 +440,13 @@ bullet_scores %>% select(-data)
 ```
 
     ## # A tibble: 4 x 3
+    ## # Groups:   bulletA, bulletB [4]
     ##   bulletA bulletB bullet_score
     ##   <chr>   <chr>          <dbl>
-    ## 1 1       1              0.982
-    ## 2 2       1              0.681
-    ## 3 1       2              0.681
-    ## 4 2       2              0.989
+    ## 1 1       1              0.977
+    ## 2 2       1              0.648
+    ## 3 1       2              0.648
+    ## 4 2       2              0.977
 
 12. Use bullet-to-bullet scores to predict land to land scores
 
@@ -451,23 +462,26 @@ bullet_scores <- bullet_scores %>% mutate(
       d
     })
 )
-comparisons <- bullet_scores %>% tidyr::unnest(data)
-comparisons %>% 
+features <- bullet_scores %>% tidyr::unnest(data)
+features %>% 
   ggplot(aes(x = landA, y = landB, 
              fill = rfscore, colour=samesource)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  scale_colour_manual(values = c("grey80", "darkorange")) +
+  scale_colour_manual(values = c("grey80", "darkorange"), limits=c(0,1)) +
   geom_tile(size = 1, 
-            data = comparisons %>% filter(samesource)) +
+            data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
   ylab("Land B") +
-  theme(aspect.ratio = 1)
+  theme(aspect.ratio = 1) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+    ## Warning: Continuous limits supplied to discrete scale.
+    ## Did you mean `limits = factor(...)` or `scale_*_continuous()`?
+
+![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 An interactive interface for doing comparisons is available
 <https://oaiti.org/apps/bulletmatcher/>

@@ -8,6 +8,7 @@
 #'          smaller changes in the crosscut.
 #' @param striae If TRUE, show the detected striae on the plot
 #' @param window If TRUE, show the window of the striae on the plot
+#' @param plot If TRUE, show a plot
 #' @return list of several objects:
 #' @importFrom zoo rollapply
 #' @import ggplot2
@@ -34,7 +35,7 @@
 #' # Plot
 #' sig_peaks$plot
 #' }
-sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) {
+sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE, plot = TRUE) {
   x <- NULL
   xmin <- NULL
   xmax <- NULL
@@ -91,23 +92,29 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE) 
     x = 1:length(smoothed_truefalse),
     smoothed = smoothed_truefalse
   )
-
-  p <- qplot(data = dframe, x = x, y = smoothed, geom = "line") + theme_bw()
-  if (window) {
-    p <- p + geom_rect(aes(xmin = xmin, xmax = xmax),
-      ymin = -6, ymax = 6,
-      data = lines, colour = "grey60", alpha = 0.2,
-      inherit.aes = FALSE
-    )
+  if (plot) {
+    p <- qplot(data = dframe, x = x, y = smoothed, geom = "line") + theme_bw()
+    if (window) {
+      p <- p + geom_rect(aes(xmin = xmin, xmax = xmax),
+        ymin = -6, ymax = 6,
+        data = lines, colour = "grey60", alpha = 0.2,
+        inherit.aes = FALSE
+      )
+    }
+    if (striae) p <- p + geom_vline(xintercept = peaks, colour = "red")
+    if (striae) p <- p + geom_vline(xintercept = valleys, colour = "blue")
+    return(list(
+      peaks = peaks, valleys = valleys, extrema = extrema,
+      peaks.heights = peaks.heights, valleys.heights = valleys.heights,
+      lines = lines, plot = p, dframe = dframe
+    ))
+  } else {
+    return(list(
+      peaks = peaks, valleys = valleys, extrema = extrema,
+      peaks.heights = peaks.heights, valleys.heights = valleys.heights,
+      lines = lines, plot = NULL, dframe = dframe
+    ))
   }
-  if (striae) p <- p + geom_vline(xintercept = peaks, colour = "red")
-  if (striae) p <- p + geom_vline(xintercept = valleys, colour = "blue")
-
-  return(list(
-    peaks = peaks, valleys = valleys, extrema = extrema,
-    peaks.heights = peaks.heights, valleys.heights = valleys.heights,
-    lines = lines, plot = p, dframe = dframe
-  ))
 }
 
 
@@ -182,7 +189,8 @@ striation_identify_matches <- function(striae1, striae2) {
     if (length(unique(land)) != 2) return(FALSE)
     return(length(unique(type)) == 1)
   }
-  groups <- ml %>% dplyr::group_by(group) %>%
+  groups <- ml %>%
+    dplyr::group_by(group) %>%
     dplyr::summarise(
       match = isMatch(type, land),
       size = n(),

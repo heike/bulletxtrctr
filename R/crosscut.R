@@ -15,9 +15,13 @@ land_cc <- function(y, land) {
   this_groove <- quantile(this_land$x, probs = c(0.15, 0.85))
   this_land_filtered <- subset(this_land, !is.na(value) &
     x > this_groove[1] & x < this_groove[2])
-  this_cc_df <- cc_fit_loess(this_land_filtered, span = 0.75)
-  # if (is.null(this_cc_df$raw_sig)) browser()
-  this_cc_df$resid <- this_cc_df$raw_sig # where are we still using resid?
+  if (nrow(this_land_filtered) > 5) {
+    this_cc_df <- cc_fit_loess(this_land_filtered, span = 0.75)
+    # if (is.null(this_cc_df$raw_sig)) browser()
+    this_cc_df$resid <- this_cc_df$raw_sig # where are we still using resid?
+  } else {
+    this_cc_df <- this_land_filtered
+  }
   this_cc_df
 }
 
@@ -100,15 +104,25 @@ x3p_crosscut_optimize <- function(x3p, distance = 25, ylimits = c(50, NA),
   }
 
   done <- FALSE
-  y <- min(ylimits)
+  # make sure the first y picked is above the missing value threshold.
+  rowMiss <- rev(apply(x3p$surface.matrix, function(x) sum(is.na(x)), MARGIN=2))
+  ys <- sort(unique(x3p_df$y))
+  ys <- ys[ys > ylimits[1]] # respect the lower limit
+  idx <- which(rowMiss/x3pdat$header.info$sizeX*100 < percent_missing)
+  if (length(idx) == 0)
+    stop("Too many missing values, increase the value of allowed percent missing values from percent_missing = %d", percent_missing)
+
+ # y <- min(ylimits)
+  y <- ys[idx[1]]
   first_cc <- land_cc(y, land = x3p_df)
 
   # This loop only entered when there is too much missingness - too hard to test
-  while ((dim(first_cc)[1] < x3pdat$header.info$sizeX * (100- percent_missing) / 100) &
-    (y < x3pdat$header.info$sizeY)) {
-    y <- y + distance
-    first_cc <- land_cc(y, land = x3p_df)
-  }
+  # 0.7 because land_cc is removing the most extreme 30% of the data
+#  while ((dim(first_cc)[1] < 0.7*x3pdat$header.info$sizeX * (100 - percent_missing) / 100) &
+#    (y < x3pdat$header.info$sizeY)) {
+#    y <- y + distance
+#    first_cc <- land_cc(y, land = x3p_df)
+#  }
 
   while (!done) {
     y <- y + distance
@@ -181,7 +195,7 @@ switch_xy <- function(dataframe) {
 #' )
 #'
 #' x3p_crosscut_optimize(example_data$x3p[[1]])
-#' x3p_crosscut(example_data$x3p[[1]], 75) %>%
+  #' x3p_crosscut(example_data$x3p[[1]], 75) %>%
 #'   ggplot(aes(x = x, y = value)) + geom_line()
 #' }
 x3p_crosscut <- function(x3p, y = NULL, range = 1e-5) {
@@ -195,7 +209,14 @@ x3p_crosscut <- function(x3p, y = NULL, range = 1e-5) {
   picky <- ys[which.min(abs(y - ys))]
   x3p_df_fix <- x3p_df[x3p_df$y >= picky & x3p_df$y <= picky + range, ]
 
-  return(na.omit(x3p_df_fix))
+  df <- na.omit(x3p_df_fix)
+  # we only want to keep attributes "names" "class" and "row.names"
+
+  delete_attrs <- setdiff(names(attributes(df)), c("names", "class", "row.names"))
+  lapply(delete_attrs, function(x){
+    attr(df, x) <<- NULL
+  })
+  return(df)
 }
 
 #' Check object returned by x3p_crosscut_optimize

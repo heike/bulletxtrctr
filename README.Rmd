@@ -10,6 +10,7 @@ output: github_document
 [![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
 [![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
+[![Github Actions Status](https://github.com/heike/bulletxtrctr/workflows/Build/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
 
 # bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
 
@@ -71,8 +72,8 @@ We expect data to be recorded at the micron level.
 The scans posted give measurements in meters:
 
 ```{r}
-bullets$x3p[[1]]$header.info$incrementY
-bullets$x3p[[1]]$header.info$incrementX
+bullets$x3p[[1]] %>% x3p_get_scale()
+
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 ```
 
@@ -86,10 +87,17 @@ bullets <- bullets %>% mutate(
 
 
 ```{r}
-bullets$x3p[[1]]$header.info$incrementY
-bullets$x3p[[1]]$header.info$incrementX
+bullets$x3p[[1]] %>% x3p_get_scale()
+
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 ```
+
+Save resolution of the scans in a variable (we will be using this piece of information later:
+```{r}
+resolution <- bullets$x3p[[1]] %>% x3p_get_scale()
+resolution
+```
+
 
 
 We are working under the assumption that the scans are aligned such that the base of the bullet are at the bottom (y = 0) of the image, and the land engraved area is displayed left to right from groove to groove, i.e. we are assuming that (0,0) is in the bottom left corner of the image.  In scans where no adjustment was made for the barrel's twist (not recommended) the twist will be visible in the image.
@@ -123,6 +131,9 @@ image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```{r, echo=FALSE}
 knitr::include_graphics("man/figures/temp-after.png")
 ```
+
+
+
 
 
 3. Get the ideal cross sections
@@ -199,7 +210,8 @@ bullets <- bullets %>% mutate(
 ```
 
 ```{r, fig.width = 8, fig.height = 3.3}
-signatures <- bullets %>% select(source, sigs) %>% tidyr::unnest()
+signatures <- bullets %>% 
+  select(source, sigs) %>% tidyr::unnest(sigs)
 signatures %>% 
   filter(!is.na(sig),!is.na(raw_sig)) %>%
   ggplot(aes(x = x)) + 
@@ -273,7 +285,7 @@ comparisons <- comparisons %>% mutate(
 ```{r}
 comparisons <- comparisons %>% mutate(
   cms_per_mm = purrr::map2(striae, aligned, .f = function(s, a) {
-    extract_feature_cms_per_mm(s$lines, a$lands, resolution=1.5625)
+    extract_feature_cms_per_mm(s$lines, a$lands, resolution=resolution)
   }),
   matches0 = striae %>% purrr::map_dbl(.f = function(s) {
     bulletxtrctr:::extract_helper_feature_n_striae(s$lines, type = "peak", match = TRUE)
@@ -299,19 +311,23 @@ comparisons <- comparisons %>% mutate(
 ```{r}
 
 comparisons <- comparisons %>% mutate(
-  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = 1.5625)
+  features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = resolution)
 )
 
 comparisons <- comparisons %>% mutate(
-  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = 1.5625)
+  legacy_features = purrr::map(striae, extract_features_all_legacy, resolution = resolution)
 )
 
-comparisons <- comparisons %>% tidyr::unnest(legacy_features) 
+legacy <- comparisons %>% tidyr::unnest(legacy_features) 
 # scale features before using them in the random forest, legacy features can be used out of the box
+
+features <- comparisons %>% 
+  select(land1, land2, ccf0, bulletA, bulletB, landA, landB, features) %>%
+  tidyr::unnest(features) 
 
 
 # quick visualization:
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = ccf)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -326,9 +342,17 @@ comparisons %>%
 10. Get Score predictions for each land to land comparison
 
 ```{r, warning=FALSE}
-comparisons$rfscore <- predict(bulletr::rtrees, newdata = comparisons, type = "prob")[,2]
+require(randomForest)
+# use the scaled features, but the unscaled names ...
+features <- features %>% mutate(
+  cms = cms_per_mm,
+  matches = matches_per_mm,
+  mismatches = mismatches_per_mm,
+  non_cms = non_cms_per_mm
+  )
+features$rfscore <- predict(rtrees, newdata = features, type = "prob")[,2]
 
-comparisons %>% 
+features %>% 
   ggplot(aes(x = landA, y = landB, fill = rfscore)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
@@ -342,7 +366,7 @@ comparisons %>%
 11. Determine bullet-to-bullet scores
 
 ```{r}
-bullet_scores <- comparisons %>% group_by(bulletA, bulletB) %>% tidyr::nest()
+bullet_scores <- features %>% group_by(bulletA, bulletB) %>% tidyr::nest()
 bullet_scores <- bullet_scores %>% mutate(
   bullet_score = data %>% purrr::map_dbl(
     .f = function(d) max(compute_average_scores(land1 = d$landA, land2 = d$landB, d$rfscore)))
@@ -362,20 +386,20 @@ bullet_scores <- bullet_scores %>% mutate(
       d
     })
 )
-comparisons <- bullet_scores %>% tidyr::unnest(data)
-comparisons %>% 
+features <- bullet_scores %>% tidyr::unnest(data)
+features %>% 
   ggplot(aes(x = landA, y = landB, 
              fill = rfscore, colour=samesource)) +
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  scale_colour_manual(values = c("grey80", "darkorange")) +
+  scale_colour_manual(values = c("grey80", "darkorange"), limits=c(0,1)) +
   geom_tile(size = 1, 
-            data = comparisons %>% filter(samesource)) +
+            data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
   ylab("Land B") +
-  theme(aspect.ratio = 1)
+  theme(aspect.ratio = 1) 
 ```
 
 An interactive interface for doing comparisons is available https://oaiti.org/apps/bulletmatcher/

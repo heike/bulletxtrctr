@@ -4,7 +4,13 @@
 \alias{sig_get_peaks}
 \title{Identify the location and the depth of peaks and valleys in a signature}
 \usage{
-sig_get_peaks(sig, smoothfactor = 35, striae = TRUE, window = TRUE)
+sig_get_peaks(
+  sig,
+  smoothfactor = 35,
+  striae = TRUE,
+  window = TRUE,
+  plot = TRUE
+)
 }
 \arguments{
 \item{sig}{numeric vector of smoothed signature, padded with NAs at front
@@ -16,6 +22,8 @@ smaller changes in the crosscut.}
 \item{striae}{If TRUE, show the detected striae on the plot}
 
 \item{window}{If TRUE, show the window of the striae on the plot}
+
+\item{plot}{If TRUE, show a plot}
 }
 \value{
 list of several objects:

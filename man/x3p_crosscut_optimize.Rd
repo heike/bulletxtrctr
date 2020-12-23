@@ -4,8 +4,14 @@
 \alias{x3p_crosscut_optimize}
 \title{Identify a reliable cross section}
 \usage{
-x3p_crosscut_optimize(x3p, distance = 25, ylimits = c(50, NA),
-  minccf = 0.9, span = 0.03, percent_missing = 50)
+x3p_crosscut_optimize(
+  x3p,
+  distance = 25,
+  ylimits = c(50, NA),
+  minccf = 0.9,
+  span = 0.03,
+  percent_missing = 50
+)
 }
 \arguments{
 \item{x3p}{if character, path to an x3p file. Otherwise a scan in x3p

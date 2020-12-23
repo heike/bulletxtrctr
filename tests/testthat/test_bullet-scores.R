@@ -2,11 +2,13 @@ context("bullet-scores")
 
 skipall <- T
 if (requireNamespace("here") & requireNamespace("purrr") &
-    requireNamespace("randomForest")) {
+  requireNamespace("randomForest")) {
   skipall <- F
   load(here::here("tests/rf_features.Rdata"))
-  test_rf_features <- predict(rtrees, newdata = rf_features,
-                              type = "prob")[, 2]
+  test_rf_features <- predict(bulletxtrctr::rtrees,
+    newdata = rf_features,
+    type = "prob"
+  )[, 2]
 }
 
 test_that("bullet-scores works as expected", {

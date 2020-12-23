@@ -1,5 +1,3 @@
-
-
 #' Find the grooves of a bullet land
 #'
 #' @param ccdata data frame of the crosscut. Data frame needs location x and
@@ -64,7 +62,8 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
 
   check_ccdata(ccdata)
 
-  assert_that(method %in% c("quadratic", "rollapply", "middle", "logisticlegacy", "lassobasic", "lassofull", "bcp", "hough")) ## too strict
+  assert_that(method %in% c("quadratic", "rollapply", "middle", "logisticlegacy",
+                            "lassobasic", "lassofull", "bcp", "hough")) ## too strict
 
   # TODO: expand cc_locate_groove to accept user defined get_grooves_XXX function
   assert_that(
@@ -80,13 +79,13 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   }
   if (method == "lassobasic") {
     grooves <- get_grooves_lasso(
-      x = land$x, value = land$value, lasso_method = 'basic',
+      x = land$x, value = land$value, lasso_method = "basic",
       return_plot = return_plot, ...
     )
   }
   if (method == "lassofull") {
     grooves <- get_grooves_lasso(
-      x = land$x, value = land$value, lasso_method = 'full',
+      x = land$x, value = land$value, lasso_method = "full",
       return_plot = return_plot, ...
     )
   }
@@ -136,21 +135,18 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
   }
 
   if (method == "bcp") {
-    bcp_out <- bulletcp::get_grooves_bcp(x = land$x, value = land$value, adjust = adjust, ...)
-    if (return_plot == T) {
-      grooves <- list(
-        groove = bcp_out$groove,
-        plot = grooves_plot(land = land, grooves = bcp_out$groove)
-      )
-    } else {
-      grooves <- bcp_out
-    }
+    grooves <- grooveFinder::get_grooves_bcp(
+      x = land$x, value = land$value,
+      adjust = adjust,
+      return_plot = return_plot
+    )
   }
 
-  if(method == "hough"){
-    qu <- list(...)$qu
-    if (is.null(qu)) qu <- 0.999
-    grooves <- get_grooves_hough(land = land, qu = qu, adjust = adjust, return_plot = return_plot)
+  if (method == "hough") {
+    norm.index <- list(...)$norm.index
+    if (is.null(norm.index)) norm.index <- 1
+    grooves <- get_grooves_hough(land = land, norm.index = norm.index, adjust = adjust,
+                                 return_plot = return_plot)
   }
 
   return(grooves)

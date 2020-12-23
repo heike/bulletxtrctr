@@ -5,7 +5,8 @@ if (requireNamespace("here") & requireNamespace("purrr")) {
   load(here::here("tests/bullets_match.Rdata"))
 
   featurestest_legacy <- extract_features_all_legacy(match$maxcms,
-                                                     resolution = 1.5625)
+    resolution = 1.5625
+  )
 
   classes <- lapply(featurestest_legacy, mode) %>% unlist() %>% unique()
 
@@ -347,10 +348,12 @@ test_that("extract_feature_overlap works as expected", {
 })
 
 test_that("extract_features_all works as expected", {
-  ft_names <- c("ccf", "cms", "cms2", "cms2_per_mm", "cms_per_mm", "D", "lag",
-                "lag_mm", "left_cms", "length", "length_mm", "matches", "matches_per_mm",
-                "mismatches", "mismatches_per_mm", "non_cms", "non_cms_per_mm",
-                "overlap", "right_cms", "rough_cor", "sd_D", "sum_peaks")
+  ft_names <- c(
+    "ccf", "cms", "cms2", "cms2_per_mm", "cms_per_mm", "D", "lag",
+    "lag_mm", "left_cms", "length", "length_mm", "matches", "matches_per_mm",
+    "mismatches", "mismatches_per_mm", "non_cms", "non_cms_per_mm",
+    "overlap", "right_cms", "rough_cor", "sd_D", "sum_peaks"
+  )
   expect_equal(sort(names(featurestest_full)), sort(ft_names))
   skip_if(skipall)
   expect_setequal(match$features, featurestest_full)

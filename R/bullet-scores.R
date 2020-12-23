@@ -65,7 +65,7 @@
 #'                                                   d$rfscore)))
 #'   )
 #' }
-compute_average_scores <- function(land1, land2, score, addNA=FALSE) {
+compute_average_scores <- function(land1, land2, score, addNA = FALSE) {
   if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
@@ -109,7 +109,7 @@ bootstrap_k <- function(scores, k, K, value) {
   res <- replicate(K, {
     mean(sample(scores, size = k, replace = TRUE), na.rm = TRUE)
   })
-  sum(res >= value)/K
+  sum(res >= value) / K
 }
 
 
@@ -131,37 +131,36 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   avgs <- compute_average_scores(land2, land1, scores, addNA)
 
-    p <- max(c(land1, land2))
+  p <- max(c(land1, land2))
+  boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
+  if (!is.numeric(boot)) {
     boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
-    if (!is.numeric(boot)) {
-      boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
- #     print("boot is not numeric")
-#      browser()
-    }
+    #     print("boot is not numeric")
+    #      browser()
+  }
 
-    getdiff <- diff(sort(-avgs))[1]
-    if (!is.numeric(getdiff)) print("getdiff is not numeric") #browser()
-    if (getdiff > difference & boot) {
+  getdiff <- diff(sort(-avgs))[1]
+  if (!is.numeric(getdiff)) print("getdiff is not numeric") # browser()
+  if (getdiff > difference & boot) {
     # pick the maximum to determine the phase
     idx <- which.max(avgs)
     dd <- data.frame(
       land1,
       land2
     ) %>%
-        mutate_if(function(.) !is.numeric(.), parse_number)
-    dd$diff = (dd$land1 - dd$land2) %% p + 1
+      mutate_if(function(.) !is.numeric(.), parse_number)
+    dd$diff <- (dd$land1 - dd$land2) %% p + 1
 
 
     return(dd$diff == idx)
-    } else {
-
-      return(rep(FALSE, length=length(land1)))
-    }
+  } else {
+    return(rep(FALSE, length = length(land1)))
   }
+}
 
 
 
-#' Get land to land prediction based on bullet to bullet comparisons
+#' Wilcox test of bullet to bullet similarity
 #'
 #' The combination of `land1` and `land2` are a key to the scores,
 #' i.e. if a bullet has six lands, each of the input vectors should have
@@ -169,16 +168,18 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
 #' @param land1 (numeric) vector with land ids of bullet 1
 #' @param land2 (numeric) vector with land ids of bullet 2
 #' @param scores numeric vector of scores to be summarized into a single number
-#' @param difference numeric value describing the minimal difference between scores from same source versus different sources.
-#' @param alpha numeric value describing the significance level for the bootstrap
 #' @param addNA how are missing values treated? addNA = TRUE leaves missing values, addNA=FALSE imputes with 0.
+#' @importFrom stats wilcox.test
 #' @export
+#' @importFrom stats wilcox.test
+#' @importFrom stats xtabs
+#' @importFrom readr parse_number
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
 max_u <- function(land1, land2, scores, addNA = FALSE) {
   if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
   if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(scores))
-#browser()
+  # browser()
 
   maxland <- max(land1, land2)
   fullframe <- data.frame(expand.grid(land1 = 1:maxland, land2 = 1:maxland))
@@ -192,7 +193,7 @@ max_u <- function(land1, land2, scores, addNA = FALSE) {
   )
   # get averages, just in case
   matrix <- xtabs(scores ~ land1 + land2,
-                  data = fullframe, addNA = addNA
+    data = fullframe, addNA = addNA
   ) / xtabs(~land1 + land2, data = fullframe, addNA = addNA)
 
   matrix <- cbind(matrix, matrix)
@@ -207,11 +208,13 @@ max_u <- function(land1, land2, scores, addNA = FALSE) {
     u <- na.omit(diag(mm))
     diag(mm) <- NA
     notu <- na.omit(as.vector(mm))
-    list(wilcox.test(u, notu, alternative="greater"))
+    list(wilcox.test(u, notu, alternative = "greater"))
   })
   wts %>% purrr::map_dfr(
     .f = function(x) {
-      data.frame(W = x$statistic, pval=x$p.value)
+      data.frame(W = x$statistic, pval = x$p.value)
     }
   )
 }
+
+

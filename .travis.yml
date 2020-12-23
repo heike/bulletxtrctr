@@ -2,7 +2,25 @@
 
 language: R
 sudo: false
-cache: packages
+
+addons:
+  apt:
+    update: true
+    packages:
+      - libglu1-mesa-dev
+      - freeglut3-dev
+      - mesa-common-dev
+      - libtiff-dev
+      - libpng-dev
+      - libjpeg-dev
+      - libfftw3-dev
+      - libmagick++-dev
+      - librsvg2-dev
+      - libwebp-dev
+      - libpoppler-cpp-dev
+      - libleptonica-dev
+      - cargo
+      - gsfonts
 
 env_vars:
   global:
@@ -10,22 +28,35 @@ env_vars:
 
 services:
   - xvfb
-  
+
 r_binary_packages:
   - rgl
-  
-r_packages:
   - covr
-  - smoother
-  
+  - assertthat
+  - ggplot2
+  - purrr
+  - locfit
+  - zoo
+  - magrittr
+  - dplyr
+  - readr
+  - tidyr
+  - randomForest
+
 r_github_packages:
   - nategarton13/bulletcp
-  
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3
-  
+  - heike/grooveFinder
+  - heike/x3ptools
+
+r_packages:
+  - smoother
+  - imager
+
+cache:
+  packages: true
+  directories:
+    - /usr/local/lib/R/site-library
+    - /usr/lib/R
+
 after_success:
-  - Rscript -e 'install.packages("randomForest")'
   - Rscript -e 'covr::codecov()'
