@@ -31,6 +31,7 @@ read_bullet <- function(folder = NULL, ext = ".x3p$", urllist = NULL, size = NA)
   }
 
   if (!is.null(folder)) {
+    # the following assertion creates weird error in Windows when x ends in /
     lapply(folder, function(x) assert_that(is.dir(x)))
     set <- dir(folder, pattern = ext, recursive = TRUE, full.names = TRUE)
     message(sprintf("%d files found. Reading ...", length(set)))
