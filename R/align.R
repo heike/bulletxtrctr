@@ -6,6 +6,7 @@
 #' Function copied from `bulletAlign`
 #' @param sig1 vector of first signature
 #' @param sig2 vector of second signature
+#' @param min.overlap additional parameter passed on to get_ccf
 #' @return list consisting of
 #'           a) the maximal cross correlation,
 #'           b) the lag resulting in the highest cross correlation, and
@@ -34,7 +35,7 @@
 #'
 #' sig_align(example_data$sigs[[1]]$sig, example_data$sigs[[2]]$sig)
 #' }
-sig_align <- function(sig1, sig2) {
+sig_align <- function(sig1, sig2, min.overlap = round(0.75 * min(length(sig1), length(sig2)))) {
   assert_that(is.numeric(sig1), is.numeric(sig2))
 
   sig1 <- na.trim(sig1)
@@ -53,7 +54,8 @@ sig_align <- function(sig1, sig2) {
     y <- sig1
   }
 
-  cors <- get_ccf(x, y, round(0.75 * min(length(sig1), length(sig2))))
+  cors <- get_ccf(x, y, min.overlap = min.overlap)
+
   # do some padding at the front
   lag <- cors$lag[which.max(cors$ccf)]
   if (lag < 0) {
