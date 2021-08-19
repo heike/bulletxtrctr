@@ -4,12 +4,18 @@
 \alias{sig_align}
 \title{Align two surface cross cuts according to maximal correlation}
 \usage{
-sig_align(sig1, sig2)
+sig_align(
+  sig1,
+  sig2,
+  min.overlap = round(0.75 * min(length(sig1), length(sig2)))
+)
 }
 \arguments{
 \item{sig1}{vector of first signature}
 
 \item{sig2}{vector of second signature}
+
+\item{min.overlap}{additional parameter passed on to get_ccf}
 }
 \value{
 list consisting of
