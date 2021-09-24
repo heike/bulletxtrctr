@@ -11,3 +11,4 @@ codecov.yml
 ^extra$
 ^stuff$
 .github
+^debug_will$

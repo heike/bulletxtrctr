@@ -706,7 +706,7 @@ extract_feature_lag <- function(aligned) {
   lags <- sapply(aligned[, -1], function(x) {
     if (!is.na(x[1])) return(0)
     diffs <- diff(is.na(x))
-    which(diffs == -1)
+    which(diffs == -1)[1]
   })
 
   if (length(lags) == 2) return(diff(lags))
@@ -724,6 +724,19 @@ extract_feature_lag <- function(aligned) {
 #' @family alignment-related-features
 extract_feature_lag_mm <- function(aligned, resolution) {
   extract_feature_lag(aligned) * resolution / 1000
+}
+
+#' Extract the absolute value of lag in mm from two (or more) aligned signatures
+#'
+#'
+#' @inheritParams extract_feature_ccf
+#' @param resolution numeric value of resolution in micron per pixel
+#' @return (vector) of absolute lags in millimeter
+#' @importFrom assertthat assert_that
+#' @export
+#' @family alignment-related-features
+extract_feature_abs_lag_mm <- function(aligned, resolution) {
+  abs(extract_feature_lag(aligned) * resolution / 1000)
 }
 
 

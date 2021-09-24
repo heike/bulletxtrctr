@@ -46,6 +46,7 @@ extract_feature_overlap(alignment$lands)
 \seealso{
 Other alignment-related-features: 
 \code{\link{extract_feature_D}()},
+\code{\link{extract_feature_abs_lag_mm}()},
 \code{\link{extract_feature_ccf}()},
 \code{\link{extract_feature_lag_mm}()},
 \code{\link{extract_feature_lag}()},
