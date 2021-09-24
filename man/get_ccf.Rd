@@ -7,7 +7,7 @@
 get_ccf(x, y, min.overlap = round(0.1 * max(length(x), length(y))))
 }
 \arguments{
-\item{x}{vector, assumption is that x is longer than y}
+\item{x}{vector, assumption is that x is shorter than y}
 
 \item{y}{vector}
 
