@@ -44,15 +44,17 @@ sig_align <- function(sig1, sig2, min.overlap = round(0.75 * min(length(sig1), l
   n1 <- length(sig1)
   n2 <- length(sig2)
 
+  x <- sig1
+  y <- sig2
   # assume y is the long vector, x is the short vector. If not, switch the
   # vectors around
-  if (n1 < n2) {
-    x <- sig1
-    y <- sig2
-  } else {
-    x <- sig2
-    y <- sig1
-  }
+  # if (n1 < n2) {
+  #   x <- sig1
+  #   y <- sig2
+  # } else {
+  #   x <- sig2
+  #   y <- sig1
+  # }
 
   cors <- get_ccf(x, y, min.overlap = min.overlap)
 
@@ -74,12 +76,13 @@ sig_align <- function(sig1, sig2, min.overlap = round(0.75 * min(length(sig1), l
   if (delta < 0) x <- c(x, rep(NA, abs(delta)))
   if (delta > 0) y <- c(y, rep(NA, delta))
 
+  dframe0 <- data.frame(x = 1:length(x), sig1 = x, sig2 = y)
   # switch back
-  if (n1 < n2) {
-    dframe0 <- data.frame(x = 1:length(x), sig1 = x, sig2 = y)
-  } else {
-    dframe0 <- data.frame(x = 1:length(x), sig1 = y, sig2 = x)
-  }
+  # if (n1 < n2) {
+  #   dframe0 <- data.frame(x = 1:length(x), sig1 = x, sig2 = y)
+  # } else {
+  #   dframe0 <- data.frame(x = 1:length(x), sig1 = y, sig2 = x)
+  # }
 
   maxcor <- max(cors$ccf, na.rm = TRUE)
 
@@ -135,7 +138,7 @@ get_ccf <- function (x, y, min.overlap = round(0.1 * max(length(x), length(y))))
 
   # nx <= ny requires the length of x less than the length of y
   # this requirement might be removed
-  assert_that(nx > 0, ny > 0, nx <= ny,
+  assert_that(nx > 0, ny > 0,
               is.numeric(x), is.numeric(y), is.numeric(min.overlap))
 
   x <- as.numeric(x)
