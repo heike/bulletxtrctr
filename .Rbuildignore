@@ -11,3 +11,5 @@ codecov.yml
 ^extra$
 ^stuff$
 .github
+
+^README\.Rmd$

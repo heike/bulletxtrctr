@@ -1,21 +1,44 @@
 ---
-title: "bulletxtrctr"
-author: "Heike Hofmann, Susan Vanderplas, Eric Hare,  Ganesh Krishnan"
-date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: github_document
 ---
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# bulletxtrctr
+
+<!-- badges: start -->
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Travis-CI Build Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
 [![Last-changedate](https://img.shields.io/badge/last%20change-`r gsub('-', '--', Sys.Date())`-yellowgreen.svg)](/commits/master)
 [![Coverage status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 [![Github Actions Status](https://github.com/heike/bulletxtrctr/workflows/Build/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
-
-# bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
+<!-- badges: end -->
 
 Analyze bullet striations using nonparametric methods
 
+## Installation
+
+You can install the released version of bulletxtrctr from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("bulletxtrctr")
+```
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("heike/bulletxtrctr")
+```
 
 
 ## Comparing lands from two bullets
@@ -393,7 +416,7 @@ features %>%
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  scale_colour_manual(values = c("grey80", "darkorange"), limits=c(0,1)) +
+  scale_colour_manual(values = c("grey80", "darkorange")) +
   geom_tile(size = 1, 
             data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
@@ -403,3 +426,4 @@ features %>%
 ```
 
 An interactive interface for doing comparisons is available https://oaiti.org/apps/bulletmatcher/
+

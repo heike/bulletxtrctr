@@ -1,7 +1,9 @@
-bulletxtrctr
-================
-Heike Hofmann, Susan Vanderplas, Eric Hare, Ganesh Krishnan
-November 22, 2020
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# bulletxtrctr
+
+<!-- badges: start -->
 
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr)
@@ -10,17 +12,30 @@ downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Travis-CI Build
-Status](https://travis-ci.org/heike/bulletxtrctr.svg?branch=master)](https://travis-ci.org/heike/bulletxtrctr)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2020--11--22-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2021--11--18-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 [![Github Actions
-Status](https://github.com/heike/bulletxtrctr/workflows/R-CMD-check/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
-
-# bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width = "120"/>
+Status](https://github.com/heike/bulletxtrctr/workflows/Build/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
+<!-- badges: end -->
 
 Analyze bullet striations using nonparametric methods
+
+## Installation
+
+You can install the released version of bulletxtrctr from
+[CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("bulletxtrctr")
+```
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("heike/bulletxtrctr")
+```
 
 ## Comparing lands from two bullets
 
@@ -28,8 +43,6 @@ Striae comparisons between bullets are based on land-to-land
 comparisons.
 
 1.  Load libraries
-
-<!-- end list -->
 
 ``` r
 library(dplyr)
@@ -72,15 +85,10 @@ if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")
   NRBTDsample_download("README_files/data")
 }
 b1 <- read_bullet("README_files/data/Bullet1")
-```
-
-    ## 6 files found. Reading ...
-
-``` r
+#> 6 files found. Reading ...
 b2 <- read_bullet("README_files/data/Bullet2")
+#> 6 files found. Reading ...
 ```
-
-    ## 6 files found. Reading ...
 
 Combine the results into a single data frame:
 
@@ -97,16 +105,12 @@ measurements in meters:
 
 ``` r
 bullets$x3p[[1]] %>% x3p_get_scale()
-```
+#> [1] 1.5625e-06
 
-    ## [1] 1.5625e-06
-
-``` r
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#>       0       0       0       0       0       0   24829
 ```
-
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    ##       0       0       0       0       0       0   24829
 
 Change measurements to microns:
 
@@ -118,16 +122,12 @@ bullets <- bullets %>% mutate(
 
 ``` r
 bullets$x3p[[1]] %>% x3p_get_scale()
-```
+#> [1] 1.5625
 
-    ## [1] 1.5625
-
-``` r
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#>   1.513 117.626 166.723 155.933 199.429 216.341   24829
 ```
-
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-    ##   1.513 117.626 166.723 155.933 199.429 216.341   24829
 
 Save resolution of the scans in a variable (we will be using this piece
 of information later:
@@ -135,9 +135,8 @@ of information later:
 ``` r
 resolution <- bullets$x3p[[1]] %>% x3p_get_scale()
 resolution
+#> [1] 1.5625
 ```
-
-    ## [1] 1.5625
 
 We are working under the assumption that the scans are aligned such that
 the base of the bullet are at the bottom (y = 0) of the image, and the
@@ -150,7 +149,7 @@ recommended) the twist will be visible in the image.
 image_x3p(bullets$x3p[[1]], file = "man/figures/temp-before.png")
 ```
 
-<img src="man/figures/temp-before.png" width="750" />
+<img src="man/figures/temp-before.png" width="100%" />
 
 The raw scan needs to be flipped such that the heel is along the bottom
 of the image rather than along the left hand side.
@@ -171,11 +170,9 @@ right slant of striae and grooves:
 image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```
 
-<img src="man/figures/temp-after.png" width="750" />
+<img src="man/figures/temp-after.png" width="100%" />
 
 3.  Get the ideal cross sections
-
-<!-- end list -->
 
 ``` r
 bullets <- bullets %>% mutate(
@@ -199,7 +196,7 @@ crosscuts %>%
   theme_bw()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
 
 Note the rather strange cross cut for land 6 in bullet 1. We can look at
 the scan - and find quite pronounced tank rash. However, the extraction
@@ -215,11 +212,9 @@ filter(bullets, land==6, bullet==1)$x3p[[1]] %>%
   image_x3p(file="man/figures/bullet1-land6.png")
 ```
 
-<img src="man/figures/bullet1-land6.png" width="750" />
+<img src="man/figures/bullet1-land6.png" width="100%" />
 
 4.  Get the groove locations
-
-<!-- end list -->
 
 ``` r
 bullets <- bullets %>% mutate(
@@ -244,11 +239,9 @@ gridExtra::grid.arrange(
 )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-20-1.png" width="100%" />
 
 5.  Extract signatures
-
-<!-- end list -->
 
 ``` r
 bullets <- bullets %>% mutate(
@@ -274,11 +267,9 @@ signatures %>%
   theme_bw()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-22-1.png" width="100%" />
 
 8.  Align signatures and extract features
-
-<!-- end list -->
 
 ``` r
 bullets$bulletland <- paste0(bullets$bullet,"-", bullets$land)
@@ -307,11 +298,10 @@ subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>%
     geom_line() +
   theme_bw() +
   scale_color_brewer(palette = "Dark2")
+#> Warning: Removed 36 row(s) containing missing values (geom_path).
 ```
 
-    ## Warning: Removed 36 row(s) containing missing values (geom_path).
-
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-24-1.png" width="100%" />
 
 Some features are based on aligned signatures:
 
@@ -365,8 +355,6 @@ comparisons <- comparisons %>% mutate(
 
 9.  Extract Features
 
-<!-- end list -->
-
 ``` r
 comparisons <- comparisons %>% mutate(
   features = purrr::map2(.x = aligned, .y = striae, .f = extract_features_all, resolution = resolution)
@@ -396,11 +384,9 @@ features %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-29-1.png" width="100%" />
 
 10. Get Score predictions for each land to land comparison
-
-<!-- end list -->
 
 ``` r
 require(randomForest)
@@ -424,11 +410,9 @@ features %>%
   theme(aspect.ratio = 1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-30-1.png" width="100%" />
 
 11. Determine bullet-to-bullet scores
-
-<!-- end list -->
 
 ``` r
 bullet_scores <- features %>% group_by(bulletA, bulletB) %>% tidyr::nest()
@@ -437,20 +421,17 @@ bullet_scores <- bullet_scores %>% mutate(
     .f = function(d) max(compute_average_scores(land1 = d$landA, land2 = d$landB, d$rfscore)))
 )
 bullet_scores %>% select(-data)
+#> # A tibble: 4 × 3
+#> # Groups:   bulletA, bulletB [4]
+#>   bulletA bulletB bullet_score
+#>   <chr>   <chr>          <dbl>
+#> 1 1       1              0.977
+#> 2 2       1              0.648
+#> 3 1       2              0.648
+#> 4 2       2              0.977
 ```
 
-    ## # A tibble: 4 x 3
-    ## # Groups:   bulletA, bulletB [4]
-    ##   bulletA bulletB bullet_score
-    ##   <chr>   <chr>          <dbl>
-    ## 1 1       1              0.977
-    ## 2 2       1              0.648
-    ## 3 1       2              0.648
-    ## 4 2       2              0.977
-
 12. Use bullet-to-bullet scores to predict land to land scores
-
-<!-- end list -->
 
 ``` r
 bullet_scores <- bullet_scores %>% mutate(
@@ -469,7 +450,7 @@ features %>%
   geom_tile() +
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
-  scale_colour_manual(values = c("grey80", "darkorange"), limits=c(0,1)) +
+  scale_colour_manual(values = c("grey80", "darkorange")) +
   geom_tile(size = 1, 
             data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
@@ -478,10 +459,7 @@ features %>%
   theme(aspect.ratio = 1) 
 ```
 
-    ## Warning: Continuous limits supplied to discrete scale.
-    ## Did you mean `limits = factor(...)` or `scale_*_continuous()`?
-
-![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />
 
 An interactive interface for doing comparisons is available
 <https://oaiti.org/apps/bulletmatcher/>
