@@ -44,20 +44,26 @@ sig_align <- function(sig1, sig2, min.overlap = round(0.75 * min(length(sig1), l
   n1 <- length(sig1)
   n2 <- length(sig2)
 
+  x <- sig1
+  y <- sig2
   # assume y is the long vector, x is the short vector. If not, switch the
   # vectors around
-  if (n1 < n2) {
-    x <- sig1
-    y <- sig2
-  } else {
-    x <- sig2
-    y <- sig1
-  }
+  # if (n1 < n2) {
+  #   x <- sig1
+  #   y <- sig2
+  # } else {
+  #   x <- sig2
+  #   y <- sig1
+  # }
 
   cors <- get_ccf(x, y, min.overlap = min.overlap)
 
   # do some padding at the front
   lag <- cors$lag[which.max(cors$ccf)]
+  # lag: we are fixing the shorter signature and moving the longer signature
+  # pro: sig_align(sig1, sig2) gives the same lag as sig_align(sig2, sig1) gives
+  # con: might be counter-intuition? clear definition needed
+
   if (lag < 0) {
     x <- c(rep(NA, abs(lag)), x)
   }
@@ -70,12 +76,13 @@ sig_align <- function(sig1, sig2, min.overlap = round(0.75 * min(length(sig1), l
   if (delta < 0) x <- c(x, rep(NA, abs(delta)))
   if (delta > 0) y <- c(y, rep(NA, delta))
 
+  dframe0 <- data.frame(x = 1:length(x), sig1 = x, sig2 = y)
   # switch back
-  if (n1 < n2) {
-    dframe0 <- data.frame(x = 1:length(x), sig1 = x, sig2 = y)
-  } else {
-    dframe0 <- data.frame(x = 1:length(x), sig1 = y, sig2 = x)
-  }
+  # if (n1 < n2) {
+  #   dframe0 <- data.frame(x = 1:length(x), sig1 = x, sig2 = y)
+  # } else {
+  #   dframe0 <- data.frame(x = 1:length(x), sig1 = y, sig2 = x)
+  # }
 
   maxcor <- max(cors$ccf, na.rm = TRUE)
 
@@ -107,7 +114,7 @@ check_align <- function(x) {
 #' Cross correlation function between two vectors
 #'
 #'
-#' @param x vector, assumption is that x is longer than y
+#' @param x vector, assumption is that x is shorter than y
 #' @param y vector
 #' @param min.overlap integer value: what is the minimal number of values
 #'          between x and y that should be considered?
@@ -122,32 +129,71 @@ check_align <- function(x) {
 #' get_ccf(x, lag(x, 5), min.overlap = 3)
 #' x <- runif(100)
 #' get_ccf(x[45:50], x, min.overlap = 6)
-get_ccf <- function(x, y, min.overlap = round(0.1 * max(length(x), length(y)))) {
+get_ccf <- function (x, y, min.overlap = round(0.1 * max(length(x), length(y))))
+{
   x <- as.vector(unlist(x))
   y <- as.vector(unlist(y))
   nx <- length(x)
   ny <- length(y)
 
-  assert_that(is.numeric(x), is.numeric(y))
-  assert_that(nx > 0, ny > 0, nx <= ny)
+  # nx <= ny requires the length of x less than the length of y
+  # this requirement might be removed
+  assert_that(nx > 0, ny > 0,
+              is.numeric(x), is.numeric(y), is.numeric(min.overlap))
 
-  xx <- c(rep(NA, ny - min.overlap), x, rep(NA, ny - min.overlap))
-  yy <- c(y, rep(NA, length(xx) - ny))
+  x <- as.numeric(x)
+  y <- as.numeric(y)
 
-  lag.max <- length(yy) - length(y)
+  lag.max <- nx + 2 * (ny - ceiling(min.overlap)) - ny
   lags <- 0:lag.max
-
-  cors <- sapply(lags, function(lag) {
-    cor(xx, lag(yy, lag), use = "pairwise.complete")
-  })
-  ns <- sapply(lags, function(lag) {
-    dim(na.omit(cbind(xx, lag(yy, lag))))[1]
-  })
-  cors[ns < min.overlap] <- NA
-
   lag <- lags - (ny - min.overlap)
+
+  if(all(is.na(x)) | all(is.na(y)) | (ny < min.overlap)){
+    cors <- rep(NA, lag.max + 1)
+    return(list(lag = lag, ccf = cors))
+  }
+
+  x.na.count <- .Call(trim_na_c, x)
+  y.na.count <- .Call(trim_na_c, y)
+
+  x.narm <- x[(x.na.count[1] + 1) : (length(x) - x.na.count[2])]
+  y.narm <- y[(y.na.count[1] + 1) : (length(y) - y.na.count[2])]
+  nyy <- length(y.narm)
+
+  xx <- c(rep(NA, nyy - min.overlap), x.narm, rep(NA, nyy - min.overlap))
+
+  cors <- .Call(compute_cross_corr_c, xx, y.narm, as.numeric(min.overlap))
+  cors <- c(rep(NA, x.na.count[1] + y.na.count[2]),
+            cors,
+            rep(NA, x.na.count[2] + y.na.count[1]))
   return(list(lag = lag, ccf = cors))
 }
+# get_ccf <- function(x, y, min.overlap = round(0.1 * max(length(x), length(y)))) {
+#   x <- as.vector(unlist(x))
+#   y <- as.vector(unlist(y))
+#   nx <- length(x)
+#   ny <- length(y)
+#
+#   assert_that(is.numeric(x), is.numeric(y))
+#   assert_that(nx > 0, ny > 0, nx <= ny)
+#
+#   xx <- c(rep(NA, ny - min.overlap), x, rep(NA, ny - min.overlap))
+#   yy <- c(y, rep(NA, length(xx) - ny))
+#
+#   lag.max <- length(yy) - length(y)
+#   lags <- 0:lag.max
+#
+#   cors <- sapply(lags, function(lag) {
+#     cor(xx, lag(yy, lag), use = "pairwise.complete")
+#   })
+#   ns <- sapply(lags, function(lag) {
+#     dim(na.omit(cbind(xx, lag(yy, lag))))[1]
+#   })
+#   cors[ns < min.overlap] <- NA
+#
+#   lag <- lags - (ny - min.overlap)
+#   return(list(lag = lag, ccf = cors))
+# }
 
 
 
