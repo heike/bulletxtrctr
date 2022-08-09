@@ -90,15 +90,6 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Does rgl load?
-        run: |
-          options(width = 100)
-          library(rgl)
-          library(x3ptools)
-          library(grooveFinder)
-          library(bulletxtrctr)
-        shell: Rscript {0}
-
       - name: Session info
         run: |
           options(width = 100)
