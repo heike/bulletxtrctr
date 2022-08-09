@@ -50,8 +50,7 @@ check_x3p <- function(x3p) {
 #' If the resulting cross section is equal to the maximum of the search area
 #' (defined in xlimits), there should be some investigation to determine
 #' whether this cross section is usable, due to the risk of tank rash.
-#'
-#' # TODO: are missing values only on the right hand side (leading shoulder)?
+#' TODO: are missing values only on the right hand side (leading shoulder)?
 #' @param x3p if character, path to an x3p file. Otherwise a scan in x3p
 #'          format is expected. The assumption is that the scan is taken across
 #'          the bullet land, with an upright bullet, i.e.  heel along x with
@@ -172,7 +171,7 @@ switch_xy <- function(dataframe) {
 #'          format is expected.
 #' @param y level of the crosscut to be taken. If this level does not exist,
 #'          the crosscut along the middle of the land is returned.
-#' @param range numeric specifying a range of [y, y + range] to be extracted
+#' @param range numeric specifying a range of (y, y + range) to be extracted
 #' @return data frame
 #' @importFrom x3ptools read_x3p
 #' @importFrom x3ptools x3p_to_df

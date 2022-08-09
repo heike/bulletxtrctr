@@ -13,10 +13,10 @@ sig_cms_max(aligned, span = 35)
 }
 \value{
 list of matching parameters, data set of the identified striae,
-   and the aligned data sets.
+and the aligned data sets.
 }
 \description{
-adapted from `bulletGetMaxCMS`
+adapted from \code{bulletGetMaxCMS}
 aligns two signatures, identifies peaks and valleys, matches striae, and
 counts longest run.
 }

@@ -1,8 +1,7 @@
 Package: bulletxtrctr
 Type: Package
 Title: Automatic Matching of Bullet Striae
-Version: 0.2.0
-Author: Heike Hofmann, Susan Vanderplas, Will Ju, Ganesh Krishnan, Eric Hare, Kiegan Rice, Nate Garton
+Version: 0.2.0.9000
 Authors@R: c(
     person("Heike", "Hofmann", email = "hofmann@iastate.edu", role = c("aut", "cre"), comment=c(ORCID="0000-0001-6216-5183")),
     person("Susan", "Vanderplas", email = "susan.vanderplas@unl.edu", role = "aut", comment=c(ORCID="0000-0001-6216-5183")),
@@ -12,8 +11,7 @@ Authors@R: c(
     person("Kiegan", "Rice", email = "ricek@iastate.edu", role = "ctb"),
     person("Nate", "Garton", email = "nmgarton@iastate.edu", role = "ctb")
     )
-Maintainer: Heike Hofmann <hofmann@iastate.edu>
-Date: 2021-12-01
+Date: 2022-08-01
 Description: Analyze bullet lands in x3p format. We provide a
     a host of analysis functions designed to assess the
     probability that two bullets were fired from the same gun barrel. 
@@ -51,5 +49,6 @@ VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+LazyDataCompression: xz
+RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)

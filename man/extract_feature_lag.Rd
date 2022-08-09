@@ -21,8 +21,8 @@ signature in the alignment. Note that this lag can be negative.
 In the case of multiple signatures the result is a vector of non-negative
 integers of the same length as signatures. Each element gives the number of
 indices by which the corresponding signature is shifted compared to the
-*first* signature. By definition, one of the numbers has to be 0 indicating
-the *first* signature. XXX Need to indicate that "first" isn't the col index
+\emph{first} signature. By definition, one of the numbers has to be 0 indicating
+the \emph{first} signature. XXX Need to indicate that "first" isn't the col index
 }
 \examples{
 \dontrun{

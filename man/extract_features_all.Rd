@@ -7,13 +7,13 @@
 extract_features_all(aligned, striae, resolution, tmpfile = NULL, ...)
 }
 \arguments{
-\item{aligned}{aligned signatures, result from `sig_cms_max`}
+\item{aligned}{aligned signatures, result from \code{sig_cms_max}}
 
 \item{striae}{data frame with evaluated matching striae}
 
 \item{resolution}{micron per pixel resolution of scans}
 
-\item{tmpfile}{character consisting of the path to a temporary file. If not `NULL`, one line is appended to the file each time the function is executed.}
+\item{tmpfile}{character consisting of the path to a temporary file. If not \code{NULL}, one line is appended to the file each time the function is executed.}
 
 \item{...}{passed on to extractor functions}
 }

@@ -17,13 +17,13 @@ xmin, xmax, group, type, bullet, heights#' Check a striae object is valid}
 }
 \value{
 data frame of the same form as lines1 and lines2, but with an
-  additional variable of whether the striation marks are matches
+additional variable of whether the striation marks are matches
 }
 \description{
-`striae1` and `striae2` are data frames of previously identified peaks and
-valleys returned by `sig_get_peaks`
+\code{striae1} and \code{striae2} are data frames of previously identified peaks and
+valleys returned by \code{sig_get_peaks}
 }
 \details{
-adapted from function `striation_identify` in the bulletr package, just used
+adapted from function \code{striation_identify} in the bulletr package, just used
 internally. Not intended for public consumption.
 }

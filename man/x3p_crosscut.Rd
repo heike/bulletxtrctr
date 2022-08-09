@@ -13,7 +13,7 @@ format is expected.}
 \item{y}{level of the crosscut to be taken. If this level does not exist,
 the crosscut along the middle of the land is returned.}
 
-\item{range}{numeric specifying a range of [y, y + range] to be extracted}
+\item{range}{numeric specifying a range of (y, y + range) to be extracted}
 }
 \value{
 data frame

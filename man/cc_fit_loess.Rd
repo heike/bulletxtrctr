@@ -14,15 +14,15 @@ removed ahead of time}
 }
 \value{
 a list of a data frame of the original bullet measurements extended
-          by loess fit, residuals, and standard errors and two plots: a plot
-          of the fit, and a plot of the bullet's land signature.
+by loess fit, residuals, and standard errors and two plots: a plot
+of the fit, and a plot of the bullet's land signature.
 }
 \description{
 A loess regression is fit to the surface measurements and residuals are
 calculated.
-The most extreme 0.25% of residuals are filtered from further consideration.
+The most extreme 0.25\% of residuals are filtered from further consideration.
 The result is called the raw signature of the bullet land.
-Adapted from `fit_loess` in `bulletr`
+Adapted from \code{fit_loess} in \code{bulletr}
 }
 \examples{
 library(dplyr)

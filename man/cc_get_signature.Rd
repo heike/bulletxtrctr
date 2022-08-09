@@ -4,7 +4,7 @@
 \alias{cc_get_signature}
 \title{Extract signature from crosscut}
 \usage{
-cc_get_signature(ccdata, grooves, span1 = 0.75, span2 = 0.03)
+cc_get_signature(ccdata, grooves = NULL, span1 = 0.75, span2 = 0.03)
 }
 \arguments{
 \item{ccdata}{crosscut as returned from x3p_crosscut}

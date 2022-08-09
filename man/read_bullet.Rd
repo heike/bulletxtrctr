@@ -18,7 +18,7 @@ file format the scans are in}
 }
 \value{
 data frame with two variables, source and x3p, containing the path
-          to the file and the corresponding x3p file
+to the file and the corresponding x3p file
 }
 \description{
 Read all scans of a specified format from a folder. This operation is recursive, i.e. also reads scans from the folder of a folder.

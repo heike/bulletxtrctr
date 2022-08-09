@@ -45,9 +45,7 @@ the closest to the bottom of the bullet but does not suffer from break-off.
 If the resulting cross section is equal to the maximum of the search area
 (defined in xlimits), there should be some investigation to determine
 whether this cross section is usable, due to the risk of tank rash.
-}
-\details{
-# TODO: are missing values only on the right hand side (leading shoulder)?
+TODO: are missing values only on the right hand side (leading shoulder)?
 }
 \examples{
 \dontrun{

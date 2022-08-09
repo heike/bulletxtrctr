@@ -19,7 +19,7 @@ cc_locate_grooves(
 }
 \arguments{
 \item{ccdata}{data frame of the crosscut. Data frame needs location x and
-measured values as `value`. If multiple crosscuts are to be
+measured values as \code{value}. If multiple crosscuts are to be
 considered, include a variable y and use as a key.}
 
 \item{method}{method to use for identifying grooves. One of "quadratic", "rollapply", "middle", "logisticlegacy", "lassobasic", "lassofull", "bcp". Defaults to "rollapply"}

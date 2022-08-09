@@ -13,7 +13,7 @@ sig_align)}
 }
 \value{
 value between 0 and 1, ratio of length of overlap compared to
-          smaller length of the signature
+smaller length of the signature
 }
 \description{
 The overlap of two aligned signatures is defined as the ratio of the number

@@ -7,12 +7,12 @@
 runExample()
 }
 \description{
-This shiny app would expect a tibble object called `shiny.tt` in the user's working environment.
+This shiny app would expect a tibble object called \code{shiny.tt} in the user's working environment.
 }
 \details{
-shiny.tt should have variables: `x3p`, `scan_id`, `crosscut`, `ccdata`, `grooves`.
+shiny.tt should have variables: \code{x3p}, \code{scan_id}, \code{crosscut}, \code{ccdata}, \code{grooves}.
 
-To have this shiny app run properly, `shiny.tt` should at least include `grooves` as a variable
+To have this shiny app run properly, \code{shiny.tt} should at least include \code{grooves} as a variable
 }
 \examples{
 \dontrun{

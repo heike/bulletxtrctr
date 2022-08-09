@@ -19,7 +19,7 @@ max_u(land1, land2, scores, addNA = FALSE)
 numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
 }
 \description{
-The combination of `land1` and `land2` are a key to the scores,
+The combination of \code{land1} and \code{land2} are a key to the scores,
 i.e. if a bullet has six lands, each of the input vectors should have
 length 36.
 }

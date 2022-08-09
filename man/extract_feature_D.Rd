@@ -11,7 +11,7 @@ extract_feature_D(aligned, ...)
 more measurements (the bullets entry in the list returned from
 sig_align)}
 
-\item{...}{arguments for function `dist`}
+\item{...}{arguments for function \code{dist}}
 }
 \value{
 object of class distance

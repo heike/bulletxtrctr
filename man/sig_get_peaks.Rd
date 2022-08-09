@@ -29,7 +29,7 @@ smaller changes in the crosscut.}
 list of several objects:
 }
 \description{
-Adapted from the function `get_peaks`
+Adapted from the function \code{get_peaks}
 }
 \examples{
 \dontrun{

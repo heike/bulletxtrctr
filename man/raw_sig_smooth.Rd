@@ -16,7 +16,7 @@ between these values.}
 }
 \value{
 numeric vector of the same length as the input with the smoothed
-          signature.
+signature.
 }
 \description{
 Smooth the raw signature

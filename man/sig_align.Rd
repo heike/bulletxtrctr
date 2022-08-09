@@ -19,15 +19,15 @@ sig_align(
 }
 \value{
 list consisting of
-          a) the maximal cross correlation,
-          b) the lag resulting in the highest cross correlation, and
-          c) same data frame as input, but y vectors are aligned for
-             maximal correlation
+a) the maximal cross correlation,
+b) the lag resulting in the highest cross correlation, and
+c) same data frame as input, but y vectors are aligned for
+maximal correlation
 }
 \description{
 The bullet with the first name serves as a reference, the second bullet is
 shifted.
-Function copied from `bulletAlign`
+Function copied from \code{bulletAlign}
 }
 \examples{
 \dontrun{

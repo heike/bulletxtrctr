@@ -11,6 +11,6 @@ a random forest object fitted by the randomforest function from the package of t
 rtrees
 }
 \description{
-this randomforest was fitted to predict known matches and non-matches from the scans of land engraved areas of the Hamby study.
+This randomforest was fitted to predict known matches and non-matches from the scans of land engraved areas of the Hamby study (see Hare et al ).
 }
 \keyword{datasets}

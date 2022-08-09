@@ -13,8 +13,8 @@ get_longest_run(x)
 an integer value of the length of the longest run of TRUE values
 }
 \description{
-Identifies the length of the longest run of TRUEs in Boolean vector `x`.
-used to be `maxCMS`
+Identifies the length of the longest run of TRUEs in Boolean vector \code{x}.
+used to be \code{maxCMS}
 }
 \examples{
 x <- rbinom(100, size = 1, prob = 1 / 3)

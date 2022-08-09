@@ -5,12 +5,20 @@
 \alias{br411}
 \title{3d topological surface measurements for one land of a bullet from the Hamby study}
 \format{
-a list
+an x3p object (list) with 5 elements
+\describe{
+\item{header.info}{list consisting of scan dimensions and scan resolution (in microns per pixel)}
+\item{surface.matrix}{2d numeric matrix of the scan heights.}
+\item{feature.info}{list containing scanning details and x3p formatting}
+\item{general.info}{list containing instrumentation details}
+\item{matrix.info}{list of technical details for the matrix encoding}
+}
 }
 \usage{
 br411
 }
 \description{
-Some more info - not sure at the moment which bullet this is. Describe structure.
+A 3d topographic surface map of Land 1 on Bullet 1 of Barrel 4 (Hamby study 252).
+The file is stored in x3p format (ISO standard for forensic measurements).
 }
 \keyword{datasets}
