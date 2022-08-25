@@ -13,7 +13,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-# bulletxtrctr
+
+# bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width="120" />
+
+ 
 
 <!-- badges: start -->
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
