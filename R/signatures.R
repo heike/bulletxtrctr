@@ -42,7 +42,7 @@ cc_get_signature <- function(ccdata, grooves=NULL, span1 = 0.75, span2 = 0.03) {
   check_ccdata(ccdata)
 
   if(is.null(grooves)) {
-    grooves <- range(ccdata$x)
+    grooves <- list(groove=range(ccdata$x))
   }
 
   check_grooves(grooves)
