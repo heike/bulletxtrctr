@@ -12,11 +12,10 @@ downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2022--08--25-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2022--12--28-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
-[![Github Actions
-Status](https://github.com/heike/bulletxtrctr/workflows/Build/badge.svg)](https://github.com/heike/bulletxtrctr/runs/)
+[![R-CMD-check](https://github.com/heike/bulletxtrctr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/heike/bulletxtrctr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Analyze bullet striations using nonparametric methods
@@ -298,7 +297,7 @@ subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>%
     geom_line() +
   theme_bw() +
   scale_color_brewer(palette = "Dark2")
-#> Warning: Removed 36 row(s) containing missing values (geom_path).
+#> Warning: Removed 36 rows containing missing values (`geom_line()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-24-1.png" width="100%" />
@@ -458,6 +457,8 @@ features %>%
   xlab("Land A") +
   ylab("Land B") +
   theme(aspect.ratio = 1) 
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` instead.
 ```
 
 <img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />
