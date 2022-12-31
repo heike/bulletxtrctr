@@ -14,3 +14,4 @@ codecov.yml
 
 ^README\.Rmd$
 ^\.github$
+^pkgdown$

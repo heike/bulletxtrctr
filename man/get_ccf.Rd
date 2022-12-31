@@ -18,7 +18,25 @@ between x and y that should be considered?}
 list with ccf values and lags
 }
 \description{
-Cross correlation function between two vectors
+Calculate the lagged correlation between numeric vectors x and y.
+Vectors x and y are assumed to be captured at the same resolution and,
+similarly,
+successive values in x and y are assumed to be equi-distant.
+Missing values are allowed in each vector, correlations are calculated
+based on the complete cases.
+}
+\details{
+This version of the cross correlation function is different from the \code{stats}
+implementation of \code{ccf} in two ways:
+\enumerate{
+\item We consider the full region of correlations between vectors x and y as
+specified by min.overlap rather than just the overlap. The two vectors can
+be of very different
+length (e.g. when y is just a snippet recovered from a crime scene and x is
+from the full length object in the lab).
+\item We do not use a Fourier transformation to calculate cross-correlation.
+This makes the evaluation slower, but prevents any edge effects.
+}
 }
 \examples{
 library(dplyr)

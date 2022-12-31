@@ -3,7 +3,6 @@
 #'
 #' The bullet with the first name serves as a reference, the second bullet is
 #' shifted.
-#' Function copied from `bulletAlign`
 #' @param sig1 vector of first signature
 #' @param sig2 vector of second signature
 #' @param min.overlap additional parameter passed on to get_ccf
@@ -35,7 +34,7 @@
 #'
 #' sig_align(example_data$sigs[[1]]$sig, example_data$sigs[[2]]$sig)
 #' }
-sig_align <- function(sig1, sig2, min.overlap = round(0.75 * min(length(sig1), length(sig2)))) {
+sig_align <- function(sig1, sig2, min.overlap = NULL) {
   assert_that(is.numeric(sig1), is.numeric(sig2))
 
   sig1 <- na.trim(sig1)
@@ -44,6 +43,9 @@ sig_align <- function(sig1, sig2, min.overlap = round(0.75 * min(length(sig1), l
   n1 <- length(sig1)
   n2 <- length(sig2)
 
+  # make sure that all the missing values are removed at either end of the
+  # signatures before aligning them
+  if (is.null(min.overlap)) min.overlap = round(0.75 * min(length(sig1), length(sig2)))
   # assume y is the long vector, x is the short vector. If not, switch the
   # vectors around
   if (n1 < n2) {
@@ -106,7 +108,23 @@ check_align <- function(x) {
 
 #' Cross correlation function between two vectors
 #'
+#' Calculate the lagged correlation between numeric vectors x and y.
+#' Vectors x and y are assumed to be captured at the same resolution and,
+#' similarly,
+#' successive values in x and y are assumed to be equi-distant.
+#' Missing values are allowed in each vector, correlations are calculated
+#' based on the complete cases.
+#' @details
+#' This version of the cross correlation function is different from the `stats`
+#' implementation of `ccf` in two ways:
 #'
+#'   1. We consider the full region of correlations between vectors x and y as
+#' specified by min.overlap rather than just the overlap. The two vectors can
+#' be of very different
+#' length (e.g. when y is just a snippet recovered from a crime scene and x is
+#' from the full length object in the lab).
+#'   2. We do not use a Fourier transformation to calculate cross-correlation.
+#' This makes the evaluation slower, but prevents any edge effects.
 #' @param x vector, assumption is that x is longer than y
 #' @param y vector
 #' @param min.overlap integer value: what is the minimal number of values
