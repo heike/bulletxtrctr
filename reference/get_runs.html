@@ -78,12 +78,12 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">100</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_runs</span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># expected value for longest run is 3</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14  5  1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  5  3 </span>
 <span class="r-in"><span><span class="fu">get_runs</span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># expected value for longest run is 6</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  3  5  7 11 13 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5  4  6  2  1  1  1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  3  4  5  6  8  9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  3  2  3  1  1  1  1 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
