@@ -118,13 +118,14 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ccf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]          NA          NA          NA          NA          NA -1.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.80154328  0.18195514 -0.84425534  0.27524958  0.49278427  0.03839042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] -0.19796369  0.22442087 -0.39416486  0.05020158 -0.07984086  0.44166346</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] -0.07509714  0.02290286 -0.15584208 -0.03433239 -0.28082229  1.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] -0.15308885 -0.10470508  0.10738215 -0.16072750 -0.31071100  0.61902816</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] -0.31909829  0.30656748 -0.04631530 -0.63711385 -0.89190056  0.03707042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] -1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]            NA            NA            NA            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  1.0000000000  0.5606775495  0.5006372042 -0.8701294667 -0.2197378869</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.6638213282  0.4708427741 -0.3129834665 -0.1485806377  0.1567846418</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16]  0.2382472062 -0.1003719609  0.0752290966 -0.1153897806  0.5471846050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] -0.2239252608  0.2527398512 -0.1851625808  1.0000000000 -0.2539852150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26]  0.3359820625 -0.1743128737  0.5903446869 -0.1602742353 -0.0459090454</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  0.0382289689  0.3321988283  0.0839392194 -0.0004708556 -0.5085078724</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [36]  0.5469034532  1.0000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">get_ccf</span><span class="op">(</span><span class="va">x</span>, <span class="fu">lag</span><span class="op">(</span><span class="va">x</span>, <span class="fl">5</span><span class="op">)</span>, min.overlap <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $lag</span>
@@ -132,13 +133,12 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20]   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ccf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.120358896 -0.387790752  0.902594783 -0.692011411  0.136707592</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] -0.134215348  0.371055532  0.118143529 -0.018421527 -0.316831029</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.032171444 -0.433230411  1.000000000 -0.317376205 -0.053640095</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] -0.131042692 -0.001511274 -0.075097136  0.441663461 -0.079840859</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  0.050201576 -0.394164864  0.224420866 -0.197963695  0.038390423</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26]  0.492784269  0.275249580 -0.844255341  0.181955143 -0.801543276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31]           NA           NA           NA           NA           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.66434096 -0.64361993 -0.37242775  0.13483731  0.36034385 -0.49391532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7]  0.32351181 -0.28436967  0.55077904 -0.51771634  0.13465736 -0.49778955</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  1.00000000 -0.34969879  0.04978736 -0.42967093  0.51329926 -0.11538978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19]  0.07522910 -0.10037196  0.23824721  0.15678464 -0.14858064 -0.31298347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  0.47084277  0.66382133 -0.21973789 -0.87012947  0.50063720  0.56067755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31]          NA          NA          NA          NA          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_ccf</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">45</span><span class="op">:</span><span class="fl">50</span><span class="op">]</span>, <span class="va">x</span>, min.overlap <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
@@ -150,25 +150,25 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [77] -18 -17 -16 -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ccf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.007644500  0.009618919  0.099492100  0.017070215 -0.124464484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] -0.338006748 -0.694426349  0.369679321  0.202975910 -0.132818631</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.210463482 -0.834972562 -0.545285486  0.378981632  0.363848216</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16]  0.174054129  0.359034237 -0.182633520 -0.367628159  0.579655306</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] -0.129361127 -0.072941357  0.269080535 -0.735748288  0.047440745</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26]  0.303833241 -0.345629359 -0.040349928 -0.103836472 -0.666340358</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] -0.507055937  0.600246995  0.321645353 -0.301904257  0.466655074</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [36]  0.390672826  0.161590929  0.911433689  0.007286646 -0.789789214</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41] -0.091917978  0.035106257  0.226284925  0.739572551  0.024136080</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [46] -0.878648687 -0.918555758 -0.507847515 -0.004224639  0.646270476</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [51]  1.000000000  0.703122883 -0.211280277 -0.474959151 -0.253526386</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [56] -0.464947661 -0.278448466  0.584282538  0.241830489  0.146100865</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61]  0.653665404  0.344872024 -0.679921079 -0.346987030  0.045938234</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [66] -0.042098079 -0.497808157 -0.314003979  0.259683346 -0.150886553</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [71]  0.334046720  0.572822820 -0.075567153  0.219359841 -0.233042866</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [76] -0.339403323 -0.136103724 -0.837199285 -0.413664415  0.311007251</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [81] -0.244313978  0.225090366  0.540359517 -0.266022422 -0.303753551</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [86] -0.065713911 -0.117294419 -0.048420098  0.012766855  0.431933613</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [91]  0.289163816  0.488260590  0.540770944  0.182209744  0.316964753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.422241218  0.199760461  0.418717940 -0.035048566 -0.066696642</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  0.139233093 -0.614492937 -0.233317441 -0.457972567 -0.234317679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.516505003 -0.139913196  0.049364086  0.405296480 -0.056164503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] -0.639396471 -0.603234761  0.471519582  0.500047003 -0.041287906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  0.434326714  0.779641800 -0.549315443 -0.501659692 -0.214535668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26] -0.593983477 -0.471267920  0.433462547  0.229188014  0.375562920</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  0.085759368  0.577909331  0.495442386 -0.551936372 -0.522524238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [36]  0.193067861 -0.332623078 -0.725614124 -0.029579324  0.589586835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [41] -0.366082061  0.259331690  0.261414660 -0.331136819 -0.475859942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [46] -0.437397234  0.158655996  0.526928926 -0.074658840  0.436652825</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [51]  1.000000000 -0.229996349 -0.359644613 -0.052916969 -0.431527683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [56] -0.148016015  0.003138872 -0.133486504  0.277461129  0.539335073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [61]  0.006569042 -0.486532713  0.237856050  0.078986096 -0.463796641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [66]  0.199367357  0.673207994  0.185337734 -0.419888168 -0.544153895</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [71]  0.057951248  0.026950784 -0.448846098 -0.235976713  0.101836444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [76]  0.618104312  0.706119269 -0.664662955 -0.301735293  0.230730026</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [81]  0.012706958 -0.385017685  0.128216731  0.682183705  0.362322521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [86] -0.034568892 -0.186250547 -0.130649787  0.156593670 -0.859865345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [91] -0.331872036  0.618403777 -0.700231713  0.139925377  0.526242478</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
