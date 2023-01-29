@@ -101,7 +101,7 @@ cc_locate_grooves <- function(ccdata, method = "rollapply", smoothfactor = 15,
     if (length(unique(land$y)) > 1) {
       message(sprintf(
         "summarizing %d profiles by averaging across values\n",
-        length(unique(land$x))
+        length(unique(land$y))
       ))
       land <- land %>% group_by(x) %>% summarize(
         y = mean(y, na.rm = TRUE),
