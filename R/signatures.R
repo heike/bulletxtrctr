@@ -9,7 +9,7 @@
 #' @param grooves The grooves to use as a two element vector, if desired
 #' @param span1 The span for the loess fit to get from the profile to the raw
 #'          signature
-#' @param span2 The span for the loess fit to smooth the raw signature
+#' @param span2 The span for the loess fit to smooth the raw signature; if `span2` is set to NA, no second smoothing will be done.
 #' @return data frame
 #' @import dplyr
 #' @export
@@ -72,11 +72,14 @@ cc_get_signature <- function(ccdata, grooves=NULL, span1 = 0.75, span2 = 0.03) {
   ccdata <- ccdata %>%
     left_join(loess_model %>% dplyr::select(x, raw_sig, se), by = "x")
 
-
+  if (is.na(span2)) {
+    ccdata$sig <- ccdata$sig_raw
+  } else {
   myspan <- ifelse(span2 > 1, span2 / diff(grooves$groove), span2)
-  ccdata$sig <- with(ccdata, predict(loess(raw_sig ~ x, span = myspan),
-    newdata = ccdata
+  ccdata$sig <- with(ccdata,
+    predict(loess(raw_sig ~ x, span = myspan), newdata = ccdata
   ))
+  }
 
   ccdata
 }

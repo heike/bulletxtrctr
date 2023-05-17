@@ -24,6 +24,7 @@ Imports:
     x3ptools (>= 0.0.2),
     grooveFinder (>= 0.0.1),
     dplyr (>= 0.7.8),
+    rlang (>= 1.1.0),
     zoo,
     smoother,
     purrr,
@@ -50,5 +51,5 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)

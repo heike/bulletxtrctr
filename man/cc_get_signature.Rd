@@ -14,7 +14,7 @@ cc_get_signature(ccdata, grooves = NULL, span1 = 0.75, span2 = 0.03)
 \item{span1}{The span for the loess fit to get from the profile to the raw
 signature}
 
-\item{span2}{The span for the loess fit to smooth the raw signature}
+\item{span2}{The span for the loess fit to smooth the raw signature; if \code{span2} is set to NA, no second smoothing will be done.}
 }
 \value{
 data frame
