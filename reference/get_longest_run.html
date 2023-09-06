@@ -81,8 +81,8 @@ used to be <code>maxCMS</code></p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">100</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="get_runs.html">get_runs</a></span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># expected value for longest match is 3</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  3  4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13  4  2  1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  4  1 </span>
 <span class="r-in"><span><span class="fu">get_longest_run</span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
 </code></pre></div>
