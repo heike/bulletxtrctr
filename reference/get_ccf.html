@@ -4,7 +4,7 @@ Vectors x and y are assumed to be captured at the same resolution and,
 similarly,
 successive values in x and y are assumed to be equi-distant.
 Missing values are allowed in each vector, correlations are calculated
-based on the complete cases."><title>Cross correlation function between two vectors — get_ccf • bulletxtrctr</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Cross correlation function between two vectors — get_ccf"><meta property="og:description" content="Calculate the lagged correlation between numeric vectors x and y.
+based on the complete cases."><title>Cross correlation function between two vectors — get_ccf • bulletxtrctr</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Cross correlation function between two vectors — get_ccf"><meta property="og:description" content="Calculate the lagged correlation between numeric vectors x and y.
 Vectors x and y are assumed to be captured at the same resolution and,
 similarly,
 successive values in x and y are assumed to be equi-distant.
@@ -118,14 +118,13 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ccf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]           NA           NA           NA           NA           NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  1.000000000  0.200413238  0.451209205  0.708597624 -0.104472470</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] -0.221546855 -0.030330256 -0.484368827  0.041423443  0.255613287</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16]  0.324209327  0.299180432  0.091349182  0.113324250 -0.509120218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] -0.067440795 -0.084427998 -0.139369333  1.000000000 -0.178146657</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26]  0.007810524 -0.179752321 -0.478513293  0.166435142 -0.194812334</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  0.693016686 -0.008026434  0.095294526  0.065065380 -0.901132921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [36]  0.939972215 -1.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]          NA          NA          NA          NA          NA  1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.71278879  0.73747884 -0.81553757 -0.40332017  0.40602963  0.01703219</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  0.37985375 -0.41284958 -0.32528179 -0.55644623  0.15730063  0.18121184</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19]  0.30569062 -0.22447315 -0.58790382 -0.15320563  0.08106094  1.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  0.10985504 -0.04989051 -0.47084961 -0.03283750  0.62469144  0.27733019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  0.17847443 -0.60628277 -0.07197082  0.08886414  0.50477083  0.17928673</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] -1.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">get_ccf</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">5</span><span class="op">)</span>, min.overlap <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $lag</span>
@@ -133,11 +132,11 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20]   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ccf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.55190293  0.89377003  0.11913114  0.59875950  0.70976128 -0.11613528</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7]  0.15395950 -0.05811084 -0.68423217  0.35832190  0.09287232  0.01910049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  1.00000000 -0.02094733 -0.10507070  0.12266594 -0.51367964  0.11332425</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19]  0.09134918  0.29918043  0.32420933  0.25561329  0.04142344 -0.48436883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] -0.03033026 -0.22154685 -0.10447247  0.70859762  0.45120920  0.20041324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.14545732  0.70441246 -0.52446047 -0.40087762 -0.41598936  0.12376067</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7]  0.41565620  0.17353735 -0.18985838 -0.69158655 -0.02530303  0.10073960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  1.00000000  0.20480769 -0.13516059 -0.50532498 -0.36700355  0.30569062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19]  0.18121184  0.15730063 -0.55644623 -0.32528179 -0.41284958  0.37985375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  0.01703219  0.40602963 -0.40332017 -0.81553757  0.73747884 -0.71278879</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31]          NA          NA          NA          NA          NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
@@ -150,25 +149,25 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [77] -18 -17 -16 -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ccf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.6219845822  0.0038295044  0.8223292831 -0.3454404151  0.0896233824</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] -0.5509626205  0.3451241574  0.0182663016 -0.5103282115  0.4447109101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.4542573234  0.2215785367 -0.7021568300  0.1315079212 -0.3493232721</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16]  0.2819609459  0.6787836936 -0.4446946100 -0.5330812706 -0.0883443726</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  0.9513036437 -0.2985160631 -0.5078294199 -0.1015345190  0.6388384950</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [26]  0.5889234148 -0.5708593904 -0.5134281479  0.3359466427  0.5076661301</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  0.0268510688  0.1707294384 -0.1578355970 -0.5810213736  0.6973348359</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [36] -0.4115255993 -0.1572294551  0.5318792123  0.2670978352 -0.0027131076</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41]  0.7248805122  0.0804196120 -0.1337251766 -0.5718741188 -0.0222763068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [46] -0.3192403962 -0.3930254806  0.5458162385 -0.2363412762 -0.1727500888</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [51]  1.0000000000 -0.1848832383 -0.3666467708  0.4794460858 -0.3845421047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [56]  0.4598786453 -0.0005137689 -0.6929363872 -0.3530204110  0.6712490056</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61]  0.3592617585 -0.5682536947  0.2255320799  0.7430035136  0.1573005906</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [66] -0.3172262506 -0.4926729627  0.3957277441 -0.4927691925  0.4875870585</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [71]  0.0383203734 -0.3961325409 -0.3856065537  0.9371589911 -0.1263562878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [76] -0.2109469356 -0.2924993769  0.1095506885  0.3054711226 -0.4932179862</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [81]  0.4237999157  0.6981075086 -0.1260096792 -0.0071571938 -0.4841739446</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [86] -0.3984358450 -0.0983030997  0.4133466719  0.4738740684 -0.8174550203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [91] -0.3845617631  0.1615358269  0.0177696648  0.6532697845  0.2847510906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.748550154 -0.047674378 -0.460038519 -0.185925184  0.754964035</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  0.011531413 -0.635501372  0.056527757  0.561974218 -0.743626060</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.001720930  0.190317998  0.661270855 -0.674425046 -0.196502859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16]  0.568160334  0.013621767 -0.487902334  0.492458264 -0.380229213</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  0.347067625  0.127015886 -0.389416721 -0.206698028  0.423753339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26] -0.051284106 -0.682006660  0.333530816  0.263136113 -0.559043800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  0.362198540  0.645897368 -0.118024020 -0.794772736  0.762121993</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [36]  0.282202458 -0.604902891  0.276824457  0.475978060 -0.896691534</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [41]  0.055865717  0.622206059 -0.235890127 -0.166695421 -0.408108917</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [46]  0.426900838  0.411359843 -0.122889597 -0.538335140  0.100507223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [51]  1.000000000 -0.244365027 -0.314534171  0.069220830  0.447154686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [56] -0.063037672  0.130674716 -0.792678080  0.284160279  0.228151131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [61]  0.005378847 -0.925613719  0.823572455 -0.097171428 -0.337984181</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [66]  0.024846466  0.028884465  0.177797394 -0.555305064  0.553760641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [71] -0.330372674  0.177578362  0.203187637 -0.267371096 -0.417195876</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [76]  0.709702298 -0.527422343 -0.421044196  0.083233734  0.811268195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [81] -0.282221953 -0.047584501  0.266370006  0.504874921 -0.602352088</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [86] -0.202356472  0.479220970 -0.693687782  0.100292971 -0.149798452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [91] -0.069943172  0.332179268 -0.215646113  0.121370279 -0.096661556</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
