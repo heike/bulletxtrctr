@@ -84,7 +84,7 @@ sig_align <- function(sig1, sig2, min.overlap = NULL) {
   # dfcor <- cor(dframe0$sig1, dframe0$sig2, use = "pairwise")
   # if (maxcor != dfcor) browser()
 
-  list(ccf = maxcor, lag = lag, lands = dframe0)
+  list(ccf = maxcor, lag = lag, lands = dframe0, cors = cors)
 }
 
 #' Check align output
