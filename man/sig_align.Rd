@@ -19,6 +19,7 @@ a) the maximal cross correlation,
 b) the lag resulting in the highest cross correlation, and
 c) same data frame as input, but y vectors are aligned for
 maximal correlation
+d) a vector of cross-correlation values
 }
 \description{
 The bullet with the first name serves as a reference, the second bullet is

@@ -11,6 +11,7 @@
 #'           b) the lag resulting in the highest cross correlation, and
 #'           c) same data frame as input, but y vectors are aligned for
 #'              maximal correlation
+#'           d) a vector of cross-correlation values
 #' @export
 #' @importFrom assertthat assert_that
 #' @importFrom zoo na.trim
