@@ -53,8 +53,7 @@ check_x3p <- function(x3p) {
 #' TODO: are missing values only on the right hand side (leading shoulder)?
 #' @param x3p if character, path to an x3p file. Otherwise a scan in x3p
 #'          format is expected. The assumption is that the scan is taken across
-#'          the bullet land, with an upright bullet, i.e.  heel along x with
-#'          y = 0. (0,0) defines the bottom left corner of the scan.
+#'          the bullet land, with an upright bullet, i.e. bullet tip points upward. (0,0) defines the bottom left corner of the scan.
 #' @param distance positive numeric value indicating the distance between cross
 #'          sections to use for a comparison
 #' @param ylimits vector of values between which to check for cross sections in

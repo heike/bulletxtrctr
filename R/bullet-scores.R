@@ -65,9 +65,20 @@
 #'                                                   d$rfscore)))
 #'   )
 #' }
-compute_average_scores <- function(land1, land2, score, addNA = FALSE) {
-  if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
-  if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
+compute_average_scores <- function(land1, land2, score, addNA = FALSE, verbose = TRUE) {
+  if (!is.numeric(land1)) {
+    if (!is.factor(land1)) {
+      land1 <- factor(land1, levels = unique(land1))
+      if (verbose) warning("Lands converted to factor variables, using order of occurrence.")
+    }
+    land1 <- as.numeric(land1)
+    }
+  if (!is.numeric(land2)) {
+    if (!is.factor(land2)) {
+    land2 <- factor(land2, levels = unique(land2))
+   }
+    land2 <- as.numeric(land2)
+  }
   assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
 
   maxland <- max(land1, land2)
@@ -127,8 +138,19 @@ bootstrap_k <- function(scores, k, K, value) {
 #' @export
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
 bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.05, addNA = FALSE) {
-  if (!is.numeric(land1)) land1 <- readr::parse_number(as.character(land1))
-  if (!is.numeric(land2)) land2 <- readr::parse_number(as.character(land2))
+  if (!is.numeric(land1)) {
+    if (!is.factor(land1)) {
+      land1 <- factor(land1, levels = unique(land1))
+  #    warning("Lands converted to factor variables, using order of occurrence.")
+    }
+    land1 <- as.numeric(land1)
+  }
+  if (!is.numeric(land2)) {
+    if (!is.factor(land2)) {
+      land2 <- factor(land2, levels = unique(land2))
+    }
+    land2 <- as.numeric(land2)
+  }
   avgs <- compute_average_scores(land2, land1, scores, addNA)
 
   p <- max(c(land1, land2))
