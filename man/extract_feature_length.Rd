@@ -44,8 +44,8 @@ extract_feature_length(alignment$lands)
 Other alignment-related-features: 
 \code{\link{extract_feature_D}()},
 \code{\link{extract_feature_ccf}()},
-\code{\link{extract_feature_lag_mm}()},
 \code{\link{extract_feature_lag}()},
+\code{\link{extract_feature_lag_mm}()},
 \code{\link{extract_feature_length_mm}()},
 \code{\link{extract_feature_overlap}()},
 \code{\link{extract_features_all}()}

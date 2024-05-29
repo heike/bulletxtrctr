@@ -16,8 +16,7 @@ x3p_crosscut_optimize(
 \arguments{
 \item{x3p}{if character, path to an x3p file. Otherwise a scan in x3p
 format is expected. The assumption is that the scan is taken across
-the bullet land, with an upright bullet, i.e.  heel along x with
-y = 0. (0,0) defines the bottom left corner of the scan.}
+the bullet land, with an upright bullet, i.e. bullet tip points upward. (0,0) defines the bottom left corner of the scan.}
 
 \item{distance}{positive numeric value indicating the distance between cross
 sections to use for a comparison}

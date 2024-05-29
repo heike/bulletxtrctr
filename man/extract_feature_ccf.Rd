@@ -42,10 +42,10 @@ extract_feature_ccf(alignment$lands)
 \seealso{
 Other alignment-related-features: 
 \code{\link{extract_feature_D}()},
-\code{\link{extract_feature_lag_mm}()},
 \code{\link{extract_feature_lag}()},
-\code{\link{extract_feature_length_mm}()},
+\code{\link{extract_feature_lag_mm}()},
 \code{\link{extract_feature_length}()},
+\code{\link{extract_feature_length_mm}()},
 \code{\link{extract_feature_overlap}()},
 \code{\link{extract_features_all}()}
 }

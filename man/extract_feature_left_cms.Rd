@@ -40,15 +40,15 @@ extract_feature_left_cms(striae$lines)
 }
 \seealso{
 Other striae-related-features: 
-\code{\link{extract_feature_cms2_per_mm}()},
-\code{\link{extract_feature_cms2}()},
 \code{\link{extract_feature_cms}()},
-\code{\link{extract_feature_matches_per_mm}()},
+\code{\link{extract_feature_cms2}()},
+\code{\link{extract_feature_cms2_per_mm}()},
 \code{\link{extract_feature_matches}()},
-\code{\link{extract_feature_mismatches_per_mm}()},
+\code{\link{extract_feature_matches_per_mm}()},
 \code{\link{extract_feature_mismatches}()},
-\code{\link{extract_feature_non_cms_per_mm}()},
+\code{\link{extract_feature_mismatches_per_mm}()},
 \code{\link{extract_feature_non_cms}()},
+\code{\link{extract_feature_non_cms_per_mm}()},
 \code{\link{extract_feature_right_cms}()},
 \code{\link{extract_feature_sum_peaks}()},
 \code{\link{extract_features_all}()},

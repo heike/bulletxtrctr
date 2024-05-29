@@ -4,7 +4,7 @@
 \alias{compute_average_scores}
 \title{Get average scores for bullet to bullet comparisons}
 \usage{
-compute_average_scores(land1, land2, score, addNA = FALSE)
+compute_average_scores(land1, land2, score, addNA = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{land1}{(numeric) vector with land ids of bullet 1}
