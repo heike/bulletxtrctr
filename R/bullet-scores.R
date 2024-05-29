@@ -109,6 +109,39 @@ compute_average_scores <- function(land1, land2, score, addNA = FALSE, verbose =
   scores
 }
 
+#' Get bullet phases
+#'
+#' Note that the combination of `land1` and `land2` are a key to the land-to-land scores,
+#' i.e. if a bullet has six lands, each of the input vectors should have 36 entries. In the case that
+#' the lands are not factor variables, the order in which different lands are encountered in the vector
+#' is used to determine their order.
+#' @param land1 vector with land ids of bullet 1
+#' @param land2 vector with land ids of bullet 2
+#' @export
+#' @importFrom readr parse_number
+#' @importFrom stats xtabs
+#' @import assertthat
+#' @return numeric vector of the phases (diagonal groupings).
+get_phases <- function(land1, land2) {
+  if (!is.numeric(land1)) {
+    if (!is.factor(land1)) {
+      land1 <- factor(land1, levels = unique(land1))
+    #  if (verbose) warning("Lands converted to factor variables, using order of occurrence.")
+    }
+    land1 <- as.numeric(land1)
+  }
+  if (!is.numeric(land2)) {
+    if (!is.factor(land2)) {
+      land2 <- factor(land2, levels = unique(land2))
+    }
+    land2 <- as.numeric(land2)
+  }
+  assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
+
+  maxland <- max(land1, land2)
+  phase <- (land1-land2) %% maxland + 1
+  return(phase)
+}
 
 #' Helper function: bootstrap scores
 #'
@@ -170,7 +203,7 @@ bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.0
       land1,
       land2
     ) %>%
-      mutate_if(function(.) !is.numeric(.), parse_number)
+      mutate_if(function(.) !is.numeric(.), parse_number) ## HH: won't return correct value if land is not a numnber
     dd$diff <- (dd$land1 - dd$land2) %% p + 1
 
 
