@@ -10,6 +10,7 @@
 #' @export
 #' @importFrom readr parse_number
 #' @importFrom stats xtabs
+#' @importFrom purrr pluck
 #' @import assertthat
 #' @return numeric vector of average scores. Length is the same as the number of
 #'           land engraved areas on the bullets.
@@ -71,7 +72,7 @@ compute_average_scores <- function(land1, land2, score, addNA = FALSE, verbose =
     phase = get_phases(land1, land2)
   )
   dframe %>% group_by(phase) %>%
-    summarize(scores = mean(score, na.rm=addNA)) %>% pluck("scores")
+    summarize(scores = mean(score, na.rm=addNA)) %>% purrr::pluck("scores")
 }
 
 #' Get bullet phases
