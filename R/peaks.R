@@ -93,7 +93,7 @@ sig_get_peaks <- function(sig, smoothfactor = 35, striae = TRUE, window = TRUE, 
     smoothed = smoothed_truefalse
   )
   if (plot) {
-    p <- qplot(data = dframe, x = x, y = smoothed, geom = "line") + theme_bw()
+    p <- ggplot(data = dframe, aes(x = x, y = smoothed)) + geom_line() + theme_bw()
     if (window) {
       p <- p + geom_rect(aes(xmin = xmin, xmax = xmax),
         ymin = -6, ymax = 6,

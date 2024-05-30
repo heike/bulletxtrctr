@@ -66,47 +66,12 @@
 #'   )
 #' }
 compute_average_scores <- function(land1, land2, score, addNA = FALSE, verbose = TRUE) {
-  if (!is.numeric(land1)) {
-    if (!is.factor(land1)) {
-      land1 <- factor(land1, levels = unique(land1))
-      if (verbose) warning("Lands converted to factor variables, using order of occurrence.")
-    }
-    land1 <- as.numeric(land1)
-    }
-  if (!is.numeric(land2)) {
-    if (!is.factor(land2)) {
-    land2 <- factor(land2, levels = unique(land2))
-   }
-    land2 <- as.numeric(land2)
-  }
-  assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
-
-  maxland <- max(land1, land2)
-  fullframe <- data.frame(expand.grid(land1 = 1:maxland, land2 = 1:maxland))
-  bcompare <- data.frame(land1, land2, score)
-
-  fullframe <- fullframe %>% left_join(bcompare, by = c("land1", "land2"))
-
-  fullframe <- fullframe %>% mutate(
-    land1 = factor(land1, levels = 1:maxland),
-    land2 = factor(land2, levels = 1:maxland)
+  dframe <- data.frame(land1 = land1, land2 = land2, score = score)
+  dframe <- dframe %>% mutate(
+    phase = get_phases(land1, land2)
   )
-  # get averages, just in case
-  matrix <- xtabs(score ~ land1 + land2,
-    data = fullframe, addNA = addNA
-  ) / xtabs(~land1 + land2, data = fullframe, addNA = addNA)
-
-  matrix <- cbind(matrix, matrix)
-
-  scores <- 1:maxland %>% sapply(FUN = function(i) {
-    if (i == 1) {
-      mean(diag(matrix), na.rm = TRUE)
-    } else {
-      i <- i - 1
-      mean(diag(matrix[, -(1:i)]), na.rm = TRUE)
-    }
-  })
-  scores
+  dframe %>% group_by(phase) %>%
+    summarize(scores = mean(score, na.rm=addNA)) %>% pluck("scores")
 }
 
 #' Get bullet phases
@@ -118,10 +83,10 @@ compute_average_scores <- function(land1, land2, score, addNA = FALSE, verbose =
 #' @param land1 vector with land ids of bullet 1
 #' @param land2 vector with land ids of bullet 2
 #' @export
-#' @importFrom readr parse_number
-#' @importFrom stats xtabs
 #' @import assertthat
 #' @return numeric vector of the phases (diagonal groupings).
+#' The number of the phase is determined by the comparison with land 1 on the first bullet, i.e. phase 1 is the diagonal,
+#' that contains the land-to-land comparison with bullet 2 land 1, phase 2 contains B1-L1 vs B2-L2, Phase 3 contains B1-L1 vs B2-L3, etc.
 get_phases <- function(land1, land2) {
   if (!is.numeric(land1)) {
     if (!is.factor(land1)) {
@@ -136,7 +101,7 @@ get_phases <- function(land1, land2) {
     }
     land2 <- as.numeric(land2)
   }
-  assert_that(is.numeric(land1), is.numeric(land2), is.numeric(score))
+  assert_that(is.numeric(land1), is.numeric(land2))
 
   maxland <- max(land1, land2)
   phase <- (land1-land2) %% maxland + 1
