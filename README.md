@@ -12,7 +12,7 @@ downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2022--12--28-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2024--05--31-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 [![R-CMD-check](https://github.com/heike/bulletxtrctr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/heike/bulletxtrctr/actions/workflows/R-CMD-check.yaml)
@@ -85,6 +85,9 @@ if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")
 }
 b1 <- read_bullet("README_files/data/Bullet1")
 #> 6 files found. Reading ...
+```
+
+``` r
 b2 <- read_bullet("README_files/data/Bullet2")
 #> 6 files found. Reading ...
 ```
@@ -105,6 +108,9 @@ measurements in meters:
 ``` r
 bullets$x3p[[1]] %>% x3p_get_scale()
 #> [1] 1.5625e-06
+```
+
+``` r
 
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
@@ -122,6 +128,9 @@ bullets <- bullets %>% mutate(
 ``` r
 bullets$x3p[[1]] %>% x3p_get_scale()
 #> [1] 1.5625
+```
+
+``` r
 
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
@@ -240,7 +249,7 @@ gridExtra::grid.arrange(
 
 <img src="man/figures/README-unnamed-chunk-20-1.png" width="100%" />
 
-5.  Extract signatures
+5.  Extract signas
 
 ``` r
 bullets <- bullets %>% mutate(
@@ -297,7 +306,8 @@ subset(comparisons, land1=="2-4" & land2 =="1-2")$aligned[[1]]$lands %>%
     geom_line() +
   theme_bw() +
   scale_color_brewer(palette = "Dark2")
-#> Warning: Removed 36 rows containing missing values (`geom_line()`).
+#> Warning: Removed 36 rows containing missing values or values outside the scale range
+#> (`geom_line()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-24-1.png" width="100%" />
@@ -459,6 +469,9 @@ features %>%
   theme(aspect.ratio = 1) 
 #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 #> ℹ Please use `linewidth` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 ```
 
 <img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />

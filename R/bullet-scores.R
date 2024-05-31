@@ -137,46 +137,53 @@ bootstrap_k <- function(scores, k, K, value) {
 #' @export
 #' @return numeric vector of binary prediction whether two lands are same-source. Vector has the same length as the input vectors.
 bullet_to_land_predict <- function(land1, land2, scores, difference, alpha = 0.05, addNA = FALSE) {
-  if (!is.numeric(land1)) {
-    if (!is.factor(land1)) {
-      land1 <- factor(land1, levels = unique(land1))
-  #    warning("Lands converted to factor variables, using order of occurrence.")
-    }
-    land1 <- as.numeric(land1)
-  }
-  if (!is.numeric(land2)) {
-    if (!is.factor(land2)) {
-      land2 <- factor(land2, levels = unique(land2))
-    }
-    land2 <- as.numeric(land2)
-  }
-  avgs <- compute_average_scores(land2, land1, scores, addNA)
+  # if (!is.numeric(land1)) {
+  #   if (!is.factor(land1)) {
+  #     land1 <- factor(land1, levels = unique(land1))
+  # #    warning("Lands converted to factor variables, using order of occurrence.")
+  #   }
+  #   land1 <- as.numeric(land1)
+  # }
+  # if (!is.numeric(land2)) {
+  #   if (!is.factor(land2)) {
+  #     land2 <- factor(land2, levels = unique(land2))
+  #   }
+  #   land2 <- as.numeric(land2)
+  # }
+  # avgs <- compute_average_scores(land2, land1, scores, addNA)
+  #
+  # p <- max(c(land1, land2))
+  # boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
+  # if (!is.numeric(boot)) {
+  #   boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
+  #   #     print("boot is not numeric")
+  #   #      browser()
+  # }
+  #
+  # getdiff <- diff(sort(-avgs))[1]
+  # if (!is.numeric(getdiff)) print("getdiff is not numeric") # browser()
+  # if (getdiff > difference & boot) {
+  #   # pick the maximum to determine the phase
+  #   idx <- which.max(avgs)
+  #   dd <- data.frame(
+  #     land1,
+  #     land2
+  #   ) %>%
+  #     mutate_if(function(.) !is.numeric(.), parse_number) ## HH: won't return correct value if land is not a numnber
+  #   dd$diff <- (dd$land1 - dd$land2) %% p + 1
+  #
+  #
+  #   return(dd$diff == idx)
+  # } else {
+  #   return(rep(FALSE, length = length(land1)))
+  # }
+  dframe <- data.frame(land1 = land1, land2 = land2, scores = scores)
+  dframe <- dframe %>% mutate(phase = get_phases(land1, land2))
+  avgs <- compute_average_scores(land1, land2, score = scores)
+  idx <- which.max(avgs)
+#  browser()
 
-  p <- max(c(land1, land2))
-  boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
-  if (!is.numeric(boot)) {
-    boot <- bootstrap_k(scores, p, 1000, max(avgs)) < alpha
-    #     print("boot is not numeric")
-    #      browser()
-  }
-
-  getdiff <- diff(sort(-avgs))[1]
-  if (!is.numeric(getdiff)) print("getdiff is not numeric") # browser()
-  if (getdiff > difference & boot) {
-    # pick the maximum to determine the phase
-    idx <- which.max(avgs)
-    dd <- data.frame(
-      land1,
-      land2
-    ) %>%
-      mutate_if(function(.) !is.numeric(.), parse_number) ## HH: won't return correct value if land is not a numnber
-    dd$diff <- (dd$land1 - dd$land2) %% p + 1
-
-
-    return(dd$diff == idx)
-  } else {
-    return(rep(FALSE, length = length(land1)))
-  }
+  return(dframe$phase == idx)
 }
 
 

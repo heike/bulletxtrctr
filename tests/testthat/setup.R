@@ -213,9 +213,9 @@ if (!file.exists(here::here("tests/bullets_match.Rdata"))) {
 if (!file.exists(here::here("tests/rf_features.Rdata"))) {
   load(here::here("tests/bullets_match.Rdata"))
   requireNamespace("randomForest")
-  rf_features <- match$features_legacy
+  rf_features <- match$features
 
-  rf_features$rfscore <- predict(bulletr::rtrees,
+  rf_features$rfscore <- predict(bulletxtrctr::rtrees,
     newdata = rf_features,
     type = "prob"
   )[, 2]

@@ -28,7 +28,8 @@ Imports:
     zoo,
     smoother,
     purrr,
-    shiny
+    shiny,
+    broom
 Remotes: 
     heike/grooveFinder,
     heike/x3ptools,

@@ -221,7 +221,7 @@ gridExtra::grid.arrange(
 )
 ```
 
-5. Extract signatures
+5. Extract signas
 
 ```{r}
 bullets <- bullets %>% mutate(
