@@ -461,17 +461,12 @@ features %>%
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
   scale_colour_manual(values = c("grey80", "darkorange")) +
-  geom_tile(size = 1, 
+  geom_tile(linewidth = 1, 
             data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
   ylab("Land B") +
   theme(aspect.ratio = 1) 
-#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-#> ℹ Please use `linewidth` instead.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 ```
 
 <img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />

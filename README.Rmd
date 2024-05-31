@@ -420,7 +420,7 @@ features %>%
   scale_fill_gradient2(low = "grey80", high = "darkorange", 
                        midpoint = .5) +
   scale_colour_manual(values = c("grey80", "darkorange")) +
-  geom_tile(size = 1, 
+  geom_tile(linewidth = 1, 
             data = features %>% filter(samesource)) +
   facet_grid(bulletB~bulletA, labeller = "label_both") +
   xlab("Land A") +
