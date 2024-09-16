@@ -39,14 +39,14 @@ phase_test <- function(land1, land2, score, sigma_0 = NA) {
 
 
   est1 <- avgs$means[n]
-  est2 <- avgs$means[n/2]
+  est2 <- avgs$means[floor(n/2)]
 
   if (is.na(sigma_0)) sigma_0 <- sd(dframe %>% filter(phase!= n) %>% purrr::pluck("score"))/sqrt(n)
   if (is.function(sigma_0)) { sigma_0 = sigma_0(dframe)}
   test.statistic <- (est1-est2)
   pvalue <- F_T(test.statistic, sigma = sigma_0, n = n, lower.tail = FALSE)
   res <- list(estimate=est1-est2,estimate1=est1, estimate2=est2, statistic= test.statistic,
-              p.value=pvalue, parameter=sigma_0, data = dframe)
+              p.value=pvalue, parameter=sigma_0, n = n, data = dframe)
   class(res) <- c("phase.test", "list")
   res
 }
@@ -61,8 +61,7 @@ phase_test <- function(land1, land2, score, sigma_0 = NA) {
 #' @examples
 #' logo <- x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
 #' print(logo)
-#' @method tidy phase.test
-tidy.phase.test <- function (x, ...) {
+tidy <- function (x, ...) {
   with(x, tibble(estimate, estimate1, estimate2, statistic, p.value, parameter))
 }
 
@@ -104,8 +103,7 @@ print.phase.test <- function(x, ...) {
 #' $$
 #' P(T < t \mid H_0, {\cal G}) = C \cdot \int_{-\infty}^{\infty} F^2(x) f(x) \left[ F(x + t) - F(x) \right]^3 dx
 #' $$
-#' where $F$ is the (approximately normal) distribution of $\bar{X}_{SS}$ under $H_0$ with expected value of $\mu$ ($=E[\bar{X}_{SS}] = E[\bar{X}_{DS}]$) and standard deviation
-#' $\sigma$ (standard deviation of a group of size $n$ under $H_0$).
+#' where $F$ is the (approximately normal) distribution of $\bar{X}_{SS}$ under $H_0$ with expected value of $\mu$ ($=E[\bar{X}_{SS}] = E[\bar{X}_{DS}]$) and standard deviation $\sigma$ (standard deviation of a group of size $n$ under $H_0$).
 #' @param t value of the observed test statistic, $t$ is positive.
 #' @param sigma (estimated) standard deviation of an average of size $n$ of the (original) sample
 #' @param n integer value, number of values in the same-source group.

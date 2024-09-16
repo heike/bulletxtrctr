@@ -13,6 +13,8 @@ get_phases(land1, land2)
 }
 \value{
 numeric vector of the phases (diagonal groupings).
+The number of the phase is determined by the comparison with land 1 on the first bullet, i.e. phase 1 is the diagonal,
+that contains the land-to-land comparison with bullet 2 land 1, phase 2 contains B1-L1 vs B2-L2, Phase 3 contains B1-L1 vs B2-L3, etc.
 }
 \description{
 Note that the combination of \code{land1} and \code{land2} are a key to the land-to-land scores,
