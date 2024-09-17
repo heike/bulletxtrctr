@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   features: features.html
-last_built: 2024-09-16T19:14Z
+last_built: 2024-09-17T13:22Z
 urls:
   reference: https://heike.github.io/bulletxtrctr/reference
   article: https://heike.github.io/bulletxtrctr/articles
