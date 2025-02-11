@@ -59,7 +59,8 @@ get_sig_lags <- function (data, value, sig_id, min.overlap=500,
 
     # we assume that d is ordered in x
     d %>% mutate(
-      aligned_x = 1:nrow(d) - idx1 + idx2,
+      aligned_x = (1:nrow(d) - idx1 + idx2)*resolution,
+      # sig_align reports back index - need to get it back into the right resolution
       ccf = aligned$ccf,
       lag = idx2 - idx1) #
   }))

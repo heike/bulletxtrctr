@@ -14,10 +14,9 @@ knitr::opts_chunk$set(
 ```
 
 
-# bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width="120" />
+# bulletxtrctr <img src="man/figures/bulletxtrctr.png" alt="hexsticker of the bulletxtrctr package. The name of the package is shown on top of a six-by-six tile plot typical for visualizing the scores of  a bullet-to-bullet comparison." align="right" width="120" />
 
  
-
 <!-- badges: start -->
 [![CRAN Status](http://www.r-pkg.org/badges/version/bulletxtrctr)](https://cran.r-project.org/package=bulletxtrctr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/pkg/bulletxtrctr) 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
@@ -132,10 +131,14 @@ We are working under the assumption that the scans are aligned such that the bas
 image_x3p(bullets$x3p[[1]], file = "man/figures/temp-before.png")
 ```
 ```{r, echo=FALSE}
+#| fig.alt: >
+#|   An image rendering of a scan of a land-engraved area.
+#|   The break-off region is on the left hand side of the image. 
+#|   This indicates that the scan should be rotated by 90 degrees (counter-clockwise).
 knitr::include_graphics("man/figures/temp-before.png")
 ```
 
-The raw scan needs to be flipped such that the heel is along the bottom of the image rather than along the left hand side.
+The raw scan needs to be flipped such that the break-off region (visible on the left hand-side) is along the bottom of the image rather than along the left hand side.
 
 
 ```{r}
@@ -155,6 +158,9 @@ image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```
 
 ```{r, echo=FALSE}
+#| fig.alt: >
+#|   An image rendering of the same scan as before.
+#|   The break-off region is now visible along the bottom of the image as expected by the further analysis.
 knitr::include_graphics("man/figures/temp-after.png")
 ```
 
@@ -177,6 +183,11 @@ bullets <- bullets %>% mutate(
 
 Visualize the cross cuts:
 ```{r, fig.width = 8, fig.height=3.3}
+#| fig.alt: >
+#|   A facetted plot of profiles. Each panel shows the profile of a land engraved area
+#|   for a fixed value across the scan.
+#|   The top row shows six lands for one bullet, the bottom row shows another bullet.
+#|   The profile for land 6 on bullet 1 looks different from the other profiles. 
 crosscuts <- bullets %>% tidyr::unnest(ccdata)
 crosscuts %>% 
   ggplot(aes(x = x, y = value)) + 
@@ -195,6 +206,9 @@ filter(bullets, land==6, bullet==1)$x3p[[1]] %>%
 ```
 
 ```{r, echo=FALSE}
+#| fig.alt: >
+#|   Image rendering of the scan corresponding to Land 6 on bullet 1. 
+#|   The scan exhibits problem of tank rash, i.e. shouldn't be used for a comparison.
 knitr::include_graphics("man/figures/bullet1-land6.png")
 ```
 
@@ -221,7 +235,7 @@ gridExtra::grid.arrange(
 )
 ```
 
-5. Extract signas
+5. Extract signals
 
 ```{r}
 bullets <- bullets %>% mutate(
@@ -236,6 +250,7 @@ bullets <- bullets %>% mutate(
 ```
 
 ```{r, fig.width = 8, fig.height = 3.3}
+
 signatures <- bullets %>% 
   select(source, sigs) %>% tidyr::unnest(sigs)
 signatures %>% 

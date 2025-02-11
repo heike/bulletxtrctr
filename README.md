@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bulletxtrctr <img src="man/figures/bulletxtrctr.png" align="right" width="120" />
+# bulletxtrctr <img src="man/figures/bulletxtrctr.png" alt="hexsticker of the bulletxtrctr package. The name of the package is shown on top of a six-by-six tile plot typical for visualizing the scores of  a bullet-to-bullet comparison." align="right" width="120" />
 
 <!-- badges: start -->
 
@@ -12,7 +12,7 @@ downloads](http://cranlogs.r-pkg.org/badges/bulletxtrctr)](http://www.r-pkg.org/
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2024--05--31-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2025--02--11-yellowgreen.svg)](/commits/master)
 [![Coverage
 status](https://codecov.io/gh/heike/bulletxtrctr/branch/master/graph/badge.svg)](https://codecov.io/github/heike/bulletxtrctr?branch=master)
 [![R-CMD-check](https://github.com/heike/bulletxtrctr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/heike/bulletxtrctr/actions/workflows/R-CMD-check.yaml)
@@ -85,9 +85,6 @@ if (!file.exists("README_files/data/Bullet1/Hamby252_Barrel1_Bullet1_Land1.x3p")
 }
 b1 <- read_bullet("README_files/data/Bullet1")
 #> 6 files found. Reading ...
-```
-
-``` r
 b2 <- read_bullet("README_files/data/Bullet2")
 #> 6 files found. Reading ...
 ```
@@ -108,9 +105,6 @@ measurements in meters:
 ``` r
 bullets$x3p[[1]] %>% x3p_get_scale()
 #> [1] 1.5625e-06
-```
-
-``` r
 
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
@@ -128,9 +122,6 @@ bullets <- bullets %>% mutate(
 ``` r
 bullets$x3p[[1]] %>% x3p_get_scale()
 #> [1] 1.5625
-```
-
-``` r
 
 summary(as.vector(bullets$x3p[[1]]$surface.matrix))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
@@ -157,10 +148,11 @@ recommended) the twist will be visible in the image.
 image_x3p(bullets$x3p[[1]], file = "man/figures/temp-before.png")
 ```
 
-<img src="man/figures/temp-before.png" width="100%" />
+<img src="man/figures/temp-before.png" alt="An image rendering of a scan of a land-engraved area. The break-off region is on the left hand side of the image.  This indicates that the scan should be rotated by 90 degrees (counter-clockwise)." width="100%" />
 
-The raw scan needs to be flipped such that the heel is along the bottom
-of the image rather than along the left hand side.
+The raw scan needs to be flipped such that the break-off region (visible
+on the left hand-side) is along the bottom of the image rather than
+along the left hand side.
 
 ``` r
 # turn the scans such that (0,0) is bottom left
@@ -178,7 +170,7 @@ right slant of striae and grooves:
 image_x3p(bullets$x3p[[1]], file = "man/figures/temp-after.png")
 ```
 
-<img src="man/figures/temp-after.png" width="100%" />
+<img src="man/figures/temp-after.png" alt="An image rendering of the same scan as before. The break-off region is now visible along the bottom of the image as expected by the further analysis." width="100%" />
 
 3.  Get the ideal cross sections
 
@@ -204,7 +196,7 @@ crosscuts %>%
   theme_bw()
 ```
 
-<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-16-1.png" alt="A facetted plot of profiles. Each panel shows the profile of a land engraved area for a fixed value across the scan. The top row shows six lands for one bullet, the bottom row shows another bullet. The profile for land 6 on bullet 1 looks different from the other profiles. " width="100%" />
 
 Note the rather strange cross cut for land 6 in bullet 1. We can look at
 the scan - and find quite pronounced tank rash. However, the extraction
@@ -220,7 +212,7 @@ filter(bullets, land==6, bullet==1)$x3p[[1]] %>%
   image_x3p(file="man/figures/bullet1-land6.png")
 ```
 
-<img src="man/figures/bullet1-land6.png" width="100%" />
+<img src="man/figures/bullet1-land6.png" alt="Image rendering of the scan corresponding to Land 6 on bullet 1.  The scan exhibits problem of tank rash, i.e. shouldn't be used for a comparison." width="100%" />
 
 4.  Get the groove locations
 
@@ -249,7 +241,7 @@ gridExtra::grid.arrange(
 
 <img src="man/figures/README-unnamed-chunk-20-1.png" width="100%" />
 
-5.  Extract signas
+5.  Extract signals
 
 ``` r
 bullets <- bullets %>% mutate(
@@ -263,6 +255,7 @@ bullets <- bullets %>% mutate(
 ```
 
 ``` r
+
 signatures <- bullets %>% 
   select(source, sigs) %>% tidyr::unnest(sigs)
 signatures %>% 
