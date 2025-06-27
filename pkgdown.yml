@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   features: features.html
-last_built: 2025-02-11T21:43Z
+last_built: 2025-06-27T20:33Z
 urls:
   reference: https://heike.github.io/bulletxtrctr/reference
   article: https://heike.github.io/bulletxtrctr/articles

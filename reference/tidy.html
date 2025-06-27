@@ -64,10 +64,16 @@ parameters and estimates.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">logo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://heike.github.io/x3ptools/reference/x3p_read.html" class="external-link">x3p_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"csafe-logo.x3p"</span>, package<span class="op">=</span><span class="st">"x3ptools"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x3p_read(system.file("csafe-logo.x3p", package = "x3ptools")):</span> could not find function "x3p_read"</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">logo</span> <span class="op">&lt;-</span> <span class="fu">x3ptools</span><span class="fu">::</span><span class="fu"><a href="https://heike.github.io/x3ptools/reference/x3p_read.html" class="external-link">x3p_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"csafe-logo.x3p"</span>, package<span class="op">=</span><span class="st">"x3ptools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">logo</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'logo' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x3p object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Instrument: N/A </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model: N/A </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date: 2018-01-30T08:30:24 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size (width x height): 741 x 419 in pixel </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> resolution: 6.4500e-07 x 6.4500e-07 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Creator: Heike Hofmann, CSAFE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Comment: image rendered from the CSAFE logo </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -79,7 +85,7 @@ parameters and estimates.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
