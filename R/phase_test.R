@@ -4,7 +4,7 @@
 #' @param land1 vector with land ids of the LEAs in bullet 1
 #' @param land2 vector with land ids of the LEAs in bullet 2
 #' @param score real-valued vector consisting of land-to-land comparisons. Higher values are assumed to describe higher similarity.
-#' @param sigma0 real valued, standard deviation of the different source distribution. If `NA` (default), the standard deviation of the scores
+#' @param sigma_0 real valued, standard deviation of the different source distribution. If `NA` (default), the standard deviation of the scores
 #' corresponding to non-matches (after selecting the highest phase) is taken. Real-values are interpreted as fixed standard deviation.
 #' The user can provide their own function of the form `function (data)`, where `data` is a data frame with `land1, land2, score,` and `phase`.
 #' The `phase` vector consists of integer values 1, ..., `k`, where `k` is the maximum of the number of unique lands in land1 and land2. The values are
@@ -26,22 +26,34 @@ phase_test <- function(land1, land2, score, sigma_0 = NA) {
     ) %>%
     arrange(land1, land2)
   n <- max(dframe$phase)
-  avgs <- dframe %>% group_by(phase) %>%
+  avgs <- dframe %>% group_by("phase") %>%
     summarize(
       means = mean(score, na.rm = TRUE)
     ) %>% ungroup() %>%
     mutate(
-      ordered = (1:n)[order(means)]
-    ) %>% arrange(means)
+      ordered = (1:n)[order(.data$means)]
+    ) %>% arrange("means")
   dframe <- dframe %>% mutate(
-    phase = avgs$ordered[phase]
+    phase = avgs$ordered[.data$phase]
   )
 
 
   est1 <- avgs$means[n]
   est2 <- avgs$means[floor(n/2)]
 
-  if (is.na(sigma_0)) sigma_0 <- sd(dframe %>% filter(phase!= n) %>% purrr::pluck("score"))/sqrt(n)
+  if (is.na(sigma_0)) {
+    # use pooled variance estimator
+    sigmas <- dframe |> mutate(inphase = .data$phase==n) |>
+      group_by("inphase") |>
+      summarize(sd = sd(score, na.rm=TRUE), nu = sum(!is.na(score)) - 1) |>
+      ungroup() |>
+      summarize(
+        pooled = sum(.data$nu*.data$sd)/sum(.data$nu)
+      )
+    sigma_0 <- sigmas$pooled[1]
+
+    #sigma_0 <- sd(dframe %>% filter(phase!= n) %>% purrr::pluck("score"))/sqrt(n)
+  }
   if (is.function(sigma_0)) { sigma_0 = sigma_0(dframe)}
   test.statistic <- (est1-est2)
   pvalue <- F_T(test.statistic, sigma = sigma_0, n = n, lower.tail = FALSE)
@@ -58,8 +70,9 @@ phase_test <- function(land1, land2, score, sigma_0 = NA) {
 #' @param x phase.test object as returned from `phase_test`
 #' @param ... ignored
 #' @export
+#' @importFrom broom tidy
 #' @examples
-#' logo <- x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
+#' logo <- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
 #' print(logo)
 tidy <- function (x, ...) {
   with(x, tibble(estimate, estimate1, estimate2, statistic, p.value, parameter))
@@ -72,7 +85,7 @@ tidy <- function (x, ...) {
 #' @param ... ignored
 #' @export
 #' @examples
-#' logo <- x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
+#' logo <- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
 #' print(logo)
 #' @method print phase.test
 print.phase.test <- function(x, ...) {
@@ -92,7 +105,7 @@ print.phase.test <- function(x, ...) {
 
 
 
-#' Reference distribution for the test statistic between Same-source and Different-source averages using phase selection
+#' Reference distribution abd debsity for the test statistic between Same-source and Different-source averages using phase selection
 #'
 #' Assuming an overall sample size of 36 (for 6 x 6 comparisons, and n=6 independent objects), we are interested in the distribution of
 #' T defined as the difference between the average of the same source values and the median average (XXX see paper for definition) of the different source values:
@@ -107,6 +120,7 @@ print.phase.test <- function(x, ...) {
 #' @param n integer value, number of values in the same-source group.
 #' @param lower.tail should the lower tail probability be returned?
 #' @export
+#' @importFrom stats dnorm pnorm integrate
 #' @examples
 #' # example code
 #' F_T(0.2, sigma = 0.1, lower.tail = FALSE) # only multitude of sigma informs the test
@@ -182,36 +196,7 @@ F_T_one <- function(t, sigma = 1, n = 6, lower.tail = TRUE) {
 }
 
 
-#' Reference density for the test statistic between Same-source and Different-source averages using phase selection
-#'
-#' Assuming an overall sample size of 36 (for 6 x 6 comparisons, n=6 independent objects), we are interested in the distribution of
-#' T defined as the difference between the average of the same source values and the median average (XXX see paper for definition) of the different source values:
-#' \deqn{T = \bar{X}_{SS} - \tilde{X}_{DS}}, where groups SS and DS are set by phase selection (after inspecting the set of $n$ values).
-#' For a (one-sided) hypothesis test of \eqn{H_0}: no difference between the means and \eqn{H_1:}: the same-source values are larger
-#' on average than the different source values, the test statistic T has under the null hypothesis and the group-finding
-#' strategy \eqn{\cal G} a distribution given as
-#' \deqn{P(T < t \mid H_0, {\cal G}) = C \cdot \int_{-\infty}^{\infty} F^2(x) f(x) \left[ F(x + t) - F(x) \right]^3 dx}
-#' where $F$ is the (approximately normal) distribution of \eqn{\bar{X}_{SS}} under \eqn{H_0} with expected value of µ (\eqn{=E[\bar{X}_{SS}] = E[\bar{X}_{DS}]}) and standard deviation
-#' \eqn{\sigma} (standard deviation of a group of size n under the null hypothesis).
-#' @param t value of the observed test statistic, t is non-negative
-#' @param sigma (estimated) standard deviation of an average of size n of the (original) sample
-#' @param n integer value, number of values in the same-source group.
-#' @export
-#' @examples
-#' # example code
-#' F_T(0.2, sigma = 0.1, lower.tail = FALSE) # only multitude of sigma informs the test
-#' F_T(2, lower.tail = FALSE)
-#' F_T(3, lower.tail = FALSE)
-#' F_T(4, lower.tail = FALSE)
-#' # critical values of t distribution and F_T (for sigma = 1):
-#' F_T(qt(1-0.05, df=34), lower.tail = FALSE)
-#' F_T(qt(1-0.05/6, df=34), lower.tail = FALSE)
-#' F_T(qt(1-0.01/6, df=34), lower.tail = FALSE)
-#'
-#' x <- 10^-(1:4)
-#' x <- sort(c(x, x/2))
-#' t_q <- qt(1-x, df=34)
-#' adjusted <- F_T(t_q, lower.tail=FALSE)
+#' @rdname F_T
 f_T <- function(t, sigma = 1, n = 6) {
   if (length(t) == 1) return(f_T_one(t=t, sigma=sigma, n=n))
   # sigma could be a vector too

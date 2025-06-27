@@ -13,7 +13,7 @@ phase_test(land1, land2, score, sigma_0 = NA)
 
 \item{score}{real-valued vector consisting of land-to-land comparisons. Higher values are assumed to describe higher similarity.}
 
-\item{sigma0}{real valued, standard deviation of the different source distribution. If \code{NA} (default), the standard deviation of the scores
+\item{sigma_0}{real valued, standard deviation of the different source distribution. If \code{NA} (default), the standard deviation of the scores
 corresponding to non-matches (after selecting the highest phase) is taken. Real-values are interpreted as fixed standard deviation.
 The user can provide their own function of the form \verb{function (data)}, where \code{data} is a data frame with \verb{land1, land2, score,} and \code{phase}.
 The \code{phase} vector consists of integer values 1, ..., \code{k}, where \code{k} is the maximum of the number of unique lands in land1 and land2. The values are

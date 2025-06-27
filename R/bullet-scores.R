@@ -7,6 +7,7 @@
 #' @param land2 (numeric) vector with land ids of bullet 2
 #' @param score numeric vector of scores to be summarized into a single number
 #' @param addNA logical value. In case of missing lands, are scores set to 0 (addNA = FALSE) or set to NA (addNA = TRUE)
+#' @param verbose be chatty?
 #' @export
 #' @importFrom readr parse_number
 #' @importFrom stats xtabs
@@ -71,7 +72,7 @@ compute_average_scores <- function(land1, land2, score, addNA = FALSE, verbose =
   dframe <- dframe %>% mutate(
     phase = get_phases(land1, land2)
   )
-  dframe %>% group_by(phase) %>%
+  dframe %>% group_by("phase") %>%
     summarize(scores = mean(score, na.rm=addNA)) %>% purrr::pluck("scores")
 }
 

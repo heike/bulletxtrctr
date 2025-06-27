@@ -16,6 +16,6 @@ tidy(x, ...)
 parameters and estimates.
 }
 \examples{
-logo <- x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
+logo <- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
 print(logo)
 }
