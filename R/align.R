@@ -129,8 +129,8 @@ check_align <- function(x) {
 #' @param x vector, assumption is that x is longer than y
 #' @param y vector
 #' @param min.overlap integer value: what is the minimal number of values
-#'          between x and y that should be considered?
-#' @return list with ccf values and lags
+#'          between x and y that should be considered? Caution: the default minimal overlap assumes that both sequences have approximately the same length.
+#' @return list with ccf values and lags and the number of observations the ccf is based on
 #' @importFrom stats na.omit
 #' @importFrom assertthat assert_that
 #' @export
@@ -165,7 +165,7 @@ get_ccf <- function(x, y, min.overlap = round(0.1 * max(length(x), length(y)))) 
   cors[ns < min.overlap] <- NA
 
   lag <- lags - (ny - min.overlap)
-  return(list(lag = lag, ccf = cors))
+  return(list(lag = lag, ccf = cors, ns = ns[!(ns < min.overlap)]))
 }
 
 
