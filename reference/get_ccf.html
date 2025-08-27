@@ -75,12 +75,12 @@ based on the complete cases.</p>
 
 <dt id="arg-min-overlap">min.overlap<a class="anchor" aria-label="anchor" href="#arg-min-overlap"></a></dt>
 <dd><p>integer value: what is the minimal number of values
-between x and y that should be considered?</p></dd>
+between x and y that should be considered? Caution: the default minimal overlap assumes that both sequences have approximately the same length.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>list with ccf values and lags</p>
+    <p>list with ccf values and lags and the number of observations the ccf is based on</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -112,6 +112,10 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31]  0.02336284 -0.09750601  0.37518206  0.43861768 -0.86599543 -0.79572257</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [37] -1.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  2  3  4  5  6  7  8  9 10 11 12 13 14 15 15 15 15 15 15 14 13 12 11 10  9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26]  8  7  6  5  4  3  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">get_ccf</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">5</span><span class="op">)</span>, min.overlap <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $lag</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -17 -16 -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1   0   1</span>
@@ -124,6 +128,10 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19] -0.27375509 -0.36945589  0.02015801  0.29846545 -0.01504534 -0.63361874</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25] -0.08064013  0.67046440 -0.23688851 -0.43674045 -0.82605771 -0.57895159</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31]          NA          NA          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  3  4  5  6  7  8  9 10 11 12 13 14 15 15 15 15 15 15 14 13 12 11 10  9  8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26]  7  6  5  4  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_ccf</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">45</span><span class="op">:</span><span class="fl">50</span><span class="op">]</span>, <span class="va">x</span>, min.overlap <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
@@ -154,6 +162,11 @@ This makes the evaluation slower, but prevents any edge effects.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [81] -0.3765467356 -0.7198102852 -0.1136001693 -0.3207293063  0.0569257730</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [86]  0.9006575087  0.1044893444 -0.6497565766 -0.3234263853  0.7421817222</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [91]  0.0146901834 -0.1190534288  0.3879125911 -0.3356829767 -0.5245482684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [39] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [77] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
