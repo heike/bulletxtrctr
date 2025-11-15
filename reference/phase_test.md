@@ -6,7 +6,7 @@ based on scores for each land-to-land comparison.
 ## Usage
 
 ``` r
-phase_test(land1, land2, score, sigma_0 = NA)
+phase_test(land1, land2, score, sigma_0 = NA, alpha = 0.05)
 ```
 
 ## Arguments
@@ -37,8 +37,28 @@ phase_test(land1, land2, score, sigma_0 = NA)
   are ordered such that the highest value `k` of phase corresponds to
   the elements in score with the highest average score.
 
+- alpha:
+
+  significance level for a rejection, acceptable Type 1 error.
+
 ## Value
 
-phase.test object. List of estimate=est1-est2,estimate1=est1,
-estimate2=est2, statistic= test.statistic, p.value=pvalue,
-parameter=sigma_0, data = dframe
+phase.test object - special case of an `htest` (hypothesis test).
+Additionally includes the data used.
+
+## Examples
+
+``` r
+score <- rnorm(36)
+phase_test(land1 = rep(1:6, 6), land2 = rep(1:6, each = 6), score = score)
+#> 
+#>  Phase Test
+#> 
+#> data:  
+#> T = 0.71524, sigma_0 = 0.73631, df = 6, p-value = 0.7481
+#> alternative hypothesis: true difference in means between group SS and group DS is greater than 0 (indicating same-source)
+#> sample estimates:
+#>  SS (mean)  DS (mean) 
+#>  0.4073304 -0.3079061 
+#> 
+```

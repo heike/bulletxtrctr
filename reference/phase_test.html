@@ -43,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">phase_test</span><span class="op">(</span><span class="va">land1</span>, <span class="va">land2</span>, <span class="va">score</span>, sigma_0 <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">phase_test</span><span class="op">(</span><span class="va">land1</span>, <span class="va">land2</span>, <span class="va">score</span>, sigma_0 <span class="op">=</span> <span class="cn">NA</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,13 +69,32 @@ The user can provide their own function of the form <code>function (data)</code>
 The <code>phase</code> vector consists of integer values 1, ..., <code>k</code>, where <code>k</code> is the maximum of the number of unique lands in land1 and land2. The values are
 ordered such that the highest value <code>k</code> of phase corresponds to the elements in score with the highest average score.</p></dd>
 
+
+<dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
+<dd><p>significance level for a rejection, acceptable Type 1 error.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>phase.test object. List of estimate=est1-est2,estimate1=est1, estimate2=est2, statistic= test.statistic,
-p.value=pvalue, parameter=sigma_0, data = dframe</p>
+    <p>phase.test object - special case of an <code>htest</code> (hypothesis test). Additionally includes the data used.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">36</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">phase_test</span><span class="op">(</span>land1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span>, land2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, each <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>, score <span class="op">=</span> <span class="va">score</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	Phase Test</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data:  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T = 0.71524, sigma_0 = 0.73631, df = 6, p-value = 0.7481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> alternative hypothesis: true difference in means between group SS and group DS is greater than 0 (indicating same-source)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sample estimates:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  SS (mean)  DS (mean) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.4073304 -0.3079061 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

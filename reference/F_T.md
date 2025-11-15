@@ -1,4 +1,4 @@
-# Reference distribution abd debsity for the test statistic between Same-source and Different-source averages using phase selection
+# \#' Extract results from test in tidy form \#' \#' `tidy.phase.test` expands the tidy method for test.phase objects. It gives a summary of the relevant \#' parameters and estimates. \#' @param x phase.test object as returned from `phase_test` \#' @param ... ignored \#' @export \#' @importFrom broom tidy \#' @examples \#' logo \<- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools")) \#' print(logo) tidy \<- function (x, ...) with(x, tibble(estimate, estimate1, estimate2, statistic, p.value, parameter)) Reference distribution and debsity for the test statistic between Same-source and Different-source averages using phase selection
 
 Assuming an overall sample size of 36 (for 6 x 6 comparisons, and n=6
 independent objects), we are interested in the distribution of T defined

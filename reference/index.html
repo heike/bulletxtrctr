@@ -50,7 +50,7 @@
           <code><a href="F_T.html">F_T()</a></code> <code><a href="F_T.html">f_T()</a></code>
 
         </dt>
-        <dd>Reference distribution abd debsity for the test statistic between Same-source and Different-source averages using phase selection</dd>
+        <dd>#' Extract results from test in tidy form #' #' <code>tidy.phase.test</code> expands the tidy method for test.phase objects. It gives a summary of the relevant #' parameters and estimates. #' @param x phase.test object as returned from <code>phase_test</code> #' @param ... ignored #' @export #' @importFrom broom tidy #' @examples #' logo &lt;- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools")) #' print(logo) tidy &lt;- function (x, ...) with(x, tibble(estimate, estimate1, estimate2, statistic, p.value, parameter)) Reference distribution and debsity for the test statistic between Same-source and Different-source averages using phase selection</dd>
 
         <dt>
 
@@ -411,13 +411,6 @@
 
         <dt>
 
-          <code><a href="print.phase.test.html">print(<i>&lt;phase.test&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Print information of a phase test</dd>
-
-        <dt>
-
           <code><a href="raw_sig_smooth.html">raw_sig_smooth()</a></code>
 
         </dt>
@@ -492,13 +485,6 @@
 
         </dt>
         <dd>Switch x and y in a data frame</dd>
-
-        <dt>
-
-          <code><a href="tidy.html">tidy()</a></code>
-
-        </dt>
-        <dd>Extract results from test in tidy form</dd>
 
         <dt>
 
