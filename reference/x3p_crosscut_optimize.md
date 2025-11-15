@@ -1,0 +1,84 @@
+# Identify a reliable cross section
+
+Identifies a "representative" cross section for a bullet land engraved
+area. Striation marks on a bullet land are best expressed at the heel
+(bottom) of a bullet where break-off is still problematic. Using
+cross-correlation we identify a cross section that is the closest to the
+bottom of the bullet but does not suffer from break-off. If the
+resulting cross section is equal to the maximum of the search area
+(defined in xlimits), there should be some investigation to determine
+whether this cross section is usable, due to the risk of tank rash.
+TODO: are missing values only on the right hand side (leading shoulder)?
+
+## Usage
+
+``` r
+x3p_crosscut_optimize(
+  x3p,
+  distance = 25,
+  ylimits = c(50, NA),
+  minccf = 0.9,
+  span = 0.03,
+  percent_missing = 50
+)
+```
+
+## Arguments
+
+- x3p:
+
+  if character, path to an x3p file. Otherwise a scan in x3p format is
+  expected. The assumption is that the scan is taken across the bullet
+  land, with an upright bullet, i.e. bullet tip points upward. (0,0)
+  defines the bottom left corner of the scan.
+
+- distance:
+
+  positive numeric value indicating the distance between cross sections
+  to use for a comparison
+
+- ylimits:
+
+  vector of values between which to check for cross sections in a stable
+  region. In case the upper limit is not specified explicitly, it is
+  determined by the scan itself.
+
+- minccf:
+
+  minimal value of cross correlation to indicate a stable region
+
+- span:
+
+  The span for the loess smooth function
+
+- percent_missing:
+
+  maximum percent missing values allowed on the crosscut to be picked
+
+## Value
+
+dataframe of crosscut
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Set the data up to be read in, cleaned, etc.
+library(bulletxtrctr)
+library(x3ptools)
+library(ggplot2)
+
+example_data <- bullet_pipeline(
+  location = list(Bullet1 = c(hamby252demo$bullet1[3])),
+  stop_at_step = "clean",
+  x3p_clean = function(x) x %>%
+      x3p_scale_unit(scale_by=10^6) %>%
+      rotate_x3p(angle = -90) %>%
+      y_flip_x3p()
+)
+
+x3p_crosscut_optimize(example_data$x3p[[1]])
+x3p_crosscut(example_data$x3p[[1]], 75) %>%
+  ggplot(aes(x = x, y = value)) + geom_line()
+} # }
+```
