@@ -9,14 +9,19 @@
 #' The user can provide their own function of the form `function (data)`, where `data` is a data frame with `land1, land2, score,` and `phase`.
 #' The `phase` vector consists of integer values 1, ..., `k`, where `k` is the maximum of the number of unique lands in land1 and land2. The values are
 #' ordered such that the highest value `k` of phase corresponds to the elements in score with the highest average score.
-#' @return phase.test object. List of estimate=est1-est2,estimate1=est1, estimate2=est2, statistic= test.statistic,
-#' p.value=pvalue, parameter=sigma_0, data = dframe
+#' @param alpha significance level for a rejection, acceptable Type 1 error.
+#' @returns phase.test object - special case of an `htest` (hypothesis test). Additionally includes the data used.
 #' @export
-phase_test <- function(land1, land2, score, sigma_0 = NA) {
+#' @examples
+#' score <- rnorm(36)
+#' phase_test(land1 = rep(1:6, 6), land2 = rep(1:6, each = 6), score = score)
+phase_test <- function(land1, land2, score, sigma_0 = NA, alpha = 0.05) {
   # data frame with structure land 1, land 2, score
   # returns estimate 1, estimate 2, test statistic (difference), sigma (of reference distribution),
   # and p-value
   if (is.numeric(sigma_0)) stopifnot(sigma_0 > 0) # only positive values for sigma_0 are allowed
+
+  DNAME <- deparse(substitute(score))
 
   dframe <- data.frame(land1, land2, score)
   dframe <- dframe %>%
@@ -57,55 +62,34 @@ phase_test <- function(land1, land2, score, sigma_0 = NA) {
   if (is.function(sigma_0)) { sigma_0 = sigma_0(dframe)}
   test.statistic <- (est1-est2)
   pvalue <- F_T(test.statistic, sigma = sigma_0, n = n, lower.tail = FALSE)
-  res <- list(estimate=est1-est2,estimate1=est1, estimate2=est2, statistic= test.statistic,
-              p.value=pvalue, parameter=sigma_0, n = n, data = dframe)
-  class(res) <- c("phase.test", "list")
+  res <- list(statistic = list(`T`=test.statistic),
+              estimate = c(`SS (mean)` = est1,
+                           `DS (mean)` = est2),
+              p.value=pvalue, parameter=list(sigma_0 = sigma_0, df = n),
+              alpha = alpha,  alternative = "true difference in means between group SS and group DS is greater than 0 (indicating same-source)",
+              method = "Phase Test",
+              data = dframe)
+  class(res) <- c("htest", "phase.test")
   res
 }
 
-#' Extract results from test in tidy form
-#'
-#' `tidy.phase.test` expands the tidy method for test.phase objects. It gives a summary of the relevant
-#' parameters and estimates.
-#' @param x phase.test object as returned from `phase_test`
-#' @param ... ignored
-#' @export
-#' @importFrom broom tidy
-#' @examples
-#' logo <- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
-#' print(logo)
-tidy <- function (x, ...) {
-  with(x, tibble(estimate, estimate1, estimate2, statistic, p.value, parameter))
-}
-
-#' Print information of a phase test
-#'
-#' `print.phase.test` expands the generic print method for x3p objects. It gives a summary of the most relevant x3p meta information and returns the object invisibly.
-#' @param x phase.test object
-#' @param ... ignored
-#' @export
-#' @examples
-#' logo <- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
-#' print(logo)
-#' @method print phase.test
-print.phase.test <- function(x, ...) {
-  cat(sprintf("
-                 Phase Test
-
-  alternative hypothesis:
-  true difference in means between group SS and group DS is greater than 0 (indicating same-source)
-
-  t = %f, sigma_0 = %f, p-value = %f
-
-  sample estimates:\n", x$statistic, x$parameter, x$p.value))
-  means <- c(x$estimate1, x$estimate2)
-  names(means) <- c("mean in group SS", "mean in group DS")
-  print(means)
-}
+#' #' Extract results from test in tidy form
+#' #'
+#' #' `tidy.phase.test` expands the tidy method for test.phase objects. It gives a summary of the relevant
+#' #' parameters and estimates.
+#' #' @param x phase.test object as returned from `phase_test`
+#' #' @param ... ignored
+#' #' @export
+#' #' @importFrom broom tidy
+#' #' @examples
+#' #' logo <- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
+#' #' print(logo)
+#' tidy <- function (x, ...) {
+#'   with(x, tibble(estimate, estimate1, estimate2, statistic, p.value, parameter))
+#' }
 
 
-
-#' Reference distribution abd debsity for the test statistic between Same-source and Different-source averages using phase selection
+#' Reference distribution and debsity for the test statistic between Same-source and Different-source averages using phase selection
 #'
 #' Assuming an overall sample size of 36 (for 6 x 6 comparisons, and n=6 independent objects), we are interested in the distribution of
 #' T defined as the difference between the average of the same source values and the median average (XXX see paper for definition) of the different source values:

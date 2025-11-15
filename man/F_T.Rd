@@ -3,7 +3,21 @@
 \name{F_T}
 \alias{F_T}
 \alias{f_T}
-\title{Reference distribution abd debsity for the test statistic between Same-source and Different-source averages using phase selection}
+\title{#' Extract results from test in tidy form
+#'
+#' \code{tidy.phase.test} expands the tidy method for test.phase objects. It gives a summary of the relevant
+#' parameters and estimates.
+#' @param x phase.test object as returned from \code{phase_test}
+#' @param ... ignored
+#' @export
+#' @importFrom broom tidy
+#' @examples
+#' logo <- x3ptools::x3p_read(system.file("csafe-logo.x3p", package="x3ptools"))
+#' print(logo)
+tidy <- function (x, ...) {
+with(x, tibble(estimate, estimate1, estimate2, statistic, p.value, parameter))
+}
+Reference distribution and debsity for the test statistic between Same-source and Different-source averages using phase selection}
 \usage{
 F_T(t, sigma = 1, n = 6, lower.tail = TRUE)
 

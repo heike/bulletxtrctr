@@ -4,7 +4,7 @@
 \alias{phase_test}
 \title{Bullet Phase test}
 \usage{
-phase_test(land1, land2, score, sigma_0 = NA)
+phase_test(land1, land2, score, sigma_0 = NA, alpha = 0.05)
 }
 \arguments{
 \item{land1}{vector with land ids of the LEAs in bullet 1}
@@ -18,11 +18,16 @@ corresponding to non-matches (after selecting the highest phase) is taken. Real-
 The user can provide their own function of the form \verb{function (data)}, where \code{data} is a data frame with \verb{land1, land2, score,} and \code{phase}.
 The \code{phase} vector consists of integer values 1, ..., \code{k}, where \code{k} is the maximum of the number of unique lands in land1 and land2. The values are
 ordered such that the highest value \code{k} of phase corresponds to the elements in score with the highest average score.}
+
+\item{alpha}{significance level for a rejection, acceptable Type 1 error.}
 }
 \value{
-phase.test object. List of estimate=est1-est2,estimate1=est1, estimate2=est2, statistic= test.statistic,
-p.value=pvalue, parameter=sigma_0, data = dframe
+phase.test object - special case of an \code{htest} (hypothesis test). Additionally includes the data used.
 }
 \description{
 Determine a p-value for the strength of similarity between two bullets based on scores for each land-to-land comparison.
+}
+\examples{
+score <- rnorm(36)
+phase_test(land1 = rep(1:6, 6), land2 = rep(1:6, each = 6), score = score)
 }
