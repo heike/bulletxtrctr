@@ -26,13 +26,13 @@ phase_test <- function(land1, land2, score, sigma_0 = NA) {
     ) %>%
     arrange(land1, land2)
   n <- max(dframe$phase)
-  avgs <- dframe %>% group_by("phase") %>%
+  avgs <- dframe %>% group_by(phase) %>%
     summarize(
       means = mean(score, na.rm = TRUE)
     ) %>% ungroup() %>%
     mutate(
       ordered = (1:n)[order(.data$means)]
-    ) %>% arrange("means")
+    ) %>% arrange(means)
   dframe <- dframe %>% mutate(
     phase = avgs$ordered[.data$phase]
   )
@@ -44,7 +44,7 @@ phase_test <- function(land1, land2, score, sigma_0 = NA) {
   if (is.na(sigma_0)) {
     # use pooled variance estimator
     sigmas <- dframe |> mutate(inphase = .data$phase==n) |>
-      group_by("inphase") |>
+      group_by(inphase) |>
       summarize(sd = sd(score, na.rm=TRUE), nu = sum(!is.na(score)) - 1) |>
       ungroup() |>
       summarize(
