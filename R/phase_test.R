@@ -35,13 +35,14 @@ phase_test <- function(land1, land2, score, sigma_0 = NA, alpha = 0.05) {
     summarize(
       means = mean(score, na.rm = TRUE)
     ) %>% ungroup() %>%
+    arrange(means) %>%
     mutate(
-      ordered = (1:n)[order(.data$means)]
-    ) %>% arrange(means)
-  dframe <- dframe %>% mutate(
-    phase = avgs$ordered[.data$phase]
-  )
-
+      ordered = (1:n)
+    )
+  dframe <- dframe %>%
+    left_join(avgs %>% select(phase, ordered), by = "phase") %>%
+    mutate(phase = ordered) %>%  # overwrite phase with ordered
+    select(-ordered)
 
   est1 <- avgs$means[n]
   est2 <- avgs$means[floor(n/2)]
